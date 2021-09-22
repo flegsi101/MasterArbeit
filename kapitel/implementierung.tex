@@ -1,0 +1,12 @@
+\section{Implementierung}
+
+\subsection{Allgemeines Vorgehen}
+Für die Implementierung soll das existierende System erweitert werden, so dass vorläufig die alte Funktionalität erhalten bleibt.
+Da zu wird im ersten Schritt die URL zur REST-API angepasst. 
+Die alte API soll danach und dem Pfad \"/api/v1\" und die neue unter \"api/v2\" erreichbar sein.
+Der alte Web-Client muss dann dementsprechend angepasst werden und wird auch auf einen anderen Pfad \"/v1\" verschoben.
+Der neue Client soll dann sowohl unter keinem Pfad \"/\" als auch unter \"/v2\", um einheitlich zu bleiben, erreichbar sein.
+
+Da bereits ein Server entwickelt wurde, der eine REST-API bietet, soll dieser auch weiter benutzt werden und nur um die neuen Funktionalitäten erweitert werden.
+Daher ist dieser auch für das zuordnen der Pfade auf die Endpunkte zuständig.
+Da es für den Web-Client, im Gegensatz zur API, keine weiteren Abhängigkeiten geben kann, kann die Ingestion direkt auf die neue API angepasst werden.

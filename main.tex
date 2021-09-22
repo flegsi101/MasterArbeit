@@ -1,0 +1,56 @@
+\documentclass[12pt,titlepage,twoside]{report}
+% font
+\usepackage{dejavu}
+\usepackage{sectsty}
+\allsectionsfont{\sffamily}
+% language stuff
+\usepackage{german, ngerman}           % deutsche Überschriften etc.
+\usepackage[utf8]{inputenc} % direkte Einbgabe von Umlauten
+% miscellaneous
+\usepackage{graphicx}         % graphics
+\graphicspath{{grafiken/}}
+\usepackage[german]{fancyref}
+\usepackage{hhline}           % double lines in tables
+\usepackage{amsfonts}         % real numbers etc.
+\usepackage[rightcaption]{sidecap} % figure captions on the right (optional)
+\usepackage{hyperref}         % for URLs
+\usepackage{listings}         % for code samples
+\usepackage{fancyhdr}         % for header line
+\usepackage{natbib}
+% Hier bei Bedarf die Seitenränder einstellen
+
+\usepackage[printonlyused]{acronym}
+
+\usepackage{algorithm}
+
+% Kopf- und Fußzeile
+\fancyhead{} % clear all header fields
+\fancyhead[RO,LE]{\leftmark}
+
+\title{Arbeit}
+\author{Alexander Martin}
+\date{August 2021}
+
+\begin{document}
+
+\include{titelseite}
+\newpage
+\include{unabhänhigkeit}
+\newpage
+\include{abstract}
+\newpage
+
+\pagestyle{fancy}
+\tableofcontents
+\newpage
+
+\include{kapitel/einleitung}
+
+\include{kapitel/entwicklung}
+
+
+\newpage
+\bibliographystyle{unsrtnat}
+\bibliography{literatur}
+
+\end{document}
