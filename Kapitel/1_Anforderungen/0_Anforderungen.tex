@@ -1,0 +1,48 @@
+\chapter{Ziel und Anforderungen}
+In diesem Kapitel werden die Ziele und Anforderungen für die Entwicklung ermittelt.
+Dazu wird zuerst die Zielsetzung beschrieben.
+Diese soll aber nur als Grundlage für die Anforderungen dienen, weshalb die Ziele nicht detailiert erklärt sind.
+Das geschieht im zweiten Teil, in dem dann auch die Anforderungen abgeleitet werden.
+
+\section{Zielsetzung}
+Allgemein formuliert ist das Ziel eine Ingestion-Schnittstelle, die in der Lage sein soll, Daten in verschiedenen Formaten quellenunabhängig zu laden und in unterschiedlichen Speichern abzulegen.
+Zusätzlich soll die Möglichkeit gegeben werden Daten kontinuierlich nach zu laden und optional diese zu Versionieren, so dass man die Änderungen von Daten nachvollziehen kann.
+Dies alles soll, im Gegensatz zur existierenden Schnittstelle aus dem Prototypen, ohne Anpassungen im Server-Code möglich sein.
+
+Wie bereits erwähnt, ist der Data-Lake-System-Prototyp eine monolithische Anwendung.
+Das bedeutet, dass die gesamte Anwendung als komplett Lösung in einem Programm entwickelt und bereit gestellt wird.
+Solche Ansätze sind Anfangs leichter umzusetzen, haben aber größere Nachteile in Bereichen wie Fehlertoleranz und Wartbarkeit.
+Daher soll für die Ingestion-Schnittstelle der Microservice-Ansatz verfoglt werden.
+Hierbei werden die Funktionalitäten und Aufgaben auf mehrere kleinere Anwendungen aufgeteilt.
+Das hat den, wie von \textcite{microservices} dargestellt, mehrere Vorteile.
+Die Wartung fällt bei mehreren kleinen Programmen leichter, da sie übersichtlicher und verständlicher sind.
+Bei Fehlerfunktionen einzelner Mircoservices faällt außerdem nicht die komplette Anwendung aus, sondern nur die Funktion, für die der Service zuständig war.
+Zuletzt ist es einfacher bestimmte Aspekte der Software zu skalieren und bei Updates bleibt eine höhere Verfügbarkeit, da nur ein kleiner Teil des Systems neu gestartet werden muss.
+
+\section{Anforderungen}
+Aus den oben genannten Zielen lassen sich jetzt genauere Anforderungen entwickeln, die die Ingestion-Schnittstelle erfüllen soll.
+Dazu werden nachfolgend die einzelnen Ziele in Abschnitte aufgeteilt und die dazugehörigen Anforderungen festgehalten.
+In der Evaluierung kann dann überprüft werden, ob alle Anforderung durch das Ergebniss erfüllt werden.
+Die Unterkapitel sind so aufgebaut, dass erst eine genauere Erklärung für das Ziel gegeben wird und dann in einzelnen Paragraphen die funktional und nicht funktionale Anforderungen nummeriert aufgelistet werden.
+
+\subsection{Quellen- und Formatunabhänigkeit}
+Es soll die Möglichkeit gegeben werden, Daten aus jeder beliebigen Quelle in das System zu integrieren.
+Dazu muss die Schnittstelle sowohl in der Lage sein direkt Daten entgegen zu nehmen als auch aus anderen Systemen zu extrahieren.
+Unter System wird hierbei jedoch nicht nur eine Datenbank verstanden, sonder es können unter anderem auch Dateien, APIs oder Datenströme gemeint sein.
+Ebenso soll es möglich sein, den Speicher im Data-Lake-System für die Daten auszuwählen.
+Da im Prototypsystem \textit{Apache Spark} verwendet wird, wird die Funktion, Daten in verschiedensten Formaten zu laden und zu speichern als gegeben betrachtet.
+
+\paragraph{ANF\_01}
+Die Schnittstelle muss in der Lage sein Quelldaten entgegen zu nehmen, die an das Data-Lake-System gesendet werden.
+Diese müssen so verwaltet werden, dass sie über \textit{Apache Spark} gelesen werden können.
+
+\paragraph{ANF\_02}
+Da \textit{Apache Spark} nicht von sich aus in der Lage ist, alle Datenformate zu verstehen, muss es möglich sein die \verb|SparkSession| mit benötigten Packeten zu erweitern.
+
+\paragraph{ANF\_03}
+Für die Unterstützung verschiedenster Quell- und Zielsystem verwendet \textit{Apache Spark} zum Lesen und Speichern von Dateien eine Format-Parameter und Optionen.
+Diese sollen komplett konfigurierbar sein um alle Systeme verwenden zu können.
+
+\paragraph{ANF\_04}
+Einige Funktionalitäten, wie eine Reihnfolge von Abfragen an eine Programmierschnittstelle können nicht durch \textit{Apache Spark} abgedeckt werden.
+Daher soll es eine Möglichkeit geben der Ingestion-Schnittstelle eigenen Programmcode mit zu geben, der diese Funktionen abdeckt.

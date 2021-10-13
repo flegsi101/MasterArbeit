@@ -1,37 +1,42 @@
 \chapter{Einleitung}
 
-\section{Motivation}
+\section{Die Motivation}
 In der heutigen Zeit spielen Daten in der Welt eine immer größere Rolle.
-In \textit{Rethink Data Report 2020} \textcite{rethink_data_2020} wurde eine Studie durchgeführt, die als Prognose eine Steigerung von 42\% pro Jahr in der Menge der anfallenden Daten pro Jahr voraussagte.
-Diese sollen zum Bespiele durch den vermehrten Einsatz von IoT-Geräten, erweiterte Analysen und den einfacheren Gebrauch von Cloud-Speichern begründet sein.
-Dabei entstehen Herausforderungen, diese Datenmengen effizient zu verwalten und zu verwenden.
+In \textit{Rethink Data Report 2020} \textcite{rethink_data_2020} wurde eine Studie durchgeführt, die eine Steigerung von 42\% der Menge an anfallenden Daten pro Jahr prognostiziert.
+Dies wird unter anderem auf den vermehrten Einsatz von IoT-Geräten, immer ausführlicheres Analysieren von Daten und die einfacher werdende Anwendung von Cloud-Speichern zurückgeführt.
+Dabei besteht die Herausforderung, Daten in verschiedensten Formaten in großen Mengen zu verwalten und zu verwenden.
 
-Eine Lösung für dieses Problem sind Data-Lake-Systeme, die eine Architektur bereitstellen, mit deren Hilfe alle Aufgaben umgesetzt werden können.
-Wie von \textcite{DBLP:journals/corr/abs-2106-09592} beschrieben sind Data-Lake-Systeme Speicher für heterogene Daten, die außerdem Schnittstellen zur Anfrageausführung und Datenanalyse bieten.
-Es gibt bereits viele Anbieter, die fertige Data-Lake-System zur Verfügung stellen.
+Ein Lösungansatz für dieses Problem sind Data-Lake-Systeme.
+Data-Lake-Systeme sind zentrale Datenspeicher, die strukturierte, semi- und unstrukturierte Daten in ihrem Rohformat speichern.
+Mit Hilfe von Metadaten bietet ein Datalake Schnittstellen zur Datenanalyse und -abfrage.
+Dabei funktioniert das System nach dem Schema-On-Read oder auch ELT (Extrahieren Laden Transformieren) Prinzip.
+Das bedeutet, dass die Daten wie bereits erwähnt im Rohformat im Data Lake gespeichert werden und erst nach dem Laden ein entsprechendes Schema angewendet wird.
+
+Es gibt bereits viele Anbieter, die fertige Data-Lake-Systeme anbieten.
 Dabei ist jedoch ein Nachteil, dass sie häufig nur in der (Cloud-)Infrastruktur des Anbieters (z.B. Microsoft Azure\footnote{https://azure.microsoft.com/}, Amazon Web Services\footnote{https://aws.amazon.com/}) verfügbar sind und sich ihrere Architektur nach diesen Diensten richtet.
+Daher wird in dieser Arbeit eine Schnittstelle für die Ingestion, also das Laden der Daten in das Data-Lake-System, entwickelt, die in einem platform unabhängigen Data-Lake-System Anwendung finden soll.
 
-\section{Zielsetzung}
-Das Ziel dieser Masterarbeit ist der Entwurf und die Implementierung einer Ingestion-Schnittstelle für ein Data-Lake-System.
-Die Ingestion-Schnittstelle ist verantwortlich dafür, das Daten in den Data-Lake geladen und gespeichert werden.
-Außerdem sollte sie sich einerseits um die Erstellung von passenden Metadaten und einer Versionierung kümmern, um das weitere Arbeiten mit den Daten einfacher zu gestalten.
-Dabei soll es möglich sein, Daten aus verschiedensten Datenquellen in das System zu integrieren.
+\section{Der Aufbau}
+Am Anfang wird auf die Ziele eigengangen, die Schnittstelle erreichen soll.
+Aus diesen Zielen werden dann konkrete Anforderungen an die Entwicklung abgeleitet.
+Im zweiten Kapitel wird das System der Schnittstelle entwickelt, ohne dabei auf konkrete Details, wie zum Beispiel Programmiersprachen, einzugehen.
+Hier geht es mehr um die Architektur und das Design, das benötigt wird um alle Anforderunegn abzudecken.
+Danach wird die Umsetzung beschrieben.
+Hierbei spielt vorallem das bereits exisitierende Data-Lake-System, in dem die Ingestion-Schnittstelle integriert werden soll, eine große Rolle.
+Zum Schluss wird die Ingestion-Schnittstelle evaluiert und ein Ausblick auf mögliche weitere Arbeiten gegeben.
 
-\section{Existierendes Projekt}
-In dem Masterprojekt \textit{Development of a Data Lake System} \parencite{datalake_proj} wurde bereits eine Data-Lake-System-Prototyp entwickelt.
-Dieser wurde so gestaltet, dass er gut erweiterbar und ausbaubar ist.
-Als Basis wurde dabei \textit{Apache Spark}\footnote{https://spark.apache.org/} verwendet.
+\section{Das Existierende System}
+In dem Masterprojekt \textit{Development of a Data Lake System} \parencite{datalake_proj} an der Hochschule Niederrhein wurde bereits eine Data-Lake-System-Prototyp entwickelt.
+Das System ist eine monolithische Client-Server-Anwendung.
+Es besteht aus einer REST-API, die zur Interaktion mit dem Data-Lake-System verwendet wird und einem Web-Frontend.
+Außerdem können durch einfach Anpassungen der Server-Anwendung beliebige Datenspeicher in das Data-Lake-System integriert werden.
+
+Als Basis wird \textit{Apache Spark}\footnote{https://spark.apache.org/} verwendet.
 \textit{Apache Spark} ist eine Plattform, um Analyse auf großen Datenmengen aus zu führen.
 Außerdem gibt es Schnittstellen für \textit{Scala, Java und Python} und es wird auch die Verarbeitung von Datenströmen und maschinelles Lernen unterstützt \parencite{spark}.
 
-Das System wurde als eine monolithische Server-Client-Anwendung entwickelt.
 Der Server ist in \textit{Python} geschrieben und verwendet das Framework \textit{Flask}\footnote{https://palletsprojects.com/p/flask/} um eine REST-API bereitzustellen, über die mit dem Data Lake interagiert werden kann.
 Dabei werden über die API \textit{JSON}-Objekte ausgetauscht, so dass die API client-unabhängig verwendet werden kann.
 Der Client des Projekts ist eine Webanwendung, die mit \textit{Angular}\footnote{https://angular.io/} umgesetzt wurde.
-
-Dieses System soll hier als Grundlage verwendet und erweitert werden.
-Dazu muss als erstes eine Architektur für eine Ingestion-Schnittstelle entwickelt werden, die allen Ansprüchen genügt.
-Als nächstes wird analysiert, ob bereits Teile dieser Architektur im existierenden System vorhanden sind.
-Zum Schluss muss die entwickelte Architektur in das Data-Lake-System integriert und umgesetzt werden.
 
 \section{Verwandte Arbeiten}
