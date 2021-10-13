@@ -1,0 +1,18 @@
+\chapter{Entwicklung}
+In diesem Kapitel werden die einzelnen Komponenten, die für eine komplette Ingestion notwendig sind entwickelt.
+Nach \citeauthor{DL-Ing-Mgmt} ist der Ingestion-Prozess eines Data-Lake-Systems, als erster Schritt im Lebenszyklus der Daten, maßgebend dafür, wie gut die Daten später verwendet und verarbeitet werden können.
+Dafür sollte das System einige Herausforderungen erfüllen.
+Diese sind die Unterstützung für strukturiert, teil-strukturiert und unstrukturierte Datenquellen und die Möglichkeit für einmalige oder kontinuierliche Ingestion.
+Zu dem zweiten Punkt gehört außerdem, dass geänderte Daten mit einer Datenversionierung im Data Lake gespeichert werden können.
+Zur Erfüllung dieser Herausforderungen und um allgemein gut mit den Daten interagieren zu können, sollte sich die Ingestion zusätzlich um die Erstellung von Metadaten kümmern.
+
+Das zu entwickelnde System lässt sich in die drei Teile Ingestion, Delta-Erkennung und Datenversionierung unterteilen.
+Bei der Ingestion soll der Teil entwickelt werden, der dafür verantwortlich ist, Daten aus verschiedensten Quellen in das Data-Lake-System zu laden und zu speichern.
+Die Delta-Erkennung ist ein Mechanismus, der dafür sorgen soll, dass bei einer kontinuierlichen Ingestion nur geänderte Daten neu in das System integriert werden.
+Zum Schluss hat die Datenversionierung das Ziel, geänderte Daten im Data Lake so zu verwalten, dass Analysen über den Verlauf der Daten und Abfragen älterer Version möglich werden.
+
+\input{Kapitel/1_Entwicklung/1_Vorueberlegungen}
+
+\input{Kapitel/1_Entwicklung/2_Ingestion}
+
+\input{Kapitel/1_Entwicklung/3_Deltaerkennung}

@@ -16,7 +16,9 @@
 \usepackage{hyperref}         % for URLs
 \usepackage{listings}         % for code samples
 \usepackage{fancyhdr}         % for header line
-\usepackage{natbib}
+\usepackage[backend=biber, style=authoryear-icomp]{biblatex}
+\addbibresource{literatur.bib}
+% \usepackage{natbib}
 % Hier bei Bedarf die Seitenränder einstellen
 
 \usepackage[printonlyused]{acronym}
@@ -44,13 +46,17 @@
 \tableofcontents
 \newpage
 
-\include{kapitel/einleitung}
+\include{Kapitel/0_Einleitung/0_Einleitung}
 
-\include{kapitel/entwicklung}
+\include{Kapitel/1_Entwicklung/0_Entwicklung}
+
+\include{Kapitel/2_Implementierung/0_Implementierung}
 
 
 \newpage
-\bibliographystyle{unsrtnat}
-\bibliography{literatur}
+% \bibliographystyle{unsrtnat}
+% \bibliography{literatur}
+
+\printbibliography
 
 \end{document}
