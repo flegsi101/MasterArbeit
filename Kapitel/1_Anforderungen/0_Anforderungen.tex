@@ -23,7 +23,7 @@ Zuletzt ist es einfacher bestimmte Aspekte der Software zu skalieren und bei Upd
 Aus den oben genannten Zielen lassen sich jetzt genauere Anforderungen entwickeln, die die Ingestion-Schnittstelle erfüllen soll.
 Dazu werden nachfolgend die einzelnen Ziele in Abschnitte aufgeteilt und die dazugehörigen Anforderungen festgehalten.
 In der Evaluierung kann dann überprüft werden, ob alle Anforderung durch das Ergebniss erfüllt werden.
-Die Unterkapitel sind so aufgebaut, dass erst eine genauere Erklärung für das Ziel gegeben wird und dann in einzelnen Paragraphen die funktional und nicht funktionale Anforderungen nummeriert aufgelistet werden.
+Die Unterkapitel sind so aufgebaut, dass erst eine genauere Erklärung für das Ziel gegeben wird und dann in einzelnen Paragraphen die Anforderungen nummeriert aufgelistet werden.
 
 \subsection{Quellen- und Formatunabhänigkeit}
 Es soll die Möglichkeit gegeben werden, Daten aus jeder beliebigen Quelle in das System zu integrieren.
@@ -44,5 +44,55 @@ Für die Unterstützung verschiedenster Quell- und Zielsystem verwendet \textit{
 Diese sollen komplett konfigurierbar sein um alle Systeme verwenden zu können.
 
 \paragraph{ANF\_04}
-Einige Funktionalitäten, wie eine Reihnfolge von Abfragen an eine Programmierschnittstelle können nicht durch \textit{Apache Spark} abgedeckt werden.
+Einige Funktionalitäten, wie zum Beispiel das Ausführen einer Reihnfolge von Abfragen an eine Programmierschnittstelle können nicht durch \textit{Apache Spark} abgedeckt werden.
 Daher soll es eine Möglichkeit geben der Ingestion-Schnittstelle eigenen Programmcode mit zu geben, der diese Funktionen abdeckt.
+
+\subsection{Kontinuierliches Laden}
+Da Daten sich mit der Zeit ändern, soll die Ingestion-Schnittstelle in der Lage sein, neue Daten aus einer Datenquelle, die bereits ingested wurde, erneut zu laden.
+Hierfür sollen drei verschiedene Optionen zu Auswahl stehen.
+
+\paragraph{ANF\_05}
+Es soll möglich sein, Datenströme in das Data-Lake-System zu integrieren und als Quelle für kontinuierliche Daten zu verwenden.
+
+\paragraph{ANF\_06}
+Um aktuelle Daten aus Datenquellen, die nicht über einen Datenstrom verfügen, zu integrieren, soll es eine zeitgesteuerte wiederholte Ausführung geben.
+
+\paragraph{ANF\_07}
+Zur Ermöglichung einer unregelmäßigen wiederholten Inegstion einer Datenquelle, soll es einen API-Endpunkt geben, über den eine Ingestion gestartet werden kann.
+Dieser soll auch dazu verwendet werden können, externe Systeme, wie eigene Change-Data-Capture-Lösungen, als Auslöser für eine Ingestion anbinden zu können.
+
+\paragraph{ANF\_08}
+Um Konflikte durch gleichzeitig laufende Ingestions der selben Datenquelle zu vermeiden, soll das System sicher stellen, dass für eine Datenquelle immer nur eine Ingestion läuft.
+
+\subsection{Datenversionierung}
+Durch das kontinuierliche Laden von Daten, entstehen laufend neue Versionen eines Datensatzes einer Datenquelle.
+Diese Veränderungen der Daten können in vielen Anwendungsfällen bei der Auswertung von Interesse sein.
+Dabei gibt es zwei verschiedene Wege, diese Daten in das System einzupflegen.
+Einmal die Verwendung von Change-Data-Capture-Lösungen, die bereits in den Daten die Informationen über Änderungen enthalten und zweitens kann einfach der aktuelle Stand eines Datensatzes erneut geladen werden.
+
+\paragraph{ANF\_09}
+Daher soll das System eine Möglichkeit bieten das Einfügen, Aktualisieren oder Löschen von Daten festzuhalten und zur Abfrage zur Verfügung zu stellen.
+Außerdem sollen damit auch die Daten zu bestimmten Zeitpunkte rekonstruierbar sein.
+
+\paragraph{ANF\_10}
+Die Ingestion-Schnittstelle soll Daten aus externen Change-Data-Capture-Systemen in den Datensatz und die Datenversionierung einer Datenquelle einpflegen können.
+
+\paragraph{ANF\_11}
+Da neben den Change-Data auch das laden eines aktuellen Datensatzes integriert werden kann, soll ein allgemeines Vorgehen entwickelt werden, diese auch in die Datenversionierung einpflegen zu können.
+
+\subsection{Architektur}
+Wie bereits geschrieben, soll die Inegstion-Schnittstelle in einer Mircoservice-Arichtektur umgesetzt werden.
+Außerdem wird eine Schnittstelle für die Interaktion mit dem System benötigt.
+Daraus ergeben sich folgende Anforderungen, an die Architektur.
+
+\paragraph{ANF\_12}
+Die Interaktions-Schnittstelle mit dem System soll eine REST-API sein, die keine Konflikte mit dem aktuellen Prototypen erzeugt.
+
+\paragraph{ANF\_13}
+Die Aufgaben der einzelnen Mircoservices müssen klar getrennt werden.
+Die Überschneidungen zwischen den Mircoservices sollten so gering wie möglich gehalten werden.
+
+\paragraph{ANF\_14}
+Für die Kommunikation zwischen den Microservices soll eine einnheitliche Lösung entwickelt werden.
+Diese soll es auch ermöglichen neue Mircoservices einfach in die Architektur einzubringen.
+
