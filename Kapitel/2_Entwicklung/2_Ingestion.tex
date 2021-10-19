@@ -42,16 +42,3 @@ Diese Plugins sollen Logik enthalten, die an verschiedenen Stellen der Ingestion
 Aktuell sind diese Stellen das Laden der Daten, nach dem Laden der Daten und die Stream-Verarbeitung.
 Dabei ist zu beachten, dass Plugins, die das Laden der Daten abhandeln, das Standardverhalten des Ingestion-Servers überschreiben und das Stream-Verarbeitung nur mit Plugins möglich ist.
 Damit es nicht zu Konflikten bei Abhängigkeiten der Plugins gibt, muss der Ingestion-Server eine Mechanik implementieren, bei der die Abhängigkeiten der Plugins für jede Datenquelle dynamisch gealden werden.
-
-\subsection{Datenquellen}
-Eine letzte Vorüberlegung für die Ingestion ist, welche Informationen erfasst werden müssen, um eine generische Ingestion zu ermöglichen.
-Da es keine klaren Parameter wie zum Beispiel Datenbanknamen oder IP-Adressen gibt, die bei allen Quellen gleich sind, orientiert sich die Eingabe an der Funktionsweise von \textit{Pyspark / Apache Spark}.
-Um festzulegen, woher Daten gelesen werden sollen, kann man beim erstellen einer \verb|SparkSession| einmal das Format der zu lesenden Daten angeben.
-Außerdem bietet die \verb|SparkSession| die Funktion Maven-Abhängigkeiten hinzuzufügen, die Unterstützung für verschiedene Formate bringen.
-Bei den meisten Formaten müssen zusätzlich noch Optionen gesetzt werden, die zum Beispiel Verbindungsparameter oder Lesemodus enthalten.
-Diese Optionen sind eine Sammlung von Schlüssel-Wert-Paaren.
-Eine Ausnahme besteht hierbei bei der Optionen, für die Quelledateien bei Datei-Ingestions, da diese automatisch durch die Anwendung gesetzt wird.
-Daraus lassen sich bereits drei Felder ableiten, die in einem Datenmodell für die Datenquellen enthalten sein müssen: Format, Pakete und Optionen.
-
-Neben den \textit{Spark}-spezifischen Feldern soll die Datenquelle auch die anwendungsspezifischen Informationen enhalten.
-Dazu gehören Informationen über den Typ der Ingestion (siehe \ref{fig:ingestion_types}), Zeitpunkt der Erstellung und Aktualisierung, Plugins und Quelldateien und die mögliche Zeitsteuerung der Inegstions.

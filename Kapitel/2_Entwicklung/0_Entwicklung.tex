@@ -65,28 +65,34 @@ Darunter fallen zum Beispiel Authentifizierungsdaten oder Verbindungsinformation
   \label{fig:ingestion_arch}
 \end{figure}
 
+\section{Plugins}
 
-\subsection{Datenquellen}
+
+\section{Datenquellen}
 Ein weiterer Kernpunkt der Ingestion-Schnittstelle ist die Modellierung der Datenquellen.
-Um ein Datenmodel zu entwicklen, werden zuerst die möglichen Datenquellen analysiert.
-Aus dieser Analyser werden dann Informationen erstellt, die das System über die Datenquelle wissen muss.
-Das daraus enstandene Model wird dann um alle Informationen erweitert, die für den Betrieb oder die Benutzung des Systems hilfreich sind.
+Zur Entwicklung eines Datenmodells für die Datenquellen, wird als erstes betrachtet, welcher verschiedenen Typen von Datenquellen möglich sind.
+Danach wird unter Zuhilfenahme des Ergebnisses ein Modell entwickelt.
+Das fertige Datenmodell enthält dann neben den für den Betrieb benötigten Informationen auch Daten über den Verlauf der Ingestion einer Datenquelle.
+Um die Behebung von Fehlern bei einer Ingestion einfacher zu gestalten werden alle Überarbeitungen einer Datenquelle in Revisionen festgehalten.
+
+\subsection{Datenquellen-Typen}
+\label{sec:datasource-types}
 
 Da das System alle möglichen Datenquellen unterstützen soll, werden hier mögliche Typen dargestellt, mit denen sich alle Datenquellen abdecken lassen.
-Dazu werden Merkmale betrachtet die Art und der Typ Ingestion bestimmen.
-Mit der Art wird hier bezeichnet, ob die verwendeten Daten strukturiert, semi- oder unstrukturiert sind.
+Dazu werden Merkmale betrachtet die Struktur und Art der Ingestion bestimmen.
+Die Struktur der verwendeten Daten ist entweder strukturiert, semi- oder unstrukturiert.
 Da in der Vorarbeit, dem Masterprojekt, \textit{Apache Spark} verwendet wurde, ist dieser Punkt bereits abgedeckt und fällt bei der Entwicklung nicht weiter ins Gewicht.
 
-Als zweites gibt es die Typen, die hier beschreiben, wie Daten in das System gelangen.
+Die Art der Datenquelle beschreibt, wie Daten in das System gelangen.
 Dazu gibt es zwei Merkmale, in denen sich die Ingestions unterscheiden können.
-Das erste ist, ob die Unterscheidung zwischen Push- und Pull-Prinzip.
-Bei dem Push-Prinzip werden die zu speichernden Daten mit der Anfrage an das System gesendet und bei dem Pull-Prinzip muss dass System die Daten aus einer Quelle laden.
+Das erste ist die Unterscheidung zwischen Push- und Pull-Prinzip.
+Bei dem Push-Prinzip werden die zu speichernden Daten in der Anfrage an das System gesendet und bei dem Pull-Prinzip muss dass System die Daten aus einer Quelle laden.
 Die zweite Unterscheidung findet statt in einmalige in kontinuierliche Ingestion.
 Diese Unterscheidungen können, müssen aber nicht, von der Datenquelle abhängig sein.
 Als Beispiel gibt es Datenströme, die laufend Daten senden und somit eine Ingestion benötigen, die auch laufend Daten annimmt.
 Im Gegensatz dazu gibt es Datenbanken, bei denen das System die Daten aus der Quelle laden muss und somit die Ingestion sowohl einmalig als auch kontinuierlich sein kann.
 
-Aus diesen Unterscheidungen ergeben sich die vier mögliche Verarbeitungswege, die in \ref{fig:ingestion_types} zu sehen sind.
+Es ergeben sich vier Verarbeitungswege bei der Ingestion, die in \fref{fig:ingestion_types} zu sehen sind.
 Sowohl für Push- und Pull-Prinzip kann eine einfache Ingestion ausgeführt werden, die sich für kontinuierliche Pull-Ingestions wiederholt.
 Bei einer kontinuierlichen Ingestion, bei der Daten an das System gesendet werden, handelt es sich um Datenströme, die eine extra Verarbeitung erfordern.
 
@@ -97,14 +103,94 @@ Bei einer kontinuierlichen Ingestion, bei der Daten an das System gesendet werde
   \label{fig:ingestion_types}
 \end{figure}
 
+\subsection{Datenquellen-Model}
 
+Bei der Entwicklung des Datenmodells können die Informationen zur Datenquelle in drei Teilmodelle unterteilt werden.
+Die \textbf{Revision} enthält alle veränderlichen Informationen über die Datenquelle und kann nur erstellt aber nicht geändert werden.
+Ein \textbf{Ingestion-Event} beschreibt die Ausführung einer Ingestion.
+Und in der \textbf{Datasource} werden sowohl alle statischen Informationen als auch die Listen von Revisionen und Ingestion-Events gespeichert.
 
-\input{Kapitel/2_Entwicklung/1_Vorueberlegungen}
+Im folgenden werden die Felder der Datenmodelle beschrieben.
+Falls eine Information direkt aus \textit{Apache Spark} abgeleitet ist, wird auch Angegeben an welcher Stelle diese angewendet wird.
 
-Bei der Ingestion soll der Teil entwickelt werden, der dafür verantwortlich ist, Daten aus verschiedensten Quellen in das Data-Lake-System zu laden und zu speichern.
-Die Delta-Erkennung ist ein Mechanismus, der dafür sorgen soll, dass bei einer kontinuierlichen Ingestion nur geänderte Daten neu in das System integriert werden.
-Zum Schluss hat die Datenversionierung das Ziel, geänderte Daten im Data Lake so zu verwalten, dass Analysen über den Verlauf der Daten und Abfragen älterer Version möglich werden.
+\paragraph{Revision}
+\subparagraph{Nummer}
+Eine aufsteigende Nummer, die die Revision identifiziert.
+Sie startet bei 0 und jede Nummer ist für eine Datenquelle einzigartig.
+Gleichzeitig spiegelt die Nummer auch den zeitlichen Verlauf wieder.
+\subparagraph{Erstellungsdatum}
+Das Datum an dem die Revision erstellt wurde.
+Da eine Revision nicht geändert werden kann, ist das Erstellungsdatum einer Revision auch das Änderungsdatum der dazugehörigen Datenquelle.
+\subparagraph{Name}
+Ein Name, der der Datenquelle im Datalake gegebn wird.
+Dieser dient nur dazu die Datenquelle als Benutzer besser identifizieren zu können.
+\subparagraph{ID Spalte}
+Der Name der Spalte oder des Feldes, das einen Datensatz eindeutig identifiziert.
+Die ID Spalte wird für die zuordnung der Datensätze bei der Deltaerkennung benötigt.
+\subparagraph{Spark Abhägigkeiten}
+Eine Liste von Abhängigkeiten, die der Spark Session bei der Ingestion mitgegeben wird.
+Diese Liste entspricht der Option "`spark.jars.packages"' die bei der Erstellung einer Spark Session gestzt wird.
+\subparagraph{Quelldateien}
+Bei der Ingestion können die Daten über das Push-Prinzip in Form von Dateien an den Server gesendet werden.
+Die Liste der Quelldateien enthält die Pfade zu diesen Dateien.
+\subparagraph{Typ beim Lesen}
+Der Typ der zu lesenden Daten, wie in \ref{sec:datasource-types} beschrieben.
+\subparagraph{Format beim Lesen}
+Das Format in dem die Daten gelesen werden sollen.
+Der Wert aus diesem Feld wird bei der Ingestion über die \verb|format| Methode eines Readers gesetzt.
+\subparagraph{Optionen beim Lesen}
+Eine Liste von Schlüssel-Wert-Paaren, die als Optionen des Readers in \textit{Apache Spark} gesetzt werden.
+Über diese wird die verbindung zur Datenquelle definiert.
+\subparagraph{Aktualisierung für Datenquelle}
+Es kann für einen Datenquelle festgelegt werdne, dass diese Aktualisierungen für eine andere enthält.
+Das ermöglicht die Nutzung von eigenen Change Data Capture Lösungen.
+Dabei muss die Datenquelle aber dem internet Change Data Format entsprechen.
+\subparagraph{Typ beim Schreiben}
+Der Typ für das Schreiben der Daten legt fest, ob intern mit Versionierung oder in einen freien Speicher geschrieben werden soll.
+\subparagraph{Format und Optionen beim Schreiben}
+Das Format und die Optionen beim Schreiben funktionieren analog zu denen beim Lesen.
+Sie werden jedoch nicht beim Reader gesetzt sondern beim Writer.
+Gerade bei Datenströmen muss darauf geachtet werden, dass nicht in jedem Format ein Datenstrom geschrieben werden kann.
+\subparagraph{Schreibmodus}
+Der Modus in dem die Daten geschrieben werden.
+Die Auswahlmöglichkeiten werden auch durch \textit{Apache Spark} festegelegt.
+\subparagraph{Zeitsteuerungen}
+Eine Liste die festlegt, zu welchen Zeitpunkte eine Ingestion der Datenquelle asugeführt werden soll.
+\subparagraph{Plugin Abhängigkeiten}
+Eine Liste von Abhängigkeiten, die von den Plugins der Datenquelle benötigt werden.
+\subparagraph{Plugins}
+Die Speicherorte der Plugins.
 
+\paragraph{Ingestion-Event}
+\subparagraph{Nummer}
+Die Nummer um ein Ingestion-Event zu identifizieren.
+Sie funktioniert genau wie die Nummer der Revisions.
+\subparagraph{Status}
+Der aktuelle Status in dem sich das Event befindet.
+Er gibt auskunft, ob die Ingestion gestartet wurde, gerade läuft oder beendet wurde.
+\subparagraph{Revisionsnummer}
+Die Nummer der Revision, mit der die Inegstion gestartet wurde.
+Mit Hilfe der Revisionsnummer ist es leichter Fehler in der Ingestion zu finden und zu beheben.
+\subparagraph{Start- und Endzeit}
+Die Zeitpunkte des Starts und Endes eines Ingestion-Durchlaufs.
+Wenn die Ingestion noch in der Asuführung ist, ist keine Endzeit gesetzt.
+\subparagraph{Fehler}
+Die Fehlerausgabe, wenn die Ingestion nicht erfolgreich ausgeführt werden konnte.
+
+\paragraph{Datasource}
+\subparagraph{ID}
+Eine Identifikationsnummer, die für jede Datenquelle eindeutig ist.
+\subparagraph{Aktuelle Revision}
+Die Nummer der aktuellen Revision.
+Neue Ingestions werden mit den Informationen aus dieser Revision ausgeführt.
+\subparagraph{Alle Revisionen}
+Eine Liste aller Revisionen.
+\subparagraph{Letzte Ingestion}
+Die Nummer des zuletzt gestarteten Ingestion-Durchlaufs.
+\subparagraph{Letzte erfolgreiche Ingestion}
+Die Nummer des letzten erfolgreich abgeschlossenen Ingestion-Durchlauf.
+\subparagraph{Alle Ingestion-Events}
+Eine Liste aller Ingestion Events.
 
 \input{Kapitel/2_Entwicklung/2_Ingestion}
 
