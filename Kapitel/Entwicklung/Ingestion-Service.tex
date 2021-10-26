@@ -1,0 +1,31 @@
+\section{Ingestion-Service}
+
+Der Ingestion-Service hat die Aufgabe eine Ingestion für eine Datenquelle durchzuführen.
+Dazu gehören wie in der Einleitung des Kapitels bereits genannt, das Laden der Daten, die Deltaerkennung und das Speichern.
+Damit ein Ingestion-Service mehrere Ingestions zu verschiedenen Datenquellen gleichzeitig durchführen kann, wartet dieser auf Benachrichtigungen der anderen Services, dass eine Ingestion gestartet werden soll.
+In dieser Nachricht wird auch die Id der Datenquelle übertragen.
+Dann lädt der Ingestion-Service die Datenquelle aus der internen Datenbank und prüft ob eine Ingestion für diese bereits läuft.
+Wenn das nicht der Fall ist, wird die Ingestion in einem neuen Prozess gestartet.
+
+\subsection{Ablauf}
+Der Ablauf einer einzelnen Ingestion kann über alle Typen gleich etwas abstrahiert gezeigt werden.
+Im ersten Schritt müssen die Plugins für die Ingestion geladen werden.
+Dabei ist es wichtig auch eventuelle Abhängigkeiten von Bibliotheken aufzulösen.
+
+Danach können die Daten entweder über das Plugin oder normal in ein Dataframe geladen werden.
+Ingestions von Dateien oder nach dem Pull-Prinzip können gleich abgehandelt werden.
+Nur die Pfade zu den Dateien müssen durch den Service ergänzt werden.
+Eine Ingestion eines Datenstroms hat eine eigene Behandlung.
+
+Im Anschluss wir geprüft, ob eine Deltaerkennung für die Daten durchgeführt wird.
+Dazu müssen drei Bedienungen erfüllt sein.
+Es darf sich nicht um eine Datenquelle handeln, für die ein benutzerdefinierter Speicher festgelegt wurde.
+Für diese kann keine Versionierung unterstütze werden.
+Außerdem ist es für Aktualisierungsquellen nicht nötig, eine Deltaerkennung  durchzuführen, da diese schon im Änderungsdatenforamt sein sollen.
+Für den letzten Punkt muss es sich um die wiederholte Ingestion einer Datenquelle handeln, da bei der ersten keine Bestandsdaten für eine Deltaerkennung existieren.
+
+Zum Schluss wird auch beim Speichern der Daten unterschieden.
+Bei benutzerdefinierten Speichern können die Daten wie konfiguriert ohne weiteren Aufwand gespeichert werden.
+Das gilt für sowohl Datenströme als auch andere Ingestions.
+Änderungsdaten müssen in eine existierenden Speicher integriert werden.
+Der letzte Fall bedeutet, dass Daten das erste mal im internen Speichersystem gespeichert werden und auch hier in einer neuen Datensatz abgelegt werden können.

@@ -1,0 +1,48 @@
+\section{API-Service}
+
+Für den API-Service müssen Endpunkte definiert werden.
+Diese Endpunkte bilden die verschiedenen Funktionen ab, die auf der Ingestion-Schnittstelle ausgeführt werden können.
+Dazu gehören die Verwaltung von Datenquellen und das Starten einer Ingestion.
+Da es bereits festgelegt wurde, dass es sich um eine REST-Schnittstelle handelt, werden Endpunkte durch einen Pfad und eine HTTP-Methode definiert.
+Nachfolgend werden alle Endpunkte aufgelistet.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabularx}{\linewidth}{lX}
+    GET & /datasources \\
+    \multicolumn{2}{l}{Liefert alle im System gespeicherten Datenquellen} \\
+    \\
+    GET & /datasources/\textless id\textgreater \\
+    \multicolumn{2}{l}{Liefert die Datenquelle mit der im Pfad übergebenen Id} \\
+    \\
+    POST & /datasources \\
+    \multicolumn{2}{l}{Bearbeitet die Daten Datenquelle mit der im Pfad übergebenen Id} \\
+    \\
+    PUT &  /datasources/\textless id\textgreater \\
+    \multicolumn{2}{l}{Erstellt eine neue Datenquelle} \\
+    \\
+    GET &  /datasources/\textless id\textgreater/run \\
+    \multicolumn{2}{l}{Startet eine Ingestion der Datenquelle mit der im Pfad übergebenen Id}
+    
+    
+    
+    %\hline
+    %Pfad                                      & HTTP-Methode & Beschreibung                                                          \\
+    %\hline \hline
+    %/datasources                              & GET          & Liefert alle im System gespeicherten Datenquellen                     \\
+    %\hline
+    %/datasources/\textless id\textgreater     & GET          & Liefert die Datenquelle mit der im Pfad übergebenen Id                \\
+    %\hline
+    %/datasources                              & POST         & Erstellt eine neue Datenquelle                                        \\
+    %\hline
+    %/datasources/\textless id\textgreater     & PUT          & Bearbeitet die Daten Datenquelle mit der im Pfad übergebenen Id       \\
+    %\hline
+    %/datasources/\textless id\textgreater/run & GET          & Startet eine Ingestion der Datenquelle mit der im Pfad übergebenen Id \\
+    %\hline
+  \end{tabularx}
+  %\caption{Endpunkte des API-Servers}
+  \label{tab:enpoints}
+\end{table}
+
+Außerdem kümmert sich der API-Service um die Erstellung von Datenquellen, deren Revisionen und Ingestion-Events.
+Bei Anfragen zum Starten einer Ingestion versendet der API-Server eine Nachricht, mit der Id der Datenquelle.

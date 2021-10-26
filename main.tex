@@ -22,7 +22,7 @@
 % Hier bei Bedarf die Seitenränder einstellen
 
 \usepackage[printonlyused]{acronym}
-
+\usepackage{multirow, multicol, tabularx}
 \usepackage{algorithm}
 
 % Kopf- und Fußzeile
@@ -46,14 +46,10 @@
 \tableofcontents
 \newpage
 
-\include{Kapitel/0_Einleitung/0_Einleitung}
-
-\include{Kapitel/1_Anforderungen/0_Anforderungen}
-
-\include{Kapitel/2_Entwicklung/0_Entwicklung}
-
-\include{Kapitel/3_Implementierung/0_Implementierung}
-
+\include{Kapitel/Einleitung/Einleitung}
+\include{Kapitel/Anforderungen/Anforderungen}
+\include{Kapitel/Entwicklung/Entwicklung}
+%\include{Kapitel/Umsetzung/Umsetzung}
 
 \newpage
 % \bibliographystyle{unsrtnat}

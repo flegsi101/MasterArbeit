@@ -1,0 +1,19 @@
+\section{Plugins}
+
+In \ref{ANF_04} wird durch ANF\_04 gefordert, dass zusätzlicher Code bei der Ingestion ausgeführt werden können soll.
+Das soll durch Plugins umgesetzt werden.
+Die Plugins werden jeder Datenquelle einzeln hinzugefügt und werden an verschiedenen, fest definierten Punkten der Ingestion ausgeführt. 
+Da die Plugins eventuell auf Software-Bibliotheken zurückgreifen müssen, die nicht auf dem Data-Lake-System vorhanden sind, kann zusätzlich eine Liste von Abhängigkeiten der Plugins angegeben werden.
+
+Bei der Ingestion gibt es zwei Stellen, an denen das Einbringen eines Plugins sinnvoll sein kann.
+Die erste ist zum Laden der Daten als Load-Plugin.
+Hier wird das standardmäßige Vorgehen der Ingestion mit dem des Plugins ersetzt.
+Dadurch wird es möglich anders als nur über \textit{Apache Spark} Daten zu laden.
+Ein Beispiel dafür ist die Verwendung einer REST-API als Datenquelle.
+Das Plugin kann erst über mehrere Abfragen der REST-API den Datensatz abholen und diesen dann erst in eine DataFrame umwandeln.
+Ein Load-Plugin muss immer eine DataFrame zurück geben, mit dem danach in der Ingestion weiter verfahren werden kann.
+Damit ein DataFrame erstellt werden kann,  muss dem Plugin außerdem die entsprechende SparkSession mitgegeben werden.
+
+Das After-Load-Plugin setzt im Gegensatz direkt nach dem Laden der Daten an.
+Diesem Plugin wird das geladene DataFrame übergeben und es muss auch wieder ein DataFrame zurück geben.
+Es kann genutzt werden um vor dem Speichern der Daten kleinere Anpassungen am Datensatz zu machen.
