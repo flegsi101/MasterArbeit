@@ -1,0 +1,11 @@
+\section{Interner Datenspeicher}
+
+Die Entwicklung einer eigenen Lösung zum Speichern von Daten mit Versionierung passt nicht in den zeitlichen Rahmen dieser Arbeit.
+Daher wird der Delta Lake verwendet, da dieser alle benötigten Funktionen bietet und eine volle Schnittstelle zu Spark hat.
+Da das System auf eigenen Server laufen soll, wird als Speicher für den Delta Lake ein HDFS Cluster verwendet.
+Außerdem können auch die Quelldateien der Ingestion und die Plugins im HDFS abgelegt werden und so zentral durch alle Microservices erreicht werden.
+Der Zugriff zum Speichern der Daten geschieht über den Delta Lake beziehungsweise Spark und für die Quelldateien und Plugins über die WebHDFS REST-Schnittstelle.
+
+Wenn eine Datenquelle entweder mit Versionierung gespeichert wird oder Quelldateien oder Pluigns enthält, wird für diese ein Ornder im HDFS angelegt.
+Diese enthält dann einen Unterordner für die Delta Tabelle und für jede Revision.
+In den Revisionsordnern werden dann zugehörige Quelldatein und Plugins abgelegt. 

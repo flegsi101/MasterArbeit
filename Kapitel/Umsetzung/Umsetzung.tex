@@ -1,24 +1,12 @@
 \chapter{Umsetzung}
 
-Bei der Umsetzung ist die erste Frage, die zu klären ist, mit welcher Programmiersprache gearbeitet werden soll.
-In diesem habe ich mich aus verschiedenen Gründen für \textit{Python} entschieden.
-Der erste ist, dass \textit{Python} bereits im Masterprojekt verwendet wurde und so die Integration leichter fällt.
-Als zweites geht es speziell um die Bibliothek \textit{PySpark}.
-\textit{PySpark} ist die Bibliothek, mit deren Hilfe \textit{Apache Spark} in \textit{Python} verwendet werden kann.
-Neben \textit{PySpark} gibt es auch Bibliotheken für die Sprachen \textit{Java} und \textit{Scala}.
-Der entscheidende Unterschied hierbei ist aber, dass \textit{Python} eine interpretierte Sprache ist.
-Das bedeutet, dass der geschrieben Programmcode nicht in Maschinensprache übersetzt wird, sondern durch einen sogenannten Interpreter ausgeführt.
-In diesem Anwendungsfall hat das den Vorteil, dass die Spark-Jobs nicht als kompilierte Jar-Datei explizit ausgeführt werden müssen, sondern der Interpreter sich an den entsprechenden Zeitpunkten um die Ausführung kümmert.
-Das bedeutet, dass die Konfiguration eines Spark-Jobs dynamisch während der Ausführung des Programms gemacht werden kann und man so mehr Freiheit für die Entwicklung bekommt.
-Der letzte Vorteil ist, dass Programmcode dynamisch aus Dateien nachgeladen werden kann, was für die Umsetzung der Plugins wichtig ist.
+Für eine Umsetzung der entwickelten Architektur ist zuerst die Frage der Techniken zu klären.
+Dazu zählen die verwendete Programmiersprache, Frameworks und fertige Software.
 
-\section{Voraussetzungen}
-Um das Datalake System umsetzen zu können müssen einige Voraussetzungen erfüllt sein.
-Die erste ist, wie in \ref{fig:ingestion_arch} bereits beschrieben, dass ein Server benötigt wird, der sich um die Verteilung von Nachrichten kümmert.
-Als zweites muss außerdem ein zentraler Speicher für Dateien bereit stehen, indem sowohl Datenquelldateien als auch Plugindateien abgelegt und von jedem Server abgerufen werden können.
-
-\input{Kapitel/Umsetzung/Ingestion}
-
-\section{Deltaerkennung}
-
-\section{Datenversionierung}
+\input{Kapitel/Umsetzung/Programmiersprache}
+\input{Kapitel/Umsetzung/Nachrichtensystem}
+\input{Kapitel/Umsetzung/Datenbank}
+\input{Kapitel/Umsetzung/Interner-Speicher}
+\input{Kapitel/Umsetzung/API-Service}
+\input{Kapitel/Umsetzung/Continuation-Service}
+\input{Kapitel/Umsetzung/Ingestion-Service}

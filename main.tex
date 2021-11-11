@@ -1,10 +1,25 @@
-\documentclass[12pt,titlepage,twoside]{report}
+% digital
+\documentclass[titlepage]{report}
+% print
+%\documentclass[titlepage]{book}
+
+\usepackage[onehalfspacing]{setspace}
+\usepackage{geometry}
+\geometry{
+  left=3cm,
+  right=3cm,
+  top=3cm,
+  bottom=3cm,
+  % print
+  % bindingoffset=5mm
+}
+
 % font
 \usepackage{dejavu}
 \usepackage{sectsty}
 \allsectionsfont{\sffamily}
 % language stuff
-\usepackage{german, ngerman}           % deutsche Überschriften etc.
+\usepackage[german]{babel}
 \usepackage[utf8]{inputenc} % direkte Einbgabe von Umlauten
 % miscellaneous
 \usepackage{graphicx}         % graphics
@@ -16,14 +31,29 @@
 \usepackage{hyperref}         % for URLs
 \usepackage{listings}         % for code samples
 \usepackage{fancyhdr}         % for header line
+
 \usepackage[backend=biber, style=authoryear-icomp]{biblatex}
 \addbibresource{literatur.bib}
 % \usepackage{natbib}
 % Hier bei Bedarf die Seitenränder einstellen
+\usepackage[german]{algorithm2e}
+\RestyleAlgo{ruled}
+
+\usepackage[german]{cleveref}
 
 \usepackage[printonlyused]{acronym}
 \usepackage{multirow, multicol, tabularx}
-\usepackage{algorithm}
+
+\newcommand*{\fancyrefalgolabelprefix}{algo}
+
+\newcommand*{\Frefalgoname}{ALGORITHMUS}
+\newcommand*{\frefalgoname}{Algorithmus}
+
+\frefformat{plain}{\fancyrefalgolabelprefix}{\frefalgoname\fancyrefdefaultspacing#1}
+\Frefformat{plain}{\fancyrefalgolabelprefix}{\Frefalgoname\fancyrefdefaultspacing#1}
+
+\frefformat{vario}{\fancyrefalgolabelprefix}{\frefalgoname\fancyrefdefaultspacing#1#3}
+\Frefformat{vario}{\fancyrefalgolabelprefix}{\Frefalgoname\fancyrefdefaultspacing#1#3}
 
 % Kopf- und Fußzeile
 \fancyhead{} % clear all header fields
@@ -49,7 +79,7 @@
 \include{Kapitel/Einleitung/Einleitung}
 \include{Kapitel/Anforderungen/Anforderungen}
 \include{Kapitel/Entwicklung/Entwicklung}
-%\include{Kapitel/Umsetzung/Umsetzung}
+\include{Kapitel/Umsetzung/Umsetzung}
 
 \newpage
 % \bibliographystyle{unsrtnat}

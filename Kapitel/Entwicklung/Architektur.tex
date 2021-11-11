@@ -32,12 +32,10 @@ Die drei oben genannten Aufgaben können jeweils einem Microservice zugeordnet w
 In \fref{fig:ingestion_arch} ist eine dazu passende Architektur zu sehen.
 Der API-Service übernimmt die REST-Schnittstelle, der Ingestion-Service kümmert sich um die Ausführung der Ingestion und der Continuation-Service stellt die kontinuierliche Ausführung sicher.
 
-Neben diesen Mircoservices wird noch ein Nachrichtensystem benötigt, das dafür zuständig ist, die Kommunikation zu koordinierten.
-Dabei werden Nachrichten nicht direkt von einem Microservice an den anderen gesendet.
-Alle Nachrichten werden das Nachrichtensystem gesendet und das verteilt diese dann an die interessierten Microservices.
-Welcher Service eine bestimmte Nachricht empfängt wird über einen Schlüsselwert der Nachricht geregelt, auf den die Microservices sich registrieren.
-Das hat den Vorteil, dass es einfach ist neue Mircoservices in die Architektur ein zu bringen, da nichts an dem Versenden von Nachrichten in den existierenden geändert werden muss.
-Außerdem kann das Nachrichtensystem durch verschiedene Arten der Verteilung von Nachrichten auch zum Lastenausgleich dienen.
+Neben diesen Mircoservices wird noch ein Nachrichtensystem benötigt.
+Das Nachrichtensystem stellt die Kommunikation zwischen den Microservices dar.
+Hier ist es wichtig, dass es einem Sender möglich ist, Nachrichten an einen oder auch an mehrere Empfänger zu senden.
+So soll sichergestellt werden, dass bestehende Microservices einfach repliziert und neue eingefügt werden können.
 
 Zum Ablegen von internen Informationen wird eine Datenbank benötigt.
 Alle Microservices haben zugriff auf diese Datenbank und können Daten in ihr bearbeiten.

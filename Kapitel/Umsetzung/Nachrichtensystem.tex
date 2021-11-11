@@ -1,0 +1,21 @@
+\section{Nachrichtensystem}
+
+Für die Übermittlung von Nachrichten zwischen verschiedenen Anwendungen gibt es sogenannte Message-Broker.
+Diese koordinieren als Mittelsmann die Verteilung der Nachrichten an verschiedene Empfänger.
+Das hat den Vorteil, dass der Sender unabhängig von den Empfängern wird und die Kommunikation asynchron statt finden kann \parencite{message-broker}.
+
+Es gibt mittlerweile einige Projekte, diese Aufgabe auf verschiedene Arten lösen.
+Hier wird dafür \textit{Apache Kafka} verwendet, welches im Big Data Bereich weit verbreitet ist um Datenströme zu verarbeiten.
+Daher macht es Sinn, dieses in das Data-Lake-System zu integrieren und darin bereit zu stellen.
+Um das System dabei nicht unnötig komplex und zu groß werden zu lassen, wird daher auf einen anderen Message-Broker verzichtet.
+
+Durch die Verwendung von \textit{Kafka} als Message-Broker müssen die Topics der Nachrichten festgelegt werden.
+Hier kann es zu Konflikten sowohl mit internen Nachrichten als auch bei anderen Datenströmen kommen, wenn die Namen falsch gewählt werden.
+Daher sollten Topics, die zur internen Kommunikation des Data-Lake-Systems gehören immer mit "`dls\_\_"' als Prefix benannt werden.
+Danach folgt der Bereich in dem die Nachricht verwendet wird, hier zum Beispiel "`ingestion"'.
+An diesen Namen kann dann noch weiter Unterscheidung angehängt werden.
+Im Fall der Nachricht für das Ausführen einer Ingestion wäre dann die Topic "`dls\_\_ingestion\_\_run"'.
+
+Wenn mehrere Consumer in einer Gruppe für eine Topic sind, werden Nachrichten nicht an alle sonder immer nur an einen aus der Gruppe gesendet.
+Dieser Mechanismus kann für den Lastausgleich an bestimmten Stellen verwendet werden.
+Für die Ingestion kann so der Ingestion-Services einfach repliziert werden.

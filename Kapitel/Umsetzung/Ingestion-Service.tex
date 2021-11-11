@@ -1,0 +1,66 @@
+\section{Ingestion-Service}
+
+Der Ingestion-Service wartet auf den Empfang von Nachrichten mit dem Schlüssel "`dls\_ingestion\_run"'.
+Diese Nachrichten sollten immer die Id einer Datenquelle enthalten, die geladen werden soll.
+Bevor das passiert wird überprüft, ob bereits eine Ingestion für diese Datenquelle läuft.
+Die Ingestion selber läuft in vier Phasen ab.
+
+Zuerst wird die Ingestion mit Spark vorbereitet.
+Für jede Datenquelle wird ein temporärer Ordner angelegt.
+In diesen Ordner werden die Plugin-Dateien aus dem HDFS heruntergeladen und über das Packetmanagement von Python, pip, die Abhängigkeiten für die Plugins installiert.
+Aus den Informationen in der Datenquelle wird eine SparkSession erstellt.
+
+In der zweiten Phase werden die Daten aus einer Datenquelle in eine DataFrame geladen.
+Durch die Verwendung von Spark's Structured Streaming können alle Typen von Datenquellen ähnlich verarbeitet werden.
+Das Sturctured Streaming ist ein Bibliothek, die auf Spark SQL aufbaut und es ermöglicht, Daten mit Hilder der DataFrame API zu verarbeiten.
+Für die Datenquelle wird mit den gesetzten Optionen ein DataStream- oder DataFrame-Reader erzeugt, mit dem die Daten geladen werden.
+Bei der File-Ingestion werden zusätzlich die Pfande zu den Quelldateien im HDFS gesetzt.
+
+Für die geladenen Daten muss dann entschieden werden, ob eine Deltaerkennung und somit eine Umwandlung in Änderungsdaten nötig ist.
+Folgende Regeln müssen zutreffen, damit eine Deltaerkennung ausgeführt wird.
+Es handelt sich nicht um einen Datenstrom.
+Die Ingestion ist nicht die erste dieser Datenquelle oder hat einen benutzerdefinierten Speicherort.
+Die Datenquelle ist keine Updatequelle.
+In \cref{algo:delta-calc} ist zu sehen, wie aus zwei DataFrames die Änderungsdaten erzeugt werden.
+Als Eingabe werden ein linkes DataFrame, mit dem aktuellen internen Stand, eine rechtes DataFrame, mit den neuen Daten und der Name der Id-Spalte benötigt.
+Das Ergebnis ist ein DataFrame mit allen aktualisierten Datensätzen.
+Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte, die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
+
+\begin{algorithm}
+\caption{Deltaberechnung}
+\label{algo:delta-calc}
+\KwData{leftDataFrame, rightDataFrame, idColumn}
+\KwResult{changeDataFrame}
+$leftDataFrame \gets$ add column with row hash \;
+$leftDataFrame \gets$ prefix column names with "`left\_"' \;
+$rightDataFrame \gets$ add column with row hash \;
+$rightDataFrame \gets$ prefix columnnames with "`right\_"' \;
+
+$changeDataFrame \gets$ full join over $idColumn$ of $leftDataFrame$ and $rightDataFrame$ \;
+
+$changeDataFrame \gets$ remove all rows where $left\_hash$ equals $right\_hash$ \;
+
+$changeDataFrame \gets$ remove hash columns
+
+$changeDataFrame \gets$ add row $cd\_deleted$ \;
+\eIf{$right\_idColumn$ is $null$}{$cd\_deleted = true$}{$cd\_deleted = false$}
+
+$changeDataFrame \gets$ merge left and right $idColumn$ into one $idColumn$
+\eIf{$left\_idColumn$ is not $null$}{$idColumn = left\_idColumn$}{$idColun = right\_idColumn$}
+
+$changeDataFrame \gets$ merge remaining columns with left and right value by always taking the right and removing prefix
+
+\end{algorithm}
+
+Die letzte Phase ist das Speichern.
+Für Datenströme wird entweder der benutzerdefinierte Speicherort gewählt, oder die Daten werden über den "`append"'-Modus in eine Delta Tabelle geschrieben.
+Bei File- und Pull-Ingestions gibt es ebenfalls zuerst die Unterscheidung ob ein benutzerdefinierter Speicher verwendet wird oder nicht.
+Wenn die Daten intern gespeichert werden sollen gelten nachfolgende Regeln.
+Eine neue Delta Tabelle wird erstellt, wenn es sich um die erste Ingestion einer Datenquelle handelt, die keine Updatequelle ist.
+Sonst werden die Änderungsdaten in die Delta Tabelle der Zieldatenquelle eingepflegt.
+Für Updatequellen ist die Zieldatenquelle über die Konfiguration festgelegt und für eine normalen Datenquelle ist sie es selbst.
+Das Einpflegen der Änderungen wird über die Delta Lake API gelöst.
+Dazu werden die Änderungsdaten mit den aktuellen Daten über die Id-Spalte zusammengeführt.
+Dabei können verschieden Fälle definiert werden.
+Wenn die Ids einer Zeile gleich sind und die Spalte "`cd\_deleted"' $true$ enthält, wird die Zeile aus den Daten gelöscht, ansonsten wird der Datensatz aktualisiert.
+Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted'" $false$ ist, dir der Datensatz als neue Zeile eingefügt.

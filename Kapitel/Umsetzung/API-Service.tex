@@ -1,0 +1,6 @@
+\section{Api-Service}
+
+Der Api-Service basiert auf dem Server aus dem Masterprojekt, ein mit Flask\footnote{https://flask.palletsprojects.com/} in Python geschriebener Web-Server.
+Um eine saubere Trennung zwischen den existierenden und den neuen REST Endpunkten zu erreichen, wird die alte API unter den Pfad "`/api/v1/"' verschoben und die neue unter "`/api/v2/"' erstellt.
+Kommunikation mit dem Data Lake System findet nur statt, wenn eine Anfrage zur Ausführung einer Ingestion bearbeitet wird.
+Hier wird ein Event mit dem Schlüssel "`dls\_\_ingestion\_\_run"' erzeugt.

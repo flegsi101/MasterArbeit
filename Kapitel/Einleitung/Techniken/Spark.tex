@@ -1,0 +1,37 @@
+\subsection{Apache Spark}
+
+\textit{Apache Spark} ist eine einheitliche Engine für Verarbeitung von verteilten Daten mit verschieden Arbeitsabläufen in einem Cluster.
+Es gibt Bibliotheken, die beispielsweise Arbeiten mit SQL, Datenströmen, maschinelles Lernen oder Graphen ermöglicht.
+Diese Bibliotheken laufen dafür auf dieser gemeinsamen Engine.
+Durch Optimierungen der Implementationen erreicht Spark eine ähnliche Performance, wie spezialisierte Engines.
+
+Ein Kernpunkt in Spark ist die Abstraktion in RDDs (Resilient Distributed Datasets, deutsch: Robuste Verteilte Datensätze).
+RDDs sind fehlertolerante Sammlungen von Objekten, die auf dem Cluster verteilt sind und parallel bearbeitet werden können.
+Diese werden flüchtig im Speicher gehalten, können aber für einen schnelleren Zugriff zwischengespeichert werden.
+Die Erstellung und Bearbeitung von RDDs geschieht über sogenannte Transformationen.
+Die Transformationen werden in einem Herkunftsgraphen gespeichert, wodurch eine Wiederherstellung bei Fehler an jedem Punkt möglich ist.
+
+Für die Verarbeitung von strukturierten oder semi-strukturierten, tabellen-artigen Daten gibt es zusätzlich SparkSQL.
+Spark biete APIs für die Sprachen Scala, Java, Python und R.
+Auf den RDDs gibt es noch eine weitere Abstraktionsebene.
+Mit DataFrames, die eine Sammlung RDDs von Datensätzen mit einem bekannten Schema sind, kann eine API benutzt werden, bei der die Bearbeitung der Daten über Funktionsaufrufe statt SparkSQL möglich ist \parencite{spark}. 
+
+\subsubsection{Arbeiten mit Spark}
+
+Die Interaktion mit einem Spark Cluster kann über eine interaktive Shell oder als fertige Anwendung geschehen.
+Im ersten Schritt wird eine SparkSession erzeugt.
+Diese enthält verschiedene Informationen zu Anwendung.
+Als SparkMaster kann man sowohl ein Cluster verwenden als auch den lokalen Computer.
+So ist es möglich eine mit Spark zu Arbeiten ohne eine Cluster starten zu müssen.
+Um fehlende Bibliotheken für die Verarbeitung nach zu laden, kann der SparkSession eine Liste mit Maven-Abhänigkeiten mitgegeben werden.
+Außerdem wird in der SparkSession der Name der Anwendung gesetzt.
+Dieser Name wird dann auch in der Cluster UI angezeigt.
+
+Nachdem eine Session erstellt ist, können DataFrames erstellt werden.
+Hier ist es möglich eine leeres zu erzeugen oder direkt über Spark Daten aus einer Datenquelle in ein Dataframe zu laden.
+Dazu werden die DataFrame- und DataStreamReader verwendet.
+In den Readern werden sowohl das Format der zu lesenden Daten sowie formatabhängige Optionen und eventuell auch das Schema der Daten festgelegt.
+Optionen können zum Beispiel Verbindungsinformationen bei einer Datenbank oder der Pfad bei Dateien sein.
+
+Die geladenen DataFrames können dann bearbeitet oder gespeichert werden.
+Das Speichern geschieht über DataFrame- und DataStreamWriter, die analog zu den Readern verwendet werden \parencite{spark-website}.

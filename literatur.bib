@@ -47,12 +47,25 @@
     bibsource     = {dblp computer science bibliography, https://dblp.org}
 }
 
-@online{spark,
+@online{spark-website,
     author  = {{Apache Spark}},
     title   = {Spark Overview},
     year    = {2021},
     url     = {https://spark.apache.org/docs/latest},
     urldate = {2021-09-04}
+}
+
+@article{spark,
+    Author = {ZAHARIA, MATEI and XIN, REYNOLD S. and WENDELL, PATRICK and DAS, TATHAGATA and ARMBRUST, MICHAEL and DAVE, ANKUR and XIANGRUI, MENG and ROSEN, JOSH and VENKATARAMAN, SHIVARAM and FRANKLIN, MICHAEL J. and GHODSI, ALI and GONZALEZ, JOSEPH and SHENKER, SCOTT and STOICA, ION},
+    ISSN = {00010782},
+    Journal = {Communications of the ACM},
+    Keywords = {BIG data, OPEN source products, SOFTWARE frameworks, DISTRIBUTED computing, IMAGE processing software},
+    Number = {11},
+    Pages = {56 - 65},
+    Title = {Apache Spark: A Unified Engine for Big Data Processing.},
+    Volume = {59},
+    URL = {https://printkr.hs-niederrhein.de:2589/login.aspx?direct=true&db=buh&AN=119379442&site=ehost-live},
+    Year = {2016},
 }
 
 @manual{cron,
@@ -61,12 +74,29 @@
  month      = {November},
 }
 
-@online{spark,
-    author  = {{Apache Spark}},
-    title   = {Spark Overview},
+@online{parquet,
+    author  = {{Apache Parquet}},
+    title   = {Apache Parquet},
     year    = {2021},
-    url     = {https://spark.apache.org/docs/latest},
-    urldate = {2021-09-04}
+    url     = {https://parquet.apache.org/documentation/latest/},
+    urldate = {2021-10-30}
+}
+
+@INPROCEEDINGS{message-broker,  
+    author      = {Apukhtin, Vladyslav and Shirokopetleva, Mariya and Skovorodnikova, Victoria},  
+    booktitle   = {2019 IEEE International Scientific-Practical Conference Problems of Infocommunications, Science and Technology (PIC S T)},
+    title       = {The Relevance of Using Message Brokers in Robust Enterprise Applications},
+    year        = {2019},
+    pages       = {305-309},
+    doi         = {10.1109/PICST47496.2019.9061224}
+}
+
+@online{pyspark-int,
+    author  = {{Apache Spark}},
+    title   = {Spark Quick Start},
+    year    = {2021},
+    url     = {https://spark.apache.org/docs/3.2.0/quick-start.html},
+    urldate = {2021-10-27}
 }
 
 @online{kafka-docs,
@@ -109,4 +139,69 @@
     number    = {2},
     year      = {2019},
     publisher = {IJSRCSEIT}
+}
+
+@article{deltalake,
+  title={Delta lake: high-performance ACID table storage over cloud object stores},
+  author={Armbrust, Michael and Das, Tathagata and Sun, Liwen and Yavuz, Burak and Zhu, Shixiong and Murthy, Mukul and Torres, Joseph and van Hovell, Herman and Ionescu, Adrian and {\L}uszczak, Alicja and others},
+  journal={Proceedings of the VLDB Endowment},
+  volume={13},
+  number={12},
+  pages={3411--3424},
+  year={2020},
+  publisher={VLDB Endowment}
+}
+
+@article{delta-view_gen,
+    author    = {Mekterović, Igor und Brkić, Ljiljana},
+    booktitle = {2015 38th International Convention on Information and Communication Technology, Electronics and Microelectronics (MIPRO)},
+    title     = {Delta view generation for incremental loading of large dimensions in a data warehouse},
+    year      = {2015},
+    volume    = {},
+    number    = {},
+    pages     = {1417-1422},
+    doi       = {10.1109/MIPRO.2015.7160496}
+}
+
+@article{cdc_in_nosql,
+    author    = {Schmidt, Felipe Mathias and Geyer, Claudio and Schaeffer-Filho, Alberto and DeBloch, Stefan und Hu, Yong},
+    booktitle = {2015 IEEE Symposium on Computers and Communication (ISCC)},
+    title     = {Change data capture in NoSQL databases: A functional and performance comparison},
+    year      = {2015},
+    volume    = {},
+    number    = {},
+    pages     = {562-567},
+    doi       = {10.1109/ISCC.2015.7405574}
+}
+
+@article{boeing,
+    author    = {Ram, P. und Do, L.},
+    booktitle = {Proceedings of 16th International Conference on Data Engineering (Cat. No.00CB37073)},
+    title     = {Extracting delta for incremental data warehouse maintenance},
+    year      = {2000},
+    volume    = {},
+    number    = {},
+    pages     = {220-229},
+    doi       = {10.1109/ICDE.2000.839415}
+}
+
+@techreport{snapshot_algos,
+    number      = {1996-42},
+    type        = {Technical Report},
+    title       = {Efficient Snapshot Differential Algorithms in Data Warehousing},
+    author      = {W. Labio und H. Garcia-Molina},
+    publisher   = {Stanford InfoLab},
+    year        = {1996},
+    institution = {Stanford InfoLab},
+    url         = {http://ilpubs.stanford.edu:8090/170/},
+    abstract    = {Detecting and extracting modifications from information sources is an integral part of data warehousing. For unsophisticated sources, in practice it is often necessary to infer modifications by periodically comparing snapshots of data from the source. Although this snapshot differential problem is closely related to traditional joins and outerjoins, there are significant differences, which lead to simple new algorithms. In particular, we present algorithms that perform (possibly lossy) compression of records. We also present a window algorithm that works very well if the snapshots are not "very different." The algorithms are studied via analysis and an implementation of two of them; the results illustrate the potential gains achievable with the new algorithms}
+}
+
+@article{joins,
+    author  = {Priti Mishra und Margaret H. Eich},
+    title   = {Join Processing in Relational Databases},
+    journal = {ACM Computing Surveys},
+    year    = {1992},
+    volume  = {24},
+    pages   = {63--113}
 }

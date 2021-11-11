@@ -1,0 +1,26 @@
+\subsection{Delta Lake}
+
+Delta Lake ist eine extra Speicher-Ebene, die auf Objektspeichern in der Cloud (z.B. Amazon S3) oder anderen Dateisystemen verwendet werden kann.
+Das Ziel ist es diesen Speichern ACID Transaktionen, schnelles Arbeiten mit Metadaten der Tabelle und eine Versionierung der Daten hinzuzufügen.
+Daten werden in sogenannten Delta Tabellen mit Metadaten und Logs gespeichert.
+
+Eine Delta Tabelle ist praktisch ein Verzeichnis im Speicher.
+Die tatsächlichen Daten werden hier in \textit{Apache Parquet} Dateien abgelegt.
+Parquet ist ein spalten-orientiertes Format, zum effizienten Speichern von Daten \parencite{parquet}.
+Dabei können die Daten auch noch in Unterverzeichnisse aufgeteilt sein, zum Beispiel für jedes Datum ein Verzeichnis.
+Neben den Datenverzeichnissen gibt es eines für die Logs in Form von JSON Dateien mit aufsteigender Nummerierung.
+Metadaten werden sowohl innerhalb der Parquet als auch der Log Dateien passend gespeichert.
+
+Im Delta Lake wird ein Protokoll für den Zugriff verwendet, dass es ermöglicht, dass mehrere Clients gleichzeitig Lesen und immer nur einer Schreiben kann.
+Dabei werden beim Schreiben immer erst neue Datensätze, die zur Tabelle hinzugefügt werden sollen in das korrekte Verzeichnis geschrieben.
+Danach wird eine neu Log Datei erstellt.
+
+Beim Lesen werden die Log Dateien als Grundlage verwendet um daraus zusammen mit den gespeicherten Daten den Tabellen stand zu erzeugen.
+Man kann beim Lesen auch eine bestimmte Version angeben.
+Um den Aufwand bei der Verarbeitung der Logs zu verringern wird periodisch ein Kontrollpunkt erzeugt, bei dem alle vorherigen Logs zusammengefügt und komprimiert werden.
+Das bedeutet, dass zum Beispiel das Operationen die sich gegenseitig aufheben nicht gespeichert werden.
+Damit reicht es aus nur den letzten Checkpoint vor der zu lesenden Version und alle darauf folgende Logs zu lesen.
+
+Durch das Design werden keine eignen Server für die Pflege der Delta Tabellen benötigt, sondern dies kann alles über den Client gemacht werden.
+Der Delta Lake unterstützt sowohl die Batch-Verarbeitung von Daten als auch Datenströme und bietet volle Integration in Spark \parencite{deltalake}.
+

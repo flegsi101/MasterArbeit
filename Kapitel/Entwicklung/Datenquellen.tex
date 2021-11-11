@@ -28,6 +28,7 @@ Für beide besteht die Möglichkeit die Ingestion nur einmalig auszuführen oder
 Datenströme hingegen sind immer kontinuierlich.
 
 \subsection{Datenquellen-Modell}
+\label{sec:datasourcemodel}
 
 Das Modell einer Datenquelle besteht aus drei Teilen.
 Eine Liste von Ingestion-Events, die Informationen über jede ausgeführte Ingestion enthalten.
@@ -37,84 +38,112 @@ In einer Datenquelle werden diese beiden Listen zusammen mit unveränderlichen I
 Im folgenden werden die Felder der Modelle beschrieben.
 Falls eine Information direkt aus \textit{Apache Spark} abgeleitet ist, wird auch Angegeben an welcher Stelle diese angewendet wird.
 
-\paragraph{Revision}
-\subparagraph{Nummer}
+\subsubsection*{Revision} 
+    
+\paragraph{Nummer} 
 Eine aufsteigende Nummer, die die Revision identifiziert.
 Sie startet bei 0 und jede Nummer ist für eine Datenquelle einzigartig.
-Gleichzeitig spiegelt die Nummer auch den zeitlichen Verlauf wieder.
-\subparagraph{Erstellungsdatum}
+Gleichzeitig spiegelt die Nummer auch den zeitlichen Verlauf wieder. 
+
+\paragraph{Erstellungsdatum} 
 Das Datum an dem die Revision erstellt wurde.
 Da eine Revision nicht geändert werden kann, ist das Erstellungsdatum einer Revision auch das Datum der Änderung der dazugehörigen Datenquelle.
-\subparagraph{Name}
+
+\paragraph{Name} 
 Ein Name, der der Datenquelle im Datalake gegeben wird.
 Dieser dient nur dazu die Datenquelle als Benutzer besser identifizieren zu können.
-\subparagraph{Id Spalte}
+
+\paragraph{Id Spalte} 
 Der Name der Spalte oder des Feldes, das einen Datensatz eindeutig identifiziert.
 Die Id Spalte wird für die Zuordnung der Datensätze bei der Deltaerkennung benötigt.
-\subparagraph{Spark Abhängigkeiten}
+
+\paragraph{Spark Abhängigkeiten} 
 Eine Liste von Abhängigkeiten, die der SparkSession bei der Ingestion mitgegeben wird.
 Diese Liste entspricht der Option "`spark.jars.packages"' die bei der Erstellung einer Spark Session gesetzt wird.
-\subparagraph{Quelldateien}
+
+\paragraph{Quelldateien} 
 Bei der Ingestion können die Daten über das Push-Prinzip in Form von Dateien an den Server gesendet werden.
 Die Liste der Quelldateien enthält die Pfade zu diesen Dateien.
-\subparagraph{Typ beim Lesen}
+
+\paragraph{Typ beim Lesen} 
 Der Typ der zu lesenden Daten, wie in \ref{sec:datasource-types} beschrieben.
-\subparagraph{Format beim Lesen}
+
+\paragraph{Format beim Lesen} 
 Das Format in dem die Daten gelesen werden sollen.
 Der Wert aus diesem Feld wird bei der Ingestion über die \verb|format| Methode eines 
 Readers gesetzt.
-\subparagraph{Optionen beim Lesen}
+
+\paragraph{Optionen beim Lesen} 
 Eine Liste von Schlüssel-Wert-Paaren, die als Optionen des Readers in \textit{Apache Spark} gesetzt werden.
 Über diese wird die Verbindung zur Datenquelle definiert.
-\subparagraph{Aktualisierungsquelle}
+
+\paragraph{Aktualisierungsquelle} 
 Es kann für einen Datenquelle festgelegt werden, dass diese Aktualisierungen für eine andere enthält.
 Dann wird sie Aktualisierungsquelle genannt.
 Das ermöglicht die Nutzung von eigenen Change Data Capture Lösungen.
 Dabei muss die Datenquelle aber dem einem festgelegten Anderäungsdatenformat entsprechen, das später genauer erläutert wird.
 Das Feld selbst enthält die Id der Ziel-Datenquelle für die Aktualisierung.
-\subparagraph{Typ beim Schreiben}
+
+\paragraph{Typ beim Schreiben} 
 Der Typ für das Schreiben der Daten legt fest, ob intern mit Versionierung oder in einen freien Speicher geschrieben werden soll.
-\subparagraph{Format und Optionen beim Schreiben}
+
+\paragraph{Format und Optionen beim Schreiben}
 Das Format und die Optionen beim Schreiben funktionieren analog zu denen beim Lesen.
 Sie werden jedoch nicht beim Reader gesetzt sondern beim Writer.
 Gerade bei Datenströmen muss darauf geachtet werden, dass nicht in jedem Format ein Datenstrom geschrieben werden kann.
-\subparagraph{Schreibmodus}
+
+\paragraph{Schreibmodus} 
 Der Modus in dem die Daten geschrieben werden.
 Die Auswahlmöglichkeiten werden auch durch \textit{Apache Spark} festgelegt.
-\subparagraph{Zeitsteuerung}
+
+\paragraph{Zeitsteuerung} 
 Eine Liste die festlegt, zu welchen Zeitpunkte eine Ingestion der Datenquelle ausgeführt werden soll.
-\subparagraph{Plugin Abhängigkeiten}
+
+\paragraph{Plugin Abhängigkeiten} 
 Eine Liste von Abhängigkeiten, die von den Plugins der Datenquelle benötigt werden.
-\subparagraph{Plugins}
-Die Speicherorte der Plugins.
 
-\paragraph{Ingestion-Event}
-\subparagraph{Nummer}
+\paragraph{Plugins} 
+Die Speicherorte der Plugins. 
+    
+\subsubsection*{Ingestion-Event}
+
+\paragraph{Nummer}
 Die Nummer um ein Ingestion-Event zu identifizieren.
-Sie funktioniert genau wie die Nummer der Revision.
-\subparagraph{Status}
-Der aktuelle Status in dem sich das Event befindet.
-Er gibt Auskunft, ob die Ingestion gestartet wurde, gerade läuft oder beendet wurde.
-\subparagraph{Revisionsnummer}
-Die Nummer der Revision, mit der die Ingestion gestartet wurde.
-Mit Hilfe der Revisionsnummer ist es leichter Fehler in der Ingestion zu finden und zu beheben.
-\subparagraph{Start- und Endzeit}
-Die Zeitpunkte des Starts und Endes eines Ingestion-Durchlaufs.
-Wenn die Ingestion noch in der Ausführung ist, ist keine Endzeit gesetzt.
-\subparagraph{Fehler}
-Die Fehlerausgabe, wenn die Ingestion nicht erfolgreich ausgeführt werden konnte.
+Sie funktioniert genau wie die Nummer der Revision. 
 
-\paragraph{Datasource}
-\subparagraph{Id}
-Eine Identifikationsnummer, die für jede Datenquelle eindeutig ist.
-\subparagraph{Aktuelle Revision}
+\paragraph{Status}
+Der aktuelle Status in dem sich das Event befindet.
+Er gibt Auskunft, ob die Ingestion gestartet wurde, gerade läuft oder beendet wurde. 
+
+\paragraph{Revisionsnummer}
+Die Nummer der Revision, mit der die Ingestion gestartet wurde.
+Mit Hilfe der Revisionsnummer ist es leichter Fehler in der Ingestion zu finden und zu beheben. 
+
+\paragraph{Start- und Endzeit}
+Die Zeitpunkte des Starts und Endes eines Ingestion-Durchlaufs.
+Wenn die Ingestion noch in der Ausführung ist, ist keine Endzeit gesetzt. 
+
+\paragraph{Fehler}
+Die Fehlerausgabe, wenn die Ingestion nicht erfolgreich ausgeführt werden konnte. 
+    
+\subsubsection*{Datenquelle} 
+    
+\paragraph{Id} 
+Eine Identifikationsnummer, die für jede Datenquelle eindeutig ist. 
+
+\paragraph{Aktuelle Revision}
 Die Nummer der aktuellen Revision.
-Neue Ingestions werden mit den Informationen aus dieser Revision ausgeführt.
-\subparagraph{Alle Revisionen}
-Eine Liste aller Revisionen.
-\subparagraph{Letzte Ingestion}
-Die Nummer des zuletzt gestarteten Ingestion-Durchlaufs.
-\subparagraph{Letzte erfolgreiche Ingestion}
-Die Nummer des letzten erfolgreich abgeschlossenen Ingestion-Durchlauf.
-\subparagraph{Alle Ingestion-Events}
+Neue Ingestions werden mit den Informationen aus dieser Revision ausgeführt. 
+
+\paragraph{Alle Revisionen}
+Eine Liste aller Revisionen. 
+
+\paragraph{Letzte Ingestion}
+Die Nummer des zuletzt gestarteten Ingestion-Durchlaufs. 
+
+\paragraph{Letzte erfolgreiche Ingestion}
+Die Nummer des letzten erfolgreich abgeschlossenen Ingestion-Durchlauf. 
+
+\paragraph{Alle Ingestion-Events}
 Eine Liste aller Ingestion Events.
+

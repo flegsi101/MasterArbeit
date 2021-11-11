@@ -1,0 +1,20 @@
+\section{Programmiersprache}
+Da bereits im Data-Lake-Prototyp die Programmiersprache Python verwendet wird, ist dies die erste Möglichkeit.
+Für die Verwendung mit \textit{Apache Spark} stehen außerdem noch zwei weitere Sprachen, Java und Scala, zur Verfügung.
+Python bietet jedoch im Vergleich hat dabei Python einen entscheiden Vorteil, der zur Wahl von Python führt.
+Bei der Verwendung von Java und Scala müssen über ein "`spark-submit"' fertig kompilierte Jobs an das Cluster gesendet werden.
+Das bedeutet, dass der Code dieser Jobs bereits feststehen muss.
+
+Diese Option besteht auch bei Python.
+Zusätzlich gibt es jedoch auch die Möglichkeit, dass der Interpreter zur Laufzeit sich um die korrekte Ausführung der Jobs kümmert.
+So ist es möglich ebenfalls zur Laufzeit für jede Anfrage speziell definierte Jobs zu erstellen, die nicht vorher schon kompiliert sein müssen.
+Das spart sowohl Komplexität bei der Entwicklung als auch Zeit bei der Ausführung, da es nicht nötig ist für jede Anfrage einen Job neu zu kompilieren \parencite{pyspark-int}.
+
+Außerdem hat Python die Möglichkeit ebenfalls zu Laufzeit Programmcode aus einer Datei zu importieren.
+Dieser Mechanismus soll verwendet werden um die Funktion von Plugins zu ermöglichen.
+
+Aus den oben genannten Gründen ist Python die Programmiersprache, die bei der Ingestion zum Einsatz kommen soll.
+Zur Integration der Ingestion-Schnittstelle in den alten Data-Lake-Prototyp wird dessen Server als Grundlage für den Api-Service genommen und ist somit auch in Python geschrieben.
+Bei dem Continuation-Service gibt es keine großen Vor- oder Nachteile zwischen den Programmiersprachen.
+Hier fällt die Wahl auf Python auf Grund der Einheitlichkeit.
+
