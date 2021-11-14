@@ -1,0 +1,63 @@
+\subsection{Change Data Capture (CDC)}
+
+Um Änderungen an Daten in Datenquellen in das Data-Lake-System einpflegen zu können, müssen dieser ersteinmal erfasst werden.
+Diesen Prozess nennt man Change Data Capture (CDC).
+Das Ziel beim CDC ist es, die Änderungen an den Daten nur an einer Stelle zu erfassen und dann an andere Systeme weiter zu schicken.
+Dafür gibt es verschiedene Ansätze, die in den Arbeiten \citetitle{delta-view_gen}\parencite{delta-view_gen}, \citetitle{cdc_in_nosql}\parencite{cdc_in_nosql} und \citetitle{boeing}\parencite{boeing} erläutert werden.
+
+\subsubsection{Datenbank-Trigger basiert}
+Datenbank-Trigger sind Events, die bei verschiedenen Aktionen auf den Daten in einer Datenbank ausgelöst werden.
+Über diese Trigger lassen sich CDC-Programme realisieren, die Änderungen genau dann festhalten, wenn sie geschehen.
+Ein Nachteil sit, dass die Methode nur in System angewendet werden kann, die auch Trigger unterstützen.
+Dafür ist es möglich alle Änderungen wie Einfügen, Aktualisieren oder Löschen von Daten zu erfassen \parencite{boeing}.
+
+\subsubsection{Log basiert}
+Es gibt viele Datenspeicher-Systeme, die Logs über die AKtionen auf den Daten führen.
+Diese werden zum Beispiel genutzt um eine Wiederherstellung möglich zu machen.
+Ein CDC-Programm kann diese Logs auslesen und daraus die Änderungsdaten erzeugen.
+Hierdurch gibt es fast keinen extra Aufwand für das eigentliche System.
+Aber auch hier gilt, dass diese Methode davon abhängig ist ob ein System Logs erstellt und ob diese durch externe Programme abgerufen werden können \parencite{delta-view_gen}.
+
+
+\subsubsection{Zeitstempel basiert}
+Ein weiterer Ansatz ist die Verwendung von Zeitstempeln mit den Zeitpunkten der Erstellung und letzten Änderung.
+Diese Zeitstempel müssen jedem Datensatz vorhanden sein.
+Die Verantwortung dafür kann entweder bei dem Ersteller der Daten liegen oder durch das Speichersystem automatisch hinzugefügt werden.
+Das CDC-Programm überprüft regelmäßig alle Zeitstempel der Einträge in den Daten.
+Wenn diese zwischen dem letzten und dem aktuellen Durchlauf liegen wird die Änderung erfasst.
+Hierbei werden nur kumulierte Änderungen seit dem letzten Durchlauf erfasst.
+Es ist nicht möglich nachzuvollziehen, welche und wie viele Änderungen in der Zeit gemacht wurden.
+Außerdem lassen sich auch mit dieser Methode kein Löschungen erfassen \parencite{delta-view_gen}.
+Der Aufwand für diese Methode kann relativ hoch werden, da ohne Indices auf den Zeitstempeln immer die gesammten Daten gelesen werden müssen \cite{boeing}.
+
+\subsubsection{Snapshot basiert}
+Die letzte Methode ist das Vergleichen zweier Momentaufnahmen (Snapshots) eines Datensatzes.
+Dabei wird bei jedem Durchlauf zuerst ein aktueller Snapshot generiert.
+Dieser wird danach mit dem des vorherigen Durchlaufs verglichen, um alle Änderungen zu erhalten.
+Hierfür muss ein separater Speicherort für die Snapshots festgelegt werde.
+Wie bei den Zeitstempeln ist es nicht möglich den gesamten Änderungsverlauf zwischen zwei Snapshots nachzuvollziehen.
+Außerdem müssen für den Vergleich immer alle Daten geladen werden, was zu einem hohen Rechen- und Speicheraufwand führen kann \cite{cdc_in_nosql}.
+
+% den Teil eher woanders
+% Zwei Ansätze eine Liste von Einfügungen, Änderungen und Löschungen aus zwei Snapshots zu erhalten, die auch von \citeauthor{cdc_in_nosql} \cite{cdc_in_nosql} referenziert werden, haben W. Labio und H. Garcia-Molina \cite{snapshot_algos} dargelegt.
+% Dazu werden alle Daten als Einträge mit einem einzigartigen Schlüssel und den dazu gehörigen Daten betrachtet.
+
+% Der erst genannte Ansatz basiert auf Join-Algorithmen, wie sie in der Informatik, zum Beispiel in \cite{joins}, schon viel besprochen wurden.
+% Wenn man die Einträge beider Snapshots über ihren Schlüssel verknüpft, kann man so durch einen Vergleich der Ergebnisse alle geänderten Einträge finden.
+% Um dann noch alle Einfügungen und Löschungen zu finden, kann man einen Outerjoin durchführen.
+% Bei einem Outerjoin erhält man alle Daten, die nur in einem der beiden Datensätze auftauchen.
+% Je nachdem in welchem Datensatz die Daten auftauchen, handelt es sich dann um eine Einfügung oder Löschung.
+
+% Als zweites wurde ein neuerer Algorithmus präsentiert, der mit der Annahme arbeitet, dass die Einträge in beiden Snapshots nah beieinander liegen.
+% Bei diesem Algorithmus wird ein Fenster von fester Länge über beide Snapshots geschoben und nur Einträge aus diesem Fenster verglichen.
+% Bei diesem Vorgehen reicht es aus, beide Snapshots nur einmal zu lesen.
+% Es kann aber je nach Aufteilung der Einträge passieren, dass sogenannte unnütze Einträge entstehen.
+% Diese werden definiert als eine Folge von Änderungen, die keine Auswirkung auf das Endergebnis hat.
+% Das sind Folgen, bei denen erst ein Eintrag gelöscht und dann eingefügt wird, oder andersherum.
+
+% \subsubsection{Anwendbarkeit}
+
+% Im Hinblick auf diese Arbeit kann festgehalten werden, dass die meisten Methoden zur CDC direkt bei den Datenspeichern ausgeführt werden müssen, in denen die Daten geändert werden.
+% Nur das Vorgehen, bei denen zwei Momentaufnahmen von Daten verglichen werden kann ortsunabhänigig ausgeführt werden.
+% Daher ist dieses Vorgehen auch die bessere Wahl, wenn es darum geht Datenquellen unabhängig die Möglichkeit zu geben Änderungsdaten zu berechnen.
+% Da dieses Vorgehen aber weniger effizient ist, sollte eine Ingestion-Schnittstelle sowohl die Möglichkeit bieten diese Änderungsdaten im Data Lake System zu erzeugen als auch von externen CDC-System Daten einzuspielen.

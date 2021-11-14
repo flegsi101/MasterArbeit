@@ -13,7 +13,6 @@
     "**/*.fdb_latexmk": true,
     "**/*.log": true,
     "**/*.out": true,
-    "**/*.pdf": true,
     "**/*.run.xml": true,
     "**/*.synctex.gz": true,
     "**/*.toc": true,

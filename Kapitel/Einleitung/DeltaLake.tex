@@ -5,7 +5,7 @@ Das Ziel ist es diesen Speichern ACID Transaktionen, schnelles Arbeiten mit Meta
 Daten werden in sogenannten Delta Tabellen mit Metadaten und Logs gespeichert.
 
 Eine Delta Tabelle ist praktisch ein Verzeichnis im Speicher.
-Die tatsächlichen Daten werden hier in \textit{Apache Parquet} Dateien abgelegt.
+Die tatsächlichen Daten werden hier in Apache Parquet Dateien abgelegt.
 Parquet ist ein spalten-orientiertes Format, zum effizienten Speichern von Daten \parencite{parquet}.
 Dabei können die Daten auch noch in Unterverzeichnisse aufgeteilt sein, zum Beispiel für jedes Datum ein Verzeichnis.
 Neben den Datenverzeichnissen gibt es eines für die Logs in Form von JSON Dateien mit aufsteigender Nummerierung.

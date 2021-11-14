@@ -1,16 +1,16 @@
 \subsection{Apache Kafka}
 
-\textit{Apache Kafka} ist ein verteiltes Event-Streaming-System, dass nach dem Publish-Subscribe-Muster funktioniert.
-Events können von Produzenten in das System veröffentlicht werden und Konsumenten können diese Events abonnieren.
-Das ganze läuft dabei in Echtzeit ab.
-Durch seine Verteilung kann \textit{Kafka} den Ausfall einzelner Server ausgleichen.
-Außerdem können Ströme von Events für einen beliebigen Zeitraum abgespeichert werden.
+Apache Kafka ist ein verteiltes Event-Streaming-System.
+Die Vermittlung von Nachrichten nach dem Publish-Subscribe-Muster läuft dabei in Echtzeit.
+Events können von Produzenten veröffentlicht werden und Konsumenten können auf diese Events abonnieren.
+Durch seine Verteilung kann Kafka den Ausfall einzelner Server ausgleichen.
+Zusätzlich können Ströme von Events für einen beliebigen Zeitraum persistiert werden.
 
-\textit{Kafka} besteht aus einem Cluster von Servern und verschiedenen Clients.
+Kafka besteht aus einem Cluster von Servern und verschiedenen Clients.
 Es gibt zwei Arten von Servern.
-Einige bilde die Speicherebene von \textit{Kafka} und werden Broaker genannt.
-Die anderen verwenden \textbf{Kafka Connect}\footnote{https://kafka.apache.org/documentation/\#connect} um existierende Systeme, zum Beispiel eine Datenbank, in das Kafka Cluster zu integrieren.
-Anwendungen, die entweder Events produzieren oder konsumieren sind die Clients.
+Die sogenannten Broaker sind für die Verteilung und Verwaltung von Events zuständig.
+Andere verwenden Kafka Connect\footnote{https://kafka.apache.org/documentation/\#connect} um existierende Systeme, zum Beispiel eine Datenbank, in das Kafka Cluster zu integrieren.
+Die Clients sind Anwendungen die entweder Events produzieren oder konsumieren.
 
 In diesem System repräsentiert ein Event den Fakt, dass etwas "`passiert"' ist und besteht aus einem Schlüssel, einem Wert, einem Zeitstempel und optionalen Metadaten.
 Dabei werden die Werte nicht interpretiert sonder einfach als Block versendet und können so beliebige Struktur haben.

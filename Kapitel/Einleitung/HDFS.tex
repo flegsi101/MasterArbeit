@@ -1,11 +1,11 @@
 \subsection{Hadoop Distributed File System}
 
-Das \textit{Hadoop Distributed File System (HDFS)} ist ein verteiltes und fehlertolerantes Dateisystem.
-Es wurde designt um auf Hardware mit geringen Kosten zu laufen und große Datenmengen zu verarbeiten.
+Das Hadoop Distributed File System (HDFS) ist ein verteiltes und fehlertolerantes Dateisystem.
+Es wurde entwickelt um auf Hardware mit geringen Kosten zu laufen und große Datenmengen zu verarbeiten.
 Im HDFS gespeicherte Dateien können von einem Gigabyte bis mehrere Terabyte groß sein.
-Außerdem unterstützt HDFS die replizierte Speicherung von Dateien mit einem beliebigen Faktor.
+Die Fehlertoleranz wird dabei durch die Möglichkeit der Replikation mit einem beliebigen Faktor gegeben.
 
-Das Dateisystem ist ähnlich zu anderen bekannten Dateisystem.
+Das Dateisystem ist ähnlich zu anderen bekannten Dateisystemen.
 Dateien und Ordner können im Namensraum hierarchisch organisiert werden.
 Es unterstützt jedoch keine Zurgiffsberechtigung oder Hard- und Soft-Links.
 Um einfach und effektiv kohärent zu bleiben, werden Dateien nur einmal geschrieben, können aber mehrfach gelesen werden.
@@ -16,5 +16,10 @@ Ein HDFS-Cluster funktioniert nach dem Master-Worker-Prinzip und besteht aus ein
 Der NameNode übernimmt die Verwaltung des Namensraum und Verteilung der einzelnen Blöcke einer Datei.
 Er reguliert dazu noch den Zugriff durch Clients und führt Operationen auf dem Dateisystem, wie das Öffnen, Schließen oder Umbenennen von Ordnern und Dateien aus.
 Die DataNodes speichern die einzelnen Blöcke der Dateien.
-Auf die Anweisung des NameNodes führen sie die Erstellung, Löschung und Replikation von Blöcken aus.
+Auf die Anweisung des NameNodes werden Blöcke ersteltt, gelöscht oder repliziert.
 Außerdem bearbeiten sie Anfragen zum Lesen und Schreiben von Dateien \parencite{hdfs}.
+
+% Parquet
+Mit Apache Parquet steht ein Format zur Verfügung, mit dem Daten im HDFS effizient gespeichert werden können.
+Parquet ist ein spalten-orientiertes Speicherformat, das auch die Kompression und Kodierung der Daten unterstützt.
+Auch die Speicherung von verschachtelten Date ist möglich.

@@ -1,3 +1,145 @@
+% ||================================================================================================
+% || Datalake
+% ||================================================================================================
+@inproceedings{datalake_01,
+    author    = {Fang, Huang},
+    booktitle = {2015 IEEE International Conference on Cyber Technology in Automation, Control, and Intelligent Systems (CYBER)},
+    title     = {Managing data lakes in big data era: What's a data lake and why has it became popular in data management ecosystem},
+    year      = {2015},
+    pages     = {820-824}
+}
+
+@article{datalake_02,
+    title     = {Architecture of data lake},
+    author    = {Singh, Ajit and Ahmad, Sultan},
+    journal   = {International Journal of Scientific Research in Computer Science, Engineering and Information Technology},
+    volume    = {5},
+    number    = {2},
+    year      = {2019},
+    publisher = {IJSRCSEIT}
+}
+
+@inproceedings{datalake_03,
+    title     = {On warehouses, lakes, and spaces: the changing role of conceptual modeling for data integration},
+    author    = {Jarke, Matthias and Quix, Christoph},
+    booktitle = {Conceptual Modeling Perspectives},
+    pages     = {231-245},
+    year      = {2017},
+    publisher = {Springer}
+}
+
+% ||================================================================================================
+% || Prototyp
+% ||================================================================================================
+@misc{prototyp,
+    author      = {Alexander Martin and Marcel Thiel and Robin Kuller},
+    title       = {Development of a Data Lake System},
+    institution = {{Hochschule Niederrhein, Fachbereich 03 Elektrotechnik und Informatik}},
+    year        = {2020/21}
+}
+
+% ||================================================================================================
+% || CDC
+% ||================================================================================================
+@article{boeing,
+    author    = {Ram, P. und Do, L.},
+    booktitle = {Proceedings of 16th International Conference on Data Engineering (Cat. No.00CB37073)},
+    title     = {Extracting delta for incremental data warehouse maintenance},
+    year      = {2000},
+    volume    = {},
+    number    = {},
+    pages     = {220-229}
+}
+
+@article{delta-view_gen,
+    author    = {Mekterović, Igor und Brkić, Ljiljana},
+    booktitle = {2015 38th International Convention on Information and Communication Technology, Electronics and Microelectronics (MIPRO)},
+    title     = {Delta view generation for incremental loading of large dimensions in a data warehouse},
+    year      = {2015},
+    volume    = {},
+    number    = {},
+    pages     = {1417-1422}
+}
+
+@article{cdc_in_nosql,
+    author    = {Schmidt, Felipe Mathias and Geyer, Claudio and Schaeffer-Filho, Alberto and DeBloch, Stefan und Hu, Yong},
+    booktitle = {2015 IEEE Symposium on Computers and Communication (ISCC)},
+    title     = {Change data capture in NoSQL databases: A functional and performance comparison},
+    year      = {2015},
+    volume    = {},
+    number    = {},
+    pages     = {562-567}
+}
+
+
+
+@techreport{snapshot_algos,
+    number      = {1996-42},
+    type        = {Technical Report},
+    title       = {Efficient Snapshot Differential Algorithms in Data Warehousing},
+    author      = {W. Labio und H. Garcia-Molina},
+    publisher   = {Stanford InfoLab},
+    year        = {1996},
+    institution = {Stanford InfoLab},
+    url         = {http://ilpubs.stanford.edu:8090/170/},
+    abstract    = {Detecting and extracting modifications from information sources is an integral part of data warehousing. For unsophisticated sources, in practice it is often necessary to infer modifications by periodically comparing snapshots of data from the source. Although this snapshot differential problem is closely related to traditional joins and outerjoins, there are significant differences, which lead to simple new algorithms. In particular, we present algorithms that perform (possibly lossy) compression of records. We also present a window algorithm that works very well if the snapshots are not "very different." The algorithms are studied via analysis and an implementation of two of them; the results illustrate the potential gains achievable with the new algorithms}
+}
+
+@article{joins,
+    author  = {Priti Mishra und Margaret H. Eich},
+    title   = {Join Processing in Relational Databases},
+    journal = {ACM Computing Surveys},
+    year    = {1992},
+    volume  = {24},
+    pages   = {63--113}
+}
+
+% ||================================================================================================
+% || Spark
+% ||================================================================================================
+@online{spark-website,
+    author  = {{Apache Spark}},
+    title   = {Spark Overview},
+    year    = {2021},
+    url     = {https://spark.apache.org/docs/latest},
+    urldate = {2021-09-04}
+}
+
+@article{spark,
+    author   = {ZAHARIA, MATEI and XIN, REYNOLD S. and WENDELL, PATRICK and DAS, TATHAGATA and ARMBRUST, MICHAEL and DAVE, ANKUR and XIANGRUI, MENG and ROSEN, JOSH and VENKATARAMAN, SHIVARAM and FRANKLIN, MICHAEL J. and GHODSI, ALI and GONZALEZ, JOSEPH and SHENKER, SCOTT and STOICA, ION},
+    issn     = {00010782},
+    journal  = {Communications of the ACM},
+    keywords = {BIG data, OPEN source products, SOFTWARE frameworks, DISTRIBUTED computing, IMAGE processing software},
+    number   = {11},
+    pages    = {56 - 65},
+    title    = {Apache Spark: A Unified Engine for Big Data Processing.},
+    volume   = {59},
+    url      = {https://printkr.hs-niederrhein.de:2589/login.aspx?direct=true&db=buh&AN=119379442&site=ehost-live},
+    year     = {2016}
+}
+
+% ||================================================================================================
+% || HDFS & Parquet
+% ||================================================================================================
+@online{parquet,
+    author  = {{Apache Parquet}},
+    title   = {Apache Parquet},
+    year    = {2021},
+    url     = {https://parquet.apache.org/},
+    urldate = {2021-11-14}
+}
+
+@article{hdfs,
+    title   = {HDFS architecture},
+    author  = {Borthakur, Dhruba},
+    journal = {Document on Hadoop Wiki. URL http://hadoop. apache. org/common/docs/r0},
+    volume  = {20},
+    year    = {2010}
+}
+
+% ||================================================================================================
+% || Unsortiert
+% ||================================================================================================
 @misc{rethink_data_2020,
     author      = {{SEAGATE TECHNOLOGY}},
     title       = {Rethink Data Report 2020},
@@ -8,87 +150,40 @@
 }
 
 @article{DBLP:journals/corr/abs-2106-09592,
-    author        = {Rihan Hai and
+    author  = {Rihan Hai and
                Christoph Quix and
                Matthias Jarke},
-    title         = {Data lake concept and systems: a survey},
-    journal       = {CoRR},
-    volume        = {abs/2106.09592},
-    year          = {2021},
-    url           = {https://arxiv.org/abs/2106.09592},
-    archiveprefix = {arXiv},
-    eprint        = {2106.09592},
-    timestamp     = {Tue, 29 Jun 2021 16:55:04 +0200},
-    biburl        = {https://dblp.org/rec/journals/corr/abs-2106-09592.bib},
-    bibsource     = {dblp computer science bibliography, https://dblp.org}
+    title   = {Data lake concept and systems: a survey},
+    journal = {CoRR},
+    year    = {2021}
 }
 
-@misc{datalake_proj,
-    author      = {Alexander Martin and Marcel Thiel and Robin Kuller},
-    title       = {Development of a Data Lake System},
-    institution = {{Hochschule Niederrhein, Fachbereich 03 Elektrotechnik und Informatik}},
-    year        = {2020/21}
-}
+
 
 % read only %
 @article{DL-Ing-Mgmt,
-    author        = {Yan Zhao and
+    author  = {Yan Zhao and
                Imen Megdiche and
                Franck Ravat},
-    title         = {Data Lake Ingestion Management},
-    journal       = {CoRR},
-    volume        = {abs/2107.02885},
-    year          = {2021},
-    url           = {https://arxiv.org/abs/2107.02885},
-    archiveprefix = {arXiv},
-    eprint        = {2107.02885},
-    timestamp     = {Wed, 21 Jul 2021 08:08:49 +0200},
-    biburl        = {https://dblp.org/rec/journals/corr/abs-2107-02885.bib},
-    bibsource     = {dblp computer science bibliography, https://dblp.org}
+    title   = {Data Lake Ingestion Management},
+    journal = {CoRR},
+    year    = {2021}
 }
 
-@online{spark-website,
-    author  = {{Apache Spark}},
-    title   = {Spark Overview},
-    year    = {2021},
-    url     = {https://spark.apache.org/docs/latest},
-    urldate = {2021-09-04}
-}
 
-@article{spark,
-    Author = {ZAHARIA, MATEI and XIN, REYNOLD S. and WENDELL, PATRICK and DAS, TATHAGATA and ARMBRUST, MICHAEL and DAVE, ANKUR and XIANGRUI, MENG and ROSEN, JOSH and VENKATARAMAN, SHIVARAM and FRANKLIN, MICHAEL J. and GHODSI, ALI and GONZALEZ, JOSEPH and SHENKER, SCOTT and STOICA, ION},
-    ISSN = {00010782},
-    Journal = {Communications of the ACM},
-    Keywords = {BIG data, OPEN source products, SOFTWARE frameworks, DISTRIBUTED computing, IMAGE processing software},
-    Number = {11},
-    Pages = {56 - 65},
-    Title = {Apache Spark: A Unified Engine for Big Data Processing.},
-    Volume = {59},
-    URL = {https://printkr.hs-niederrhein.de:2589/login.aspx?direct=true&db=buh&AN=119379442&site=ehost-live},
-    Year = {2016},
-}
 
 @manual{cron,
- title      = "crontab(5) — Linux manual page",
- year       = {2012},
- month      = {November},
+    title = {crontab(5) — Linux manual page},
+    year  = {2012},
+    month = {November}
 }
 
-@online{parquet,
-    author  = {{Apache Parquet}},
-    title   = {Apache Parquet},
-    year    = {2021},
-    url     = {https://parquet.apache.org/documentation/latest/},
-    urldate = {2021-10-30}
-}
-
-@INPROCEEDINGS{message-broker,  
-    author      = {Apukhtin, Vladyslav and Shirokopetleva, Mariya and Skovorodnikova, Victoria},  
-    booktitle   = {2019 IEEE International Scientific-Practical Conference Problems of Infocommunications, Science and Technology (PIC S T)},
-    title       = {The Relevance of Using Message Brokers in Robust Enterprise Applications},
-    year        = {2019},
-    pages       = {305-309},
-    doi         = {10.1109/PICST47496.2019.9061224}
+@inproceedings{message-broker,
+    author    = {Apukhtin, Vladyslav and Shirokopetleva, Mariya and Skovorodnikova, Victoria},
+    booktitle = {2019 IEEE International Scientific-Practical Conference Problems of Infocommunications, Science and Technology (PIC S T)},
+    title     = {The Relevance of Using Message Brokers in Robust Enterprise Applications},
+    year      = {2019},
+    pages     = {305-309}
 }
 
 @online{pyspark-int,
@@ -114,13 +209,6 @@
     publisher = {Packt Publishing Birmingham}
 }
 
-@article{hdfs,
-    title   = {HDFS architecture},
-    author  = {Borthakur, Dhruba},
-    journal = {Document on Hadoop Wiki. URL http://hadoop. apache. org/common/docs/r0},
-    volume  = {20},
-    year    = {2010}
-}
 
 @inproceedings{microservices,
     title        = {The comparison of microservice and monolithic architecture},
@@ -131,77 +219,15 @@
     organization = {IEEE}
 }
 
-@article{datalake_arch,
-    title     = {Architecture of data lake},
-    author    = {Singh, Ajit and Ahmad, Sultan},
-    journal   = {International Journal of Scientific Research in Computer Science, Engineering and Information Technology},
-    volume    = {5},
-    number    = {2},
-    year      = {2019},
-    publisher = {IJSRCSEIT}
-}
+
 
 @article{deltalake,
-  title={Delta lake: high-performance ACID table storage over cloud object stores},
-  author={Armbrust, Michael and Das, Tathagata and Sun, Liwen and Yavuz, Burak and Zhu, Shixiong and Murthy, Mukul and Torres, Joseph and van Hovell, Herman and Ionescu, Adrian and {\L}uszczak, Alicja and others},
-  journal={Proceedings of the VLDB Endowment},
-  volume={13},
-  number={12},
-  pages={3411--3424},
-  year={2020},
-  publisher={VLDB Endowment}
-}
-
-@article{delta-view_gen,
-    author    = {Mekterović, Igor und Brkić, Ljiljana},
-    booktitle = {2015 38th International Convention on Information and Communication Technology, Electronics and Microelectronics (MIPRO)},
-    title     = {Delta view generation for incremental loading of large dimensions in a data warehouse},
-    year      = {2015},
-    volume    = {},
-    number    = {},
-    pages     = {1417-1422},
-    doi       = {10.1109/MIPRO.2015.7160496}
-}
-
-@article{cdc_in_nosql,
-    author    = {Schmidt, Felipe Mathias and Geyer, Claudio and Schaeffer-Filho, Alberto and DeBloch, Stefan und Hu, Yong},
-    booktitle = {2015 IEEE Symposium on Computers and Communication (ISCC)},
-    title     = {Change data capture in NoSQL databases: A functional and performance comparison},
-    year      = {2015},
-    volume    = {},
-    number    = {},
-    pages     = {562-567},
-    doi       = {10.1109/ISCC.2015.7405574}
-}
-
-@article{boeing,
-    author    = {Ram, P. und Do, L.},
-    booktitle = {Proceedings of 16th International Conference on Data Engineering (Cat. No.00CB37073)},
-    title     = {Extracting delta for incremental data warehouse maintenance},
-    year      = {2000},
-    volume    = {},
-    number    = {},
-    pages     = {220-229},
-    doi       = {10.1109/ICDE.2000.839415}
-}
-
-@techreport{snapshot_algos,
-    number      = {1996-42},
-    type        = {Technical Report},
-    title       = {Efficient Snapshot Differential Algorithms in Data Warehousing},
-    author      = {W. Labio und H. Garcia-Molina},
-    publisher   = {Stanford InfoLab},
-    year        = {1996},
-    institution = {Stanford InfoLab},
-    url         = {http://ilpubs.stanford.edu:8090/170/},
-    abstract    = {Detecting and extracting modifications from information sources is an integral part of data warehousing. For unsophisticated sources, in practice it is often necessary to infer modifications by periodically comparing snapshots of data from the source. Although this snapshot differential problem is closely related to traditional joins and outerjoins, there are significant differences, which lead to simple new algorithms. In particular, we present algorithms that perform (possibly lossy) compression of records. We also present a window algorithm that works very well if the snapshots are not "very different." The algorithms are studied via analysis and an implementation of two of them; the results illustrate the potential gains achievable with the new algorithms}
-}
-
-@article{joins,
-    author  = {Priti Mishra und Margaret H. Eich},
-    title   = {Join Processing in Relational Databases},
-    journal = {ACM Computing Surveys},
-    year    = {1992},
-    volume  = {24},
-    pages   = {63--113}
+    title     = {Delta lake: high-performance ACID table storage over cloud object stores},
+    author    = {Armbrust, Michael and Das, Tathagata and Sun, Liwen and Yavuz, Burak and Zhu, Shixiong and Murthy, Mukul and Torres, Joseph and van Hovell, Herman and Ionescu, Adrian and {\L}uszczak, Alicja and others},
+    journal   = {Proceedings of the VLDB Endowment},
+    volume    = {13},
+    number    = {12},
+    pages     = {3411--3424},
+    year      = {2020},
+    publisher = {VLDB Endowment}
 }

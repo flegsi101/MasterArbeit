@@ -1,46 +1,47 @@
 \chapter{Einleitung}
 
 Heutzutage spielen Daten und deren Verarbeitung in vielen Bereichen eine immer wichtigere Rolle.
-In \textit{Rethink Data Report 2020} \textcite{rethink_data_2020} wurde eine Studie durchgeführt, die eine Steigerung von 42\% der Menge an anfallenden Daten pro Jahr prognostiziert.
-Dies wird unter anderem auf den vermehrten Einsatz von IoT-Geräten, immer ausführlicheres Analysieren von Daten und die einfacher werdende Anwendung von Cloud-Speichern zurückgeführt.
+Im \textit{Rethink Data Report 2020} \textcite{rethink_data_2020} wurde eine Studie durchgeführt, die eine Steigerung von 42\% der Menge an anfallenden Daten pro Jahr prognostiziert.
+Dies wird unter anderem auf den vermehrten Einsatz von IoT-Geräten, immer ausführlichere Datenanalysen und die einfachere werdende Anwendung von Cloud-Speichern zurückgeführt.
 Dabei besteht die Herausforderung, Daten in verschiedensten Formaten in großen Mengen zu verwalten und zu verwenden.
 
-Ein Ansatz dafür sind Data-Lake-Systeme.
-Das sind Systeme, die Daten in ihrem Rohformat speichern und erst nach dem Laden für die Verwendung transformieren. Ein ideales Data-Lake-System sollte mehrerer Anforderungen erfüllen.
-Darunter zählt die Unterstützung jeglicher Datenquellen, wie zum Beispiel Datenbanken, Dateien, Datenströmen oder auch andere Schnittstellen wie REST-APIs.
-Da sich Daten mit der Zeit ändern können sollte es auch möglich sein, den Verlauf der Daten, als Versionen, zu speichern und abfragen zu können.
-Eine Metadatenverwaltung kann die Verwaltung und das Abfragen von Daten einfacher und klarer machen und sollte deshalb ebenfalls ein Bestandteil sein.
-Da Datenauswertungen und -analysen nicht mehr nur durch Menschen, sondern auch durch Methoden der künstlichen Intelligenz ausgeführt werden, sollte der Data Lake eine Anbindung an diese und eine entsprechende Aufbereitung der Daten bieten.
+Als eine Lösung für das Problem haben sich Data-Lake-Systeme hervorgetan.
+Ein Data Lake ist eine Methodik, die die Erfassung, Verfeinerung, Archivierung und Erkundung von Daten verbessert \parencite{datalake_01}.
+Große Datenmengen sollen möglichst kostensparend gespeichert werden.
+Verschiedenste Formate können in einem Data Lake abgelegt und verarbeitet werden.
+Darunter zählen zum Beispiel strukturierte Daten aus traditionellen Datenbanksystemen, semistrukturierte Daten wie JSON-Dateien, bei denen nicht alle Attribute festgelegt sind und unstrukturierte Daten wie Bilder oder Videos \parencite{datalake_02}.
 
-Es gibt bereits viele Anbieter, die fertige Data-Lake-Systeme anbieten.
-Dabei ist jedoch ein Nachteil, dass sie häufig nur in der (Cloud-)Infrastruktur des Anbieters (z.B. Microsoft Azure\footnote{https://azure.microsoft.com/}, Amazon Web Services\footnote{https://aws.amazon.com/}) verfügbar sind und sich ihrere Architektur nach diesen Diensten richtet.
 
-In einem Masterprojekt \citetitle{datalake_proj}\parencite{datalake_proj} wurde ein Prototyp eines Data-Lake-Systems entwickelt.
-In dieser Arbeit wird eine Schnittstelle für die Ingestion, also das Laden der Daten in das Data-Lake-System, entwickelt, die in diesen Prototyp integriert werden soll.
+\section{Zielsetzung der Arbeit}
 
-\input{Kapitel/Einleitung/Datalake}
+In einer Reihe von Projekten und Masterarbeiten wird an der Hochschule Niederrhein ein genrelles Data-Lake-System entwickelt.
+Das heißt es ist überall einsetzbar und alle nötigen Komponenten sind im System enthalten.
+Ein Data-Lake-System-Prototyp wurde bereits wärend eines Masterprojekts entwickelt \parencite{prototyp}.
 
-\section{Der Aufbau}
-Am Anfang wird auf die Ziele eigengangen, die Schnittstelle erreichen soll.
-Aus diesen Zielen werden dann konkrete Anforderungen an die Entwicklung abgeleitet.
-Im zweiten Kapitel wird das System der Schnittstelle entwickelt, ohne dabei auf konkrete Details, wie zum Beispiel Programmiersprachen, einzugehen.
-Hier geht es mehr um die Architektur und das Design, das benötigt wird um alle Anforderunegn abzudecken.
-Danach wird die Umsetzung beschrieben.
-Hierbei spielt vorallem das bereits exisitierende Data-Lake-System, in dem die Ingestion-Schnittstelle integriert werden soll, eine große Rolle.
-Zum Schluss wird die Ingestion-Schnittstelle evaluiert und ein Ausblick auf mögliche weitere Arbeiten gegeben.
+Diese Masterarbeit befasst sich mit der Entwicklung, Implementierung und Integration einer neuen Schnittstelle für die Aufnahme von Daten (Ingestion).
+Die wichtigsten Ziele sind dabei die Generalität, Kontinuität und Datenversionierung bei einer möglichst einfachen Verwendung für den Benutzer.
+Die Generalität bezeichnet die Funktionalität unabhängig von der Art der Datenquelle oder der Struktur der Daten.
+Unter Kontinuität ist das erneute und optional auch regelmäßige Nachladen von Daten aus einer Quelle gemeint.
+Für diese Daten soll es auch möglich sein eine Versionierung durch zu führen um Ändeurngen auswerten zu können.
 
-\input{Kapitel/Einleitung/Verwante_Arbeiten}
+Der Aufbau der Arbeit gliedert sich in fünf Kapitel.
+In diesem Kapitel werden wichtige Grundlagen für die Arbeit vermittelt und verwandte Arbeiten erleutert.
+Danach wird auf die Ziele und die daraus folgenden Anforderungen and die Schnittstelle eingegangen.
+Das nächste Kapitel befasst sich mit der Entwicklung einer Architektur und des Designs der Ingestion.
+Auf diesem Design baut die darauf folgende Umsetzug auf.
+Zuletzt wird das System durch funktionale Tests und Benchmarks evaluiert.
 
-\input{Kapitel/Einleitung/Techniken/Techniken}
+\section{Grundlagen und Verwandte Arbeiten}
 
-\section{Das Existierende System}
-In dem Masterprojekt \textit{Development of a Data Lake System} \parencite{datalake_proj} an der Hochschule Niederrhein wurde bereits eine Data-Lake-System-Prototyp entwickelt.
-Das System ist eine monolithische Client-Server-Anwendung.
-Es besteht aus einer REST-API, die zur Interaktion mit dem Data-Lake-System verwendet wird und einem Web-Frontend.
-Außerdem können durch einfach Anpassungen der Server-Anwendung beliebige Datenspeicher in das Data-Lake-System integriert werden.
-Als Plattform für die Datenverarbeitung wird \textit{Apache Spark} verwendet.
+% Techniken
+\input{Kapitel/Einleitung/Spark}
+\input{Kapitel/Einleitung/HDFS}
+\input{Kapitel/Einleitung/Kafka}
+\input{Kapitel/Einleitung/DeltaLake}
 
-Der Server ist in \textit{Python} geschrieben und verwendet das Framework \textit{Flask}\footnote{https://palletsprojects.com/p/flask/} um eine REST-API bereitzustellen, über die mit dem Data Lake interagiert werden kann.
-Dabei werden über die API \textit{JSON}-Objekte ausgetauscht, so dass die API client-unabhängig verwendet werden kann.
-Der Client des Projekts ist eine Webanwendung, die mit \textit{Angular}\footnote{https://angular.io/} umgesetzt wurde.
+% Arbeiten
+\input{Kapitel/Einleitung/Prototyp}
+\input{Kapitel/Einleitung/CDC}
+
+% \input{Kapitel/Einleitung/Datalake}
 

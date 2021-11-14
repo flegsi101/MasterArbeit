@@ -1,28 +1,37 @@
-% digital
-\documentclass[titlepage]{report}
-% print
-%\documentclass[titlepage]{book}
+% ||================================================================================================
+% || Präambel
+% ||================================================================================================
 
-\usepackage[onehalfspacing]{setspace}
+% |=================================================================================================
+% | Layout
+% |=================================================================================================
+\documentclass[12pt,titlepage]{report}
+% digital
+% print
+%\documentclass[12pt,titlepage]{book}
 \usepackage{geometry}
 \geometry{
   left=3cm,
   right=3cm,
-  top=3cm,
-  bottom=3cm,
   % print
   % bindingoffset=5mm
 }
 
-% font
-\usepackage{dejavu}
+% |=================================================================================================
+% | Fonts
+% |=================================================================================================
+\usepackage[onehalfspacing]{setspace}
+\usepackage{dejavu} 
 \usepackage{sectsty}
 \allsectionsfont{\sffamily}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % direkte Einbgabe von Umlauten
+
 % language stuff
 \usepackage[german]{babel}
-\usepackage[utf8]{inputenc} % direkte Einbgabe von Umlauten
+
 % miscellaneous
-\usepackage{graphicx}         % graphics
+\usepackage{graphicx, subfigure}         % graphics
 \graphicspath{{grafiken/}}
 \usepackage[german]{fancyref}
 \usepackage{hhline}           % double lines in tables
@@ -43,7 +52,7 @@
 
 \usepackage[printonlyused]{acronym}
 \usepackage{multirow, multicol, tabularx}
-
+\usepackage{csquotes}
 \newcommand*{\fancyrefalgolabelprefix}{algo}
 
 \newcommand*{\Frefalgoname}{ALGORITHMUS}
@@ -57,7 +66,9 @@
 
 % Kopf- und Fußzeile
 \fancyhead{} % clear all header fields
-\fancyhead[RO,LE]{\leftmark}
+%\fancyhead[RO,LE]{\leftmark}
+\fancyhead[RO]{\leftmark}
+\setlength{\headheight}{15pt}
 
 \title{Arbeit}
 \author{Alexander Martin}
@@ -81,9 +92,10 @@
 \include{Kapitel/Entwicklung/Entwicklung}
 \include{Kapitel/Umsetzung/Umsetzung}
 
+\chapter{Evaluierung}
+\chapter{Ausblick}
+
 \newpage
-% \bibliographystyle{unsrtnat}
-% \bibliography{literatur}
 
 \printbibliography
 
