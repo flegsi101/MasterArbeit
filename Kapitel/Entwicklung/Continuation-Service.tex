@@ -1,11 +1,11 @@
 \section{Continuation-Service}
 
-Für die Sicherstellung der korrekten Ausführung von kontinuierlichen Ingestions, müssen regelmäßig alle Datenquellen überprüft werden.
-Dabei gibt es zwei Fälle, die entscheiden ob eine neue Ingestion für eine Datenquelle gestartet werden muss.
+Für die Sicherstellung der korrekten Ausführung kontinuierlicher Ingestions, müssen regelmäßig alle Datenquellen überprüft werden.
+Dabei gibt es zwei Bedingungen nach denen entscheiden wird, ob eine Ingestion werden muss.
 Bei Datenströmen gilt allgemein, wenn dieser nicht läuft, dann muss die Ingestion automatisch neu gestartet werden.
 Eine Ausnahme dabei ist, wenn die Verarbeitung durch den Benutzer explizit beendet wurde.
 
-Der zweite Fall ist die Zeitsteuerung. 
+Der zweite Fall ist die Zeitsteuerung.
 Für eine zeitgesteuerte kontinuierliche Ingestion werden einer Datenquelle ein oder mehrere Timer hinzugefügt.
 Der Continuation-Service prüft, ob der Timer zu diesem Zeitpunkt zutrifft oder nicht.
 Wenn das der Fall ist und bisher keine Ingestion auf der Datenquelle läuft, dann wird eine neue gestartet.
@@ -17,5 +17,5 @@ Diese geben die Minute, die Stunde, den Tag des Monats, den Monat und den Tag de
 Als Erweiterung kann man "`*"' als Platzhalter für alle möglichen Werte verwenden, man kann mehrere Werte als mit Kommata getrennt angeben oder mit "`/x"' eine Liste in Schritten der Größe $x$ erzeugen \parencite{cron}.
 
 Diese Notation soll auch für die Zeitsteuerung der Ingestions genutzt werden.
-Als Referenz wird dabei die koordinierte Weltzeit (UTC) genommen, damit die Ausführung unabhängig vom Standort einheitlich bleibt. 
+Als Referenz wird dabei die koordinierte Weltzeit (UTC) genommen, damit die Ausführung unabhängig vom Standort einheitlich bleibt.
 Wenn eine Datenquelle mehrere Timer hat, reicht es aus, dass einer von diesen zutrifft.

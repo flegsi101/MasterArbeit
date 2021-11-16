@@ -1,149 +1,59 @@
-\section{Datenquellen}
-Ein weiterer Kernpunkt der Ingestion-Schnittstelle ist die Modellierung der Datenquellen.
-Zur Entwicklung eines Datenmodells für die Datenquellen, wird als erstes betrachtet, welche verschiedenen Typen von Datenquellen möglich sind.
-Danach wird unter Zuhilfenahme des Ergebnisses ein Modell entwickelt.
-Das fertige Datenmodell enthält dann neben den für den Betrieb benötigten Informationen auch Daten über den Verlauf der Ingestion einer Datenquelle.
-Um den Verlauf von Änderungen an einer Datenquelle möglich zu machen werden alle Überarbeitungen in Revisionen festgehalten.
+\section{Datenmodelle}
 
-\subsection{Datenquellen-Typen}
-\label{sec:datasource-types}
+\subsection{DataSourceDefinition}
 
-Da das System alle möglichen Datenquellen unterstützen soll, werden hier mögliche Typen dargestellt, mit denen sich alle Datenquellen abdecken lassen.
-Durch die Verwendung von \textit{Apache Spark} spielt bei der Unterscheidung der Daten quellen die Struktur keine Rolle.
-Es können sowohl strukturierte als auch semi- oder unstrukturierte Daten verarbeitet werden.
+Für das Data-Lake-System muss eine Modellierung entwickelt werden, mit der alle Datenquellen dargestellt werden können.
+Das entwickelt Modell definiert eine Datenquelle und bekommt den Namne DataSourceDefinition (deutsch: Datenquellendefinition).
+Da Apache Spark verwendet wird, ist einer der wichtigsten Punkte zur definition einer Datenquelle die Erfassung der Informationen, die in Spark benötigt werden.
+Dazu gehören: \begin{itemize}
+    \item extra Abhängigkeiten für Spark (spark.jars.packages)
+    \item das Format und Optionen für die Reader
+    \item und bei benutzerdefinierten Speichern das Format, die Optionen und einen Schreibmodus für die Writer
+\end{itemize}
+Neben den Spark spezfischen werden noch folgende weiter Informationen erfasst: \begin{itemize}
+    \item ein Name für die Datenquelle
+    \item die Id einer anderen Datenquelle, falls die aktuelle eine Updatequelle ist
+    \item Datum der Erstellung und letzten Änderung
+    \item den Namen der Id-Spalte in den Daten (wird später für die Deltaberechnung benötigt)
+    \item den Ingestion-Typ (Pull, File, Stream)
+    \item bei Datei-Ingestions eine Liste der Quelldateien
+    \item den Speicher-Typ (Default, Delta, Custom)
+    \item eine Liste mit der Zeitsteuerung für eine kontinuierliche Ingestion
+    \item eine Liste mit Plugindateien
+    \item und eine Liste mit Abhängigkeiten der Plugins
+\end{itemize}
 
-Die Typen der Datenquellen ergeben sich aus der Betrachtung, wie die Daten in das Data-Lake-System gelangen.
-Bei dem Pull-Prinzip ist das System dafür verantwortlich Daten aus einer Quelle zu laden.
-Das Gegenteil dazu ist dass Pull-Prinzip.
-Bei diesem werden Daten direkt an das System gesendet.
-Das Push-Prinzip lässt sich dabei noch weiter aufteilen.
-Es gibt als erstes Datenströme, bei denen kontinuierlich laufend neue Daten an das System gesendet werden.
-Als zweites gibt es Dateien, die als Datenquelle dienen.
-Es wird bewusst auf die Möglichkeit verzichtet ganze Datensätze direkt an das Data-Lake-System zu senden, da es einfacher ist, eine große Menge von Daten auf ein oder mehrere Dateien zu verteilen und diese an System zu übergeben.
+Die Ingestion-Typen ergeben sich aus der Betrachtung, wie die Daten in das Data-Lake-System gelangen.
+Bei einer Pull-Ingestion ist das System dafür verantwortlich Daten aus einer Quelle zu laden.
+Dies ist zum Beispiel bei Datenbanken der Fall.
+Das Gegenteil dazu ist eine Push-Ingestion, bei der die Daten direkt an den Data Lake gesendet werden.
+Diese muss jedoch nochmal in zwei unterschiedliche Typen unterteilt werden.
+Bei einer Stream-Ingestion, also bei Datenströmen, werden kontinuierlich neue Daten an das System gesendet werden.
+Und bei einer File-Ingestion werden Dateien hochgeladen, die die Daten enthalten, wobei wichtig ist, dass alle Dateien das gleiche Dateiformat haben.
+Es ist nicht möglich Daten direkt an die API zu senden.
+Alle Push-Ingestions sollen über diese beiden Typen abgebildet werden.
 
-Daraus ergeben sich verschiedene Typen nach denen die Datenquellen aufgeteilt werden können.
-Diese sind Pull, Datei und Datenstrom.
-Bei der Verarbeitung können eine Pull- und eine Datei-Ingestion gleich behandelt werden.
-Für beide besteht die Möglichkeit die Ingestion nur einmalig auszuführen oder als kontinuierliche Ingestion über manuelle oder zeitgesteuerte Auslösung.
-Datenströme hingegen sind immer kontinuierlich.
+Die Speicher-Typen kommen von den drei Optionen wo Daten abgelegt werden können.
+Custom bedeutet, dass der in der DataSourceDefinition konfigurierte Speicher verwendet werden soll.
+Delta ist das Speichern im internen Speicher aber mit einer Versionierung und Default Versionierung.
 
-\subsection{Datenquellen-Modell}
-\label{sec:datasourcemodel}
+Für die Umsetzung einer unkomplizierten Versionierung werden alle veränderlichen Informationen einer DataSourceDefinition in Revisionen gespeichert.
+Das betrifft alle oben genannten Felder.
+Die Revisionen einer DataSourceDefinition erhalten eine fortlaufende Nummer.
+Die DataSourceDefinition selbst hält dann nur noch eine Liste aller Revisionen und die Nummer der aktuellen.
 
-Das Modell einer Datenquelle besteht aus drei Teilen.
-Eine Liste von Ingestion-Events, die Informationen über jede ausgeführte Ingestion enthalten.
-Die Revisionen, die alle Informationen zur Datenquelle beinhalten, die durch den Benutzer geändert werden können.
-In einer Datenquelle werden diese beiden Listen zusammen mit unveränderlichen Informationen wie einer Id aggregiert.
+\subsection{IngestionEvent}
 
-Im folgenden werden die Felder der Modelle beschrieben.
-Falls eine Information direkt aus \textit{Apache Spark} abgeleitet ist, wird auch Angegeben an welcher Stelle diese angewendet wird.
+Auch für den Zustand einer Ingestion musss ein Modell entwickelt werden.
+Die Auführungen der Ingestions werden hier IngestionEvent geannant.
+Dieses enthält wie die Revision eine fortlaufende Nummer, ein Start- und Enddatum, den aktuellen Status indem es befindet, die Nummer der Revision mit der es gestartet wurde und eine Fehlernachricht.
 
-\subsubsection*{Revision} 
-    
-\paragraph{Nummer} 
-Eine aufsteigende Nummer, die die Revision identifiziert.
-Sie startet bei 0 und jede Nummer ist für eine Datenquelle einzigartig.
-Gleichzeitig spiegelt die Nummer auch den zeitlichen Verlauf wieder. 
+Das IngestionEvent kann auch an die DataSourceDefinition mit angehangen werden.
+Dafür werden Felder hinzugefügt, die alle IngestionEvents, die Nummer des letzten und die Nummer des letzten erfolgreichen IngestionEvents enthalten.
 
-\paragraph{Erstellungsdatum} 
-Das Datum an dem die Revision erstellt wurde.
-Da eine Revision nicht geändert werden kann, ist das Erstellungsdatum einer Revision auch das Datum der Änderung der dazugehörigen Datenquelle.
-
-\paragraph{Name} 
-Ein Name, der der Datenquelle im Datalake gegeben wird.
-Dieser dient nur dazu die Datenquelle als Benutzer besser identifizieren zu können.
-
-\paragraph{Id Spalte} 
-Der Name der Spalte oder des Feldes, das einen Datensatz eindeutig identifiziert.
-Die Id Spalte wird für die Zuordnung der Datensätze bei der Deltaerkennung benötigt.
-
-\paragraph{Spark Abhängigkeiten} 
-Eine Liste von Abhängigkeiten, die der SparkSession bei der Ingestion mitgegeben wird.
-Diese Liste entspricht der Option "`spark.jars.packages"' die bei der Erstellung einer Spark Session gesetzt wird.
-
-\paragraph{Quelldateien} 
-Bei der Ingestion können die Daten über das Push-Prinzip in Form von Dateien an den Server gesendet werden.
-Die Liste der Quelldateien enthält die Pfade zu diesen Dateien.
-
-\paragraph{Typ beim Lesen} 
-Der Typ der zu lesenden Daten, wie in \ref{sec:datasource-types} beschrieben.
-
-\paragraph{Format beim Lesen} 
-Das Format in dem die Daten gelesen werden sollen.
-Der Wert aus diesem Feld wird bei der Ingestion über die \verb|format| Methode eines 
-Readers gesetzt.
-
-\paragraph{Optionen beim Lesen} 
-Eine Liste von Schlüssel-Wert-Paaren, die als Optionen des Readers in \textit{Apache Spark} gesetzt werden.
-Über diese wird die Verbindung zur Datenquelle definiert.
-
-\paragraph{Aktualisierungsquelle} 
-Es kann für einen Datenquelle festgelegt werden, dass diese Aktualisierungen für eine andere enthält.
-Dann wird sie Aktualisierungsquelle genannt.
-Das ermöglicht die Nutzung von eigenen Change Data Capture Lösungen.
-Dabei muss die Datenquelle aber dem einem festgelegten Anderäungsdatenformat entsprechen, das später genauer erläutert wird.
-Das Feld selbst enthält die Id der Ziel-Datenquelle für die Aktualisierung.
-
-\paragraph{Typ beim Schreiben} 
-Der Typ für das Schreiben der Daten legt fest, ob intern mit Versionierung oder in einen freien Speicher geschrieben werden soll.
-
-\paragraph{Format und Optionen beim Schreiben}
-Das Format und die Optionen beim Schreiben funktionieren analog zu denen beim Lesen.
-Sie werden jedoch nicht beim Reader gesetzt sondern beim Writer.
-Gerade bei Datenströmen muss darauf geachtet werden, dass nicht in jedem Format ein Datenstrom geschrieben werden kann.
-
-\paragraph{Schreibmodus} 
-Der Modus in dem die Daten geschrieben werden.
-Die Auswahlmöglichkeiten werden auch durch \textit{Apache Spark} festgelegt.
-
-\paragraph{Zeitsteuerung} 
-Eine Liste die festlegt, zu welchen Zeitpunkte eine Ingestion der Datenquelle ausgeführt werden soll.
-
-\paragraph{Plugin Abhängigkeiten} 
-Eine Liste von Abhängigkeiten, die von den Plugins der Datenquelle benötigt werden.
-
-\paragraph{Plugins} 
-Die Speicherorte der Plugins. 
-    
-\subsubsection*{Ingestion-Event}
-
-\paragraph{Nummer}
-Die Nummer um ein Ingestion-Event zu identifizieren.
-Sie funktioniert genau wie die Nummer der Revision. 
-
-\paragraph{Status}
-Der aktuelle Status in dem sich das Event befindet.
-Er gibt Auskunft, ob die Ingestion gestartet wurde, gerade läuft oder beendet wurde. 
-
-\paragraph{Revisionsnummer}
-Die Nummer der Revision, mit der die Ingestion gestartet wurde.
-Mit Hilfe der Revisionsnummer ist es leichter Fehler in der Ingestion zu finden und zu beheben. 
-
-\paragraph{Start- und Endzeit}
-Die Zeitpunkte des Starts und Endes eines Ingestion-Durchlaufs.
-Wenn die Ingestion noch in der Ausführung ist, ist keine Endzeit gesetzt. 
-
-\paragraph{Fehler}
-Die Fehlerausgabe, wenn die Ingestion nicht erfolgreich ausgeführt werden konnte. 
-    
-\subsubsection*{Datenquelle} 
-    
-\paragraph{Id} 
-Eine Identifikationsnummer, die für jede Datenquelle eindeutig ist. 
-
-\paragraph{Aktuelle Revision}
-Die Nummer der aktuellen Revision.
-Neue Ingestions werden mit den Informationen aus dieser Revision ausgeführt. 
-
-\paragraph{Alle Revisionen}
-Eine Liste aller Revisionen. 
-
-\paragraph{Letzte Ingestion}
-Die Nummer des zuletzt gestarteten Ingestion-Durchlaufs. 
-
-\paragraph{Letzte erfolgreiche Ingestion}
-Die Nummer des letzten erfolgreich abgeschlossenen Ingestion-Durchlauf. 
-
-\paragraph{Alle Ingestion-Events}
-Eine Liste aller Ingestion Events.
-
+\begin{figure}
+    \centering
+    \includegraphics{Grafiken/Entwicklung-Datenmodell.pdf}
+    \caption{Übersicht Datenmodell}
+    \label{fig:datenmodell}
+\end{figure}

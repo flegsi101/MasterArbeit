@@ -1,19 +1,17 @@
 \chapter{Entwicklung}
-In diesem Kapitel werden die einzelnen Komponenten, die für eine komplette Ingestion notwendig sind entwickelt.
-Nach \citeauthor{DL-Ing-Mgmt} ist der Ingestion-Prozess eines Data-Lake-Systems, als erster Schritt im Lebenszyklus der Daten, maßgebend dafür, wie gut die Daten später verwendet und verarbeitet werden können.
-Um diese Aufgabe so gut wie möglich zu erfüllen, wurden im vorherigen Kapitel bereits die Anforderung festgelegt.
-Daraus ergeben sich die drei Inhaltlichen Bereiche, nach denen die weiter Entwicklung aufgeteilt ist.
+Nach \textcite{ingestion_01} ist der Ingestion-Prozess eines Data-Lake-Systems, als erster Schritt im Lebenszyklus der Daten, maßgebend dafür, wie gut die Daten später verwendet und verarbeitet werden können.
+Hier spielen besonders die Metadaten eine große Rolle.
+Da dieser Bereich jedoch nicht in den Rahmen dieser Arbeit passt, wird hier nur die Aufnahme und Integration der Daten behandelt.
+Hier durch fällt bereits ein Minimum an Metadaten an.
+Genau die Daten, die benötigt werden um eine Ingestion auszuführen und die, die bei der Versionierung erzeugt werden.
 
-Der erste ist die Ingestion.
-Diese beschreibt das erfassen von Informationen über eine Datenquelle und das Laden der Daten aus der Datenquelle.
-Dabei werden die Daten noch nicht intern im Data Lake wieder abgelegt sondern existieren nur flüchtig im Arbeitsspeicher.
-
-Die Deltaerkennung ist dafür zuständig die Unterschiede zwischen den geladenen Daten im Arbeitsspeicher und den Bestandsdaten aus dem internen Data Lake Speicher zu finden.
-Aus diesen Unterschieden sollen Änderungsdaten erstellt werden, die dann bei der weiteren Verarbeitung verwendet werden können.
-
-Der dritte Bereich ist das Speichern von Daten.
-Als Zielspeicher gibt es hier einmal ein vordefiniertes internes Speichersystem, es ist aber auch auch möglich ein benutzerdefiniertes zu verwenden.
-Der Unterschied dabei ist, dass im internen Speicher die Datenversionierung durch das Data-Lake-System unterstützt wird, während dies bei benutzerdefinierten nicht der Fall ist.
+Da ein wichtiges Prinzip bei Data Lakes das Speichern der Rohdaten ist, diese aber nicht immer passend für die weiter Verarbeitung sind, kann ein ähnliches System wie von \textcite{ingestion_02} beschireben verwendet werden.
+Die dortige Aufteilung in die drei Zonen DropZone, LandingZone und IntegrationZone wurde für einen speziellen Fall entwickelt und passt nicht in das generelle Data-Lake-System.
+Aber die Aufteilung der Zugriffe und Ändeurngen an Daten in Bereiche ist auch hier anwendbar.
+Der erste Bereich in dem Daten abgelegt werden ist der Ingestion-Bereich.
+Die Datensätze, die hier gespeichert werden repräsentieren einen bestimmte Datenquelle.
+Nur die Ingestion-Schnittstelle sollte Daten in diesem Bereich erstellen oder verändern.
+Ein Metadaten-Management-System kann diese Daten einlesen um direkt nach der Ingestion weitere Metadaten zu erstellen.
 
 \input{Kapitel/Entwicklung/Architektur}
 \input{Kapitel/Entwicklung/Plugins}

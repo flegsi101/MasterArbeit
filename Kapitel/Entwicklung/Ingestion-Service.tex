@@ -1,31 +1,33 @@
 \section{Ingestion-Service}
 
 Der Ingestion-Service hat die Aufgabe eine Ingestion für eine Datenquelle durchzuführen.
-Dazu gehören wie in der Einleitung des Kapitels bereits genannt, das Laden der Daten, die Deltaerkennung und das Speichern.
-Damit ein Ingestion-Service mehrere Ingestions zu verschiedenen Datenquellen gleichzeitig durchführen kann, wartet dieser auf Benachrichtigungen der anderen Services, dass eine Ingestion gestartet werden soll.
-In dieser Nachricht wird auch die Id der Datenquelle übertragen.
-Dann lädt der Ingestion-Service die Datenquelle aus der internen Datenbank und prüft ob eine Ingestion für diese bereits läuft.
-Wenn das nicht der Fall ist, wird die Ingestion in einem neuen Prozess gestartet.
+Dazu gehören das Laden der Daten in ein DataFrame, die Deltaberechnung und das Speichern.
+Das meiste davon wird jedoch nicht von dem Service selbst, sondern auf dem Spark Cluster gemacht.
+Der Service führt die Vorbereitung und das Deplyoment des Jobs auf dem Cluster aus.
 
-\subsection{Ablauf}
-Der Ablauf einer einzelnen Ingestion kann über alle Typen gleich etwas abstrahiert gezeigt werden.
-Im ersten Schritt müssen die Plugins für die Ingestion geladen werden.
-Dabei ist es wichtig auch eventuelle Abhängigkeiten von Bibliotheken aufzulösen.
+Der Ingestion-Service wartet auf Nachrichten zur Ausführung einer Ingestion, mit der Id der DataSourceDefinition.
+Für jede Nachricht wird ein neuer Prozess gestartet, der die Komplette Ausführung der Ingestion übernimmt.
+Auf diese Art können mehrer Ingestion von verschiedenen Quellen parallel bearbeitet werden.
 
-Danach können die Daten entweder über das Plugin oder normal in ein Dataframe geladen werden.
-Ingestions von Dateien oder nach dem Pull-Prinzip können gleich abgehandelt werden.
-Nur die Pfade zu den Dateien müssen durch den Service ergänzt werden.
-Eine Ingestion eines Datenstroms hat eine eigene Behandlung.
+Der Ablauf einer einzelnen Ingestion kann unabhängig vom Ingestion- oder Speicher-Typ in einem allgemeinen Ablauf abgebildet werden.
+Als erstes wird geprüft, ob eine Ingestion asugeführt werden darf, also ob für diese Datenquelle bereits eine Ingestion läuft.
+Danach kommt die Vorbereitung.
+Hier werden die Plugins installiert und eine SparkSession erstellt.
+Im nächsten Schritt werden die Daten aus der Quelle in ein DataFrame geladen.
+Darauf folgt eine Entscheidung, ob eine Deltaberechnung durchgeführt werden muss.
+Es gelten diese Bedingungen: \begin{itemize}
+    \item der Speicher-Typ ist Delta
+    \item es handelt sich nicht um eine Updatequelle
+    \item es ist nicht die erste Ingestion dieser Datenquelle
+\end{itemize}
+Sind alle davon erfüllt, werden Änderungsdaten zwischen dem geladenen DataFrame und den aktuellen Daten aus dem Data Lake berechnet.
+Wurden Änderungsdaten berechnet oder handelt es sich um eine Updatequelle, werden diese in die Daten der entsprechenden Datenquelle eingepflegt.
+Ansonsten werden die Daten einfach geschrieben.
+Handelt es sich nicht um einen benutzerdefinierten Speicher, werden die alten Daten mit den neuen überschrieben.
 
-Im Anschluss wir geprüft, ob eine Deltaerkennung für die Daten durchgeführt wird.
-Dazu müssen drei Bedienungen erfüllt sein.
-Es darf sich nicht um eine Datenquelle handeln, für die ein benutzerdefinierter Speicher festgelegt wurde.
-Für diese kann keine Versionierung unterstütze werden.
-Außerdem ist es für Aktualisierungsquellen nicht nötig, eine Deltaerkennung  durchzuführen, da diese schon im Änderungsdatenforamt sein sollen.
-Für den letzten Punkt muss es sich um die wiederholte Ingestion einer Datenquelle handeln, da bei der ersten keine Bestandsdaten für eine Deltaerkennung existieren.
-
-Zum Schluss wird auch beim Speichern der Daten unterschieden.
-Bei benutzerdefinierten Speichern können die Daten wie konfiguriert ohne weiteren Aufwand gespeichert werden.
-Das gilt für sowohl Datenströme als auch andere Ingestions.
-Änderungsdaten müssen in eine existierenden Speicher integriert werden.
-Der letzte Fall bedeutet, dass Daten das erste mal im internen Speichersystem gespeichert werden und auch hier in einer neuen Datensatz abgelegt werden können.
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{Grafiken/Entwicklung-Ingestion-Ablauf.pdf}
+    \caption{Allgemeiner Ablauf einer Ingestion}
+    \label{fig:ingestion-ablauf}
+\end{figure}

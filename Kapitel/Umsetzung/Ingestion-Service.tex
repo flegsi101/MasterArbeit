@@ -16,8 +16,8 @@ Das Sturctured Streaming ist ein Bibliothek, die auf Spark SQL aufbaut und es er
 Für die Datenquelle wird mit den gesetzten Optionen ein DataStream- oder DataFrame-Reader erzeugt, mit dem die Daten geladen werden.
 Bei der File-Ingestion werden zusätzlich die Pfande zu den Quelldateien im HDFS gesetzt.
 
-Für die geladenen Daten muss dann entschieden werden, ob eine Deltaerkennung und somit eine Umwandlung in Änderungsdaten nötig ist.
-Folgende Regeln müssen zutreffen, damit eine Deltaerkennung ausgeführt wird.
+Für die geladenen Daten muss dann entschieden werden, ob eine Deltaberechnung und somit eine Umwandlung in Änderungsdaten nötig ist.
+Folgende Regeln müssen zutreffen, damit eine Deltaberechnung ausgeführt wird.
 Es handelt sich nicht um einen Datenstrom.
 Die Ingestion ist nicht die erste dieser Datenquelle oder hat einen benutzerdefinierten Speicherort.
 Die Datenquelle ist keine Updatequelle.
@@ -27,28 +27,28 @@ Das Ergebnis ist ein DataFrame mit allen aktualisierten Datensätzen.
 Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte, die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
 
 \begin{algorithm}
-\caption{Deltaberechnung}
-\label{algo:delta-calc}
-\KwData{leftDataFrame, rightDataFrame, idColumn}
-\KwResult{changeDataFrame}
-$leftDataFrame \gets$ add column with row hash \;
-$leftDataFrame \gets$ prefix column names with "`left\_"' \;
-$rightDataFrame \gets$ add column with row hash \;
-$rightDataFrame \gets$ prefix columnnames with "`right\_"' \;
+    \caption{Deltaberechnung}
+    \label{algo:delta-calc}
+    \KwData{leftDataFrame, rightDataFrame, idColumn}
+    \KwResult{changeDataFrame}
+    $leftDataFrame \gets$ add column with row hash \;
+    $leftDataFrame \gets$ prefix column names with "`left\_"' \;
+    $rightDataFrame \gets$ add column with row hash \;
+    $rightDataFrame \gets$ prefix columnnames with "`right\_"' \;
 
-$changeDataFrame \gets$ full join over $idColumn$ of $leftDataFrame$ and $rightDataFrame$ \;
+    $changeDataFrame \gets$ full join over $idColumn$ of $leftDataFrame$ and $rightDataFrame$ \;
 
-$changeDataFrame \gets$ remove all rows where $left\_hash$ equals $right\_hash$ \;
+    $changeDataFrame \gets$ remove all rows where $left\_hash$ equals $right\_hash$ \;
 
-$changeDataFrame \gets$ remove hash columns
+    $changeDataFrame \gets$ remove hash columns
 
-$changeDataFrame \gets$ add row $cd\_deleted$ \;
-\eIf{$right\_idColumn$ is $null$}{$cd\_deleted = true$}{$cd\_deleted = false$}
+    $changeDataFrame \gets$ add row $cd\_deleted$ \;
+    \eIf{$right\_idColumn$ is $null$}{$cd\_deleted = true$}{$cd\_deleted = false$}
 
-$changeDataFrame \gets$ merge left and right $idColumn$ into one $idColumn$
-\eIf{$left\_idColumn$ is not $null$}{$idColumn = left\_idColumn$}{$idColun = right\_idColumn$}
+    $changeDataFrame \gets$ merge left and right $idColumn$ into one $idColumn$
+    \eIf{$left\_idColumn$ is not $null$}{$idColumn = left\_idColumn$}{$idColun = right\_idColumn$}
 
-$changeDataFrame \gets$ merge remaining columns with left and right value by always taking the right and removing prefix
+    $changeDataFrame \gets$ merge remaining columns with left and right value by always taking the right and removing prefix
 
 \end{algorithm}
 

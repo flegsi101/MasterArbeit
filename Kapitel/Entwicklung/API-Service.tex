@@ -1,48 +1,34 @@
 \section{API-Service}
 
-Für den API-Service müssen Endpunkte definiert werden.
-Diese Endpunkte bilden die verschiedenen Funktionen ab, die auf der Ingestion-Schnittstelle ausgeführt werden können.
+Der API-Service benötigt nicht viel Entwicklung.
+Es müssen lediglich die Enspunkte definiert werden, die Zugriff auf die verschiedenen Funktionen der Ingestion-Schnittstelle bereitstellen.
 Dazu gehören die Verwaltung von Datenquellen und das Starten einer Ingestion.
-Da es bereits festgelegt wurde, dass es sich um eine REST-Schnittstelle handelt, werden Endpunkte durch einen Pfad und eine HTTP-Methode definiert.
-Nachfolgend werden alle Endpunkte aufgelistet.
+Da es sich um eine REST-Schnittstelle handelt, werden die Endpunkte hier durch einen Pfad und eine HTTP-Methode definiert (\fref{tab:endpunkte}).
+Außerdem kümmert sich der API-Service um die Erstellung von DataSourceDefinitions und deren Revisionen und IngestionEvents.
+Bei Anfragen zum Starten einer Ingestion versendet der API-Server eine Nachricht mit der Id einer Definition der zu ladenen Datenquelle.
 
-\begin{table}[ht]
-  \centering
-  \begin{tabularx}{\linewidth}{lX}
-    GET & /datasources \\
-    \multicolumn{2}{l}{Liefert alle im System gespeicherten Datenquellen} \\
-    \\
-    GET & /datasources/\textless id\textgreater \\
-    \multicolumn{2}{l}{Liefert die Datenquelle mit der im Pfad übergebenen Id} \\
-    \\
-    POST & /datasources \\
-    \multicolumn{2}{l}{Bearbeitet die Daten Datenquelle mit der im Pfad übergebenen Id} \\
-    \\
-    PUT &  /datasources/\textless id\textgreater \\
-    \multicolumn{2}{l}{Erstellt eine neue Datenquelle} \\
-    \\
-    GET &  /datasources/\textless id\textgreater/run \\
-    \multicolumn{2}{l}{Startet eine Ingestion der Datenquelle mit der im Pfad übergebenen Id}
-    
-    
-    
-    %\hline
-    %Pfad                                      & HTTP-Methode & Beschreibung                                                          \\
-    %\hline \hline
-    %/datasources                              & GET          & Liefert alle im System gespeicherten Datenquellen                     \\
-    %\hline
-    %/datasources/\textless id\textgreater     & GET          & Liefert die Datenquelle mit der im Pfad übergebenen Id                \\
-    %\hline
-    %/datasources                              & POST         & Erstellt eine neue Datenquelle                                        \\
-    %\hline
-    %/datasources/\textless id\textgreater     & PUT          & Bearbeitet die Daten Datenquelle mit der im Pfad übergebenen Id       \\
-    %\hline
-    %/datasources/\textless id\textgreater/run & GET          & Startet eine Ingestion der Datenquelle mit der im Pfad übergebenen Id \\
-    %\hline
-  \end{tabularx}
-  %\caption{Endpunkte des API-Servers}
-  \label{tab:enpoints}
-\end{table}
-
-Außerdem kümmert sich der API-Service um die Erstellung von Datenquellen, deren Revisionen und Ingestion-Events.
-Bei Anfragen zum Starten einer Ingestion versendet der API-Server eine Nachricht, mit der Id der Datenquelle.
+    {\renewcommand{\arraystretch}{1.8}
+        \begin{table}[ht]
+            \centering
+            \begin{tabularx}{\linewidth}{|lX|}
+                \hline
+                GET  & /datasources                                                                         \\
+                \multicolumn{2}{|l|}{Liefert alle im System gespeicherten Datenquellen}                     \\
+                \hline
+                GET  & /datasources/\textless id\textgreater                                                \\
+                \multicolumn{2}{|l|}{Liefert die Datenquelle mit der im Pfad übergebenen Id}                \\
+                \hline
+                POST & /datasources                                                                         \\
+                \multicolumn{2}{|l|}{Bearbeitet die Daten Datenquelle mit der im Pfad übergebenen Id}       \\
+                \hline
+                PUT  & /datasources/\textless id\textgreater                                                \\
+                \multicolumn{2}{|l|}{Erstellt eine neue Datenquelle}                                        \\
+                \hline
+                GET  & /datasources/\textless id\textgreater/run                                            \\
+                \multicolumn{2}{|l|}{Startet eine Ingestion der Datenquelle mit der im Pfad übergebenen Id} \\
+                \hline
+            \end{tabularx}
+            \caption{Endpunkte des API-Servers}
+            \label{tab:endpunkte}
+        \end{table}
+    }
