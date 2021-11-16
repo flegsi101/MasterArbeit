@@ -1,10 +1,10 @@
 \subsection{Delta Lake}
 
-Delta Lake ist eine extra Speicher-Ebene, die auf Objektspeichern in der Cloud (z.B. Amazon S3) oder anderen Dateisystemen verwendet werden kann.
+Delta Lake ist eine extra Speicher-Ebene, die auf dem HDFS angewendet werden kann.
 Das Ziel ist es diesen Speichern ACID Transaktionen, schnelles Arbeiten mit Metadaten der Tabelle und eine Versionierung der Daten hinzuzufügen.
 Daten werden in sogenannten Delta Tabellen mit Metadaten und Logs gespeichert.
 
-Eine Delta Tabelle ist praktisch ein Verzeichnis im Speicher.
+Eine Delta Tabelle ist ein Verzeichnis im Speicher.
 Die tatsächlichen Daten werden hier in Apache Parquet Dateien abgelegt.
 Parquet ist ein spalten-orientiertes Format, zum effizienten Speichern von Daten \parencite{parquet}.
 Dabei können die Daten auch noch in Unterverzeichnisse aufgeteilt sein, zum Beispiel für jedes Datum ein Verzeichnis.

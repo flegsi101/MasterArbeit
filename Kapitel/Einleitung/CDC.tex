@@ -1,6 +1,6 @@
 \subsection{Change Data Capture (CDC)}
 
-Um Änderungen an Daten in Datenquellen in das Data-Lake-System einpflegen zu können, müssen dieser ersteinmal erfasst werden.
+Um Änderungen an Daten in Datenquellen in das Data-Lake-System einpflegen zu können, müssen diese erst erfasst werden.
 Diesen Prozess nennt man Change Data Capture (CDC).
 Das Ziel beim CDC ist es, die Änderungen an den Daten nur an einer Stelle zu erfassen und dann an andere Systeme weiter zu schicken.
 Dafür gibt es verschiedene Ansätze, die in den Arbeiten \citetitle{delta-view_gen}\parencite{delta-view_gen}, \citetitle{cdc_in_nosql}\parencite{cdc_in_nosql} und \citetitle{boeing}\parencite{boeing} erläutert werden.
@@ -8,11 +8,11 @@ Dafür gibt es verschiedene Ansätze, die in den Arbeiten \citetitle{delta-view_
 \subsubsection{Datenbank-Trigger basiert}
 Datenbank-Trigger sind Events, die bei verschiedenen Aktionen auf den Daten in einer Datenbank ausgelöst werden.
 Über diese Trigger lassen sich CDC-Programme realisieren, die Änderungen genau dann festhalten, wenn sie geschehen.
-Ein Nachteil sit, dass die Methode nur in System angewendet werden kann, die auch Trigger unterstützen.
+Ein Nachteil ist, dass die Methode nur in System angewendet werden kann, die auch Trigger unterstützen.
 Dafür ist es möglich alle Änderungen wie Einfügen, Aktualisieren oder Löschen von Daten zu erfassen \parencite{boeing}.
 
 \subsubsection{Log basiert}
-Es gibt viele Datenspeicher-Systeme, die Logs über die AKtionen auf den Daten führen.
+Es gibt viele Datenspeicher-Systeme, die Logs über die Aktionen auf den Daten führen.
 Diese werden zum Beispiel genutzt um eine Wiederherstellung möglich zu machen.
 Ein CDC-Programm kann diese Logs auslesen und daraus die Änderungsdaten erzeugen.
 Hierdurch gibt es fast keinen extra Aufwand für das eigentliche System.
@@ -28,7 +28,7 @@ Wenn diese zwischen dem letzten und dem aktuellen Durchlauf liegen wird die Änd
 Hierbei werden nur kumulierte Änderungen seit dem letzten Durchlauf erfasst.
 Es ist nicht möglich nachzuvollziehen, welche und wie viele Änderungen in der Zeit gemacht wurden.
 Außerdem lassen sich auch mit dieser Methode kein Löschungen erfassen \parencite{delta-view_gen}.
-Der Aufwand für diese Methode kann relativ hoch werden, da ohne Indices auf den Zeitstempeln immer die gesammten Daten gelesen werden müssen \cite{boeing}.
+Der Aufwand für diese Methode kann relativ hoch werden, da ohne Indices auf den Zeitstempeln immer die gesamten Daten gelesen werden müssen \cite{boeing}.
 
 \subsubsection{Snapshot basiert}
 Die letzte Methode ist das Vergleichen zweier Momentaufnahmen (Snapshots) eines Datensatzes.

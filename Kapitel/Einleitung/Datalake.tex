@@ -3,7 +3,7 @@
 \begin{figure}
     \begin{center}
         \includegraphics[width=\textwidth]{Grafiken/arch.pdf}
-        \caption{Architektur einse Data-Lake-Systems}
+        \caption{Architektur eines Data-Lake-Systems}
         \label{fig:dl-arch}
     \end{center}
 \end{figure}
@@ -13,8 +13,8 @@ Dabei verwenden beide Komponenten eine einheitliche und allgemeine Definition (I
 Das Ziel ist es, die Ingestion-Schnittstelle komplett unabhängig von der Datenquelle zu machen.
 In der Continuous-Integration ist zusätzlich zu sehen, dass hier neben dem reinen Laden der Daten auch das Finden und Speichern von Deltas eine Rolle spielt, da hier durch das kontinuierliche Laden der Daten Änderungen in den Daten anfallen.
 
-Die Daten des Data-Lake-Systems können dann für Machine-Learning aufbereitet und verwendet werden.
-Ergebnisse des Machine-Learnings werden wieder im Data Lake gespeichert.
+Die Daten des Data-Lake-Systems können dann für maschinelles Lernen aufbereitet und verwendet werden.
+Ergebnisse des maschinelles Lernen werden wieder im Data Lake gespeichert.
 Die Herausforderung dabei ist, die Ergebnisse mit in den Versionsverlauf einzupflegen.
 Eine Möglichkeit wäre das Machine-Learning als Datenquelle an die Ingestion mit anzubinden.
 Um diese Schwierigkeit zu umgehen, kann man die Informationen auch direkt in den Data Lake zurückschreiben.
