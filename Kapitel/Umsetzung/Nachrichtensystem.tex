@@ -9,8 +9,8 @@ Hier wird dafür Apache Kafka verwendet, welches im Big Data Bereich weit verbre
 Daher macht es Sinn, dieses in das Data-Lake-System zu integrieren und darin bereit zu stellen.
 Um das System dabei nicht unnötig komplex und zu groß werden zu lassen, wird daher auf einen anderen Message-Broker verzichtet.
 
-Da Kafka ein Event-Streaming-System ist, wird ab hier nicht mehr vom Austausch von Nachtrichten, sondern von Events gesprochen.
-Für diese Events müssen Topics zur Einordnung fetsgelegt werden.
+Da Kafka ein Event-Streaming-System ist, wird ab hier nicht mehr vom Austausch von Nachrichten, sondern von Events gesprochen.
+Für diese Events müssen Topics zur Einordnung festgelegt werden.
 Die Schlüssel sollten dabei so gewählt werden, dass Kafka auch für andere Datenströme verwendet werden kann, ohne, dass zu Konflikten kommt.
 Daher werden die Topics der internen Kommunikation des Data-Lake-Systems immer mit "`dls\_\_"' als Prefix benannt werden.
 Danach folgt der Bereich, den das Event betrifft, hier zum Beispiel "`ingestion"'.
