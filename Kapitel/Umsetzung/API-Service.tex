@@ -1,6 +1,26 @@
 \section{Api-Service}
 
-Der Api-Service basiert auf dem Server aus dem Masterprojekt, ein mit Flask\footnote{https://flask.palletsprojects.com/} in Python geschriebener Web-Server.
-Um eine saubere Trennung zwischen den existierenden und den neuen REST Endpunkten zu erreichen, wird die alte API unter den Pfad "`/api/v1/"' verschoben und die neue unter "`/api/v2/"' erstellt.
-Kommunikation mit dem Data Lake System findet nur statt, wenn eine Anfrage zur Ausführung einer Ingestion bearbeitet wird.
-Hier wird ein Event mit dem Schlüssel "`dls\_\_ingestion\_\_run"' erzeugt.
+Daten werden an den API-Service im Body einer Anfrage im form-data Format übergeben.
+So kann man neben den Informationen zu der Datenquelle in der gleich Anfrage auch weitere Dateien mit hochladen.
+Dabei werden alle Daten als Schlüssel-Wert-Paar übertragen.
+Für die DatasourceDefinition muss der Schlüssel "`datasource-definition"' verwendet werden.
+Die Schlüssel der hochgeladenen Dateien sind frei wählbar.
+Die Eingabe der DatasourceDefinition wird im JSON Format übertragen.
+\fref{fig:datasource-definition-input} zeigt das dazugehörige Model.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.65\textwidth]{Umsetzung-Definition-Input.pdf}
+    \caption{Felder Datenquellen-Eingabe}
+    \label{fig:datasource-definition-input}
+\end{figure}
+
+\subsection{Hochladen von Dateien}
+
+Für jede Datenquelle können Quell- oder Plugindateien hochgeladen werden.
+Ein Eintrag in der Liste der Dateien kann entweder ein Dateiname oder der Schlüssel einer Datei sein, die in der Anfrage mitgesendet wird.
+Bei der verarbeitung der Eingabe prüft der Api-Service für jeden Eintrag der Listen, ob eine Datei mit diesem Schlüssel hochgeladen wurde.
+Ist das der Fall, wird die entsprechende Datei in das HDFS hochgeladen und der Name der Datei der neuen Revision angehangen.
+Wenn keine Datei in der Anfrage gefunden wurde, wird geschaut ob im HDFS eine Datei mit dem Namen existiert.
+Wird eine Datei gefunden, wird der Name an die neue Revision angehangen.
+Sonst wird dieser Eintrag ignoriert.

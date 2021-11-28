@@ -6,10 +6,12 @@ Plugins werden jeder Datenquelle einzeln hinzugefügt und an verschiedenen, fest
 Da die Plugins eventuell auf Software-Bibliotheken zurückgreifen müssen, die nicht auf dem Data-Lake-System vorhanden sind, kann zusätzlich eine Liste von Abhängigkeiten der Plugins angegeben werden.
 Das Prinzip der Plugins kann auch über die Ingestion hinaus im System angewendet werden.
 
-Bei der Ingestion gibt es ein Plugin, dass benötigt wird.
-Hierbei handelt es sich wie durch die Anforderung gefordert um das Laden von Daten.
+Für die Ingestion gibt es zwei Stellen an denen die Möglichkeit für Plugins gegeben sein sollte.
+Die erste ist wie durch die Anforderung gefordert das Laden von Daten.
 Genauer bedeutet das, dass das Plugin die Aufgabe übernimmt eine DataFrame zu erstellen, dass später wieder gespeichert wird.
 Das Plugin erstzt die normale Funktion zum Laden in ein DataFrame.
 
-Auch die Möglichkeit von Plugins, die nach dem Laden der Daten und vor der Deltaberechnung ausgeführt werden sieht nach einem sinnvollen Einsatz aus.
-Das würde aber dem wiedersprechen, dass Daten als erste Stufe in ihrem unveränderten Zustand aufgenommen werden und wird deshalb nicht umgesetzt.
+Als zweite sollte es Plugins geben, mit denen man nach dem Laden das DataFrame manipulieren kann.
+Das streng gesehen gegen das Prinzip eines Data Lakes, Daten unverändert in ihrem Rohzustand zu speichern.
+Aber zum Beispiel bei der Anbindung von Kafka Datenströmen, werden die Daten nur als Bytestrom übertragen.
+Hier sollte es schon möglich sein, diese Bytes wieder in das Format zu bringen, dass sie vor dem Versenden hatten.
