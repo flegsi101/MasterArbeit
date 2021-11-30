@@ -4,7 +4,7 @@ Der Continuation-Service ist ein einzelner Prozess.
 In einer Schleife werden erst alle Datenquellen überprüft, die eine Zeitsteuerung enthalten.
 Hier wird eine Ingestion gestartet, wenn der Status des letzten IngestionEvents "`STOPPED"' oder "`FINISHED"' ist.
 Im zweiten Schritt werden alle Datenquellen mit Datenströmen geprüft.
-Datenströme werden nur bei einem Status von "`FINSIHED"' automtaisch gestartet, da "`STOPPED"' bedeutet, dass die Ausfühurng beabsichtigt beendet wurde.
+Datenströme werden nur bei einem Status von "`FINISHED"' automatisch gestartet, da "`STOPPED"' bedeutet, dass die Ausführung beabsichtigt beendet wurde.
 Dabei wird die Schleife maximal einmal jede Minute durchlaufen, da über die Zeitsteuerung keine schneller Ausführung möglich ist.
 In \cref{algo:ci-loop} ist die Logik eines Durchlaufes zu sehen.
 
