@@ -1,27 +1,20 @@
 \section{Ingestion-Service}
 
-Der Ingestion-Service wartet auf den Empfang von Nachrichten mit dem Schlüssel "`dls\_ingestion\_run"'.
-Diese Nachrichten sollten immer die Id einer Datenquelle enthalten, die geladen werden soll.
-Bevor das passiert wird überprüft, ob bereits eine Ingestion für diese Datenquelle läuft.
-Die Ingestion selber läuft in vier Phasen ab.
+Wie in \fref{sec:entw-ingestion} beschireben, wird für ein Event ein Prozess gestartet.
+Der Name der Topic des Events zum Starten einer Inegstion ist "`dls\_\_ingestion\_\_run"'.
+In \fref{sec:ingestion-run} wird der detailitere Ablauf mit den verschiedenen Wegen für Read- und SaveTypes beschrieben.
+Vorher werden die benötigt Grundlagen zur Ausführung erleutert.
 
-Zuerst wird die Ingestion mit Spark vorbereitet.
-Für jede Datenquelle wird ein temporärer Ordner angelegt.
-In diesen Ordner werden die Plugin-Dateien aus dem HDFS heruntergeladen und über das Packetmanagement von Python, pip, die Abhängigkeiten für die Plugins installiert.
-Aus den Informationen in der Datenquelle wird eine SparkSession erstellt.
+\subsection{Berechnen und Speichern der Änderungsdaten}
+Um Änderungen in eine Delta Tabelle zu übernehemn, müssen die Änderungsdaten in einem Format sein, dass Aufschluss darüber gibt, welche Daten hinzugefügt, welche geändert und welche gelöscht worden sind.
+Das hier verwendete Format muss genau dem gleichen Schema entsprechen, wie die original Daten.
+Zusätzlich soll eine Spalte oder ein Feld auf der obersten Eben mit dem Namen "`cd\_delted"' vorhanden sein.
+Es enhält einen Boolean-Wert, der sagt, ob der Eintrag aus den Daten glöscht wurde oder nicht.
+Der Datensatz mit den Änderungsdaten darf außerdem nur geänderte Daten enthalten.
+Aus diesem Format können, wie später gezeigt, die drei Operationen abgeleitet werden.
 
-In der zweiten Phase werden die Daten aus einer Datenquelle in eine DataFrame geladen.
-Durch die Verwendung von Spark's Structured Streaming können alle Typen von Datenquellen ähnlich verarbeitet werden.
-Das Sturctured Streaming ist ein Bibliothek, die auf Spark SQL aufbaut und es ermöglicht, Daten mit Hilder der DataFrame API zu verarbeiten.
-Für die Datenquelle wird mit den gesetzten Optionen ein DataStream- oder DataFrame-Reader erzeugt, mit dem die Daten geladen werden.
-Bei der File-Ingestion werden zusätzlich die Pfande zu den Quelldateien im HDFS gesetzt.
-
-Für die geladenen Daten muss dann entschieden werden, ob eine Deltaberechnung und somit eine Umwandlung in Änderungsdaten nötig ist.
-Folgende Regeln müssen zutreffen, damit eine Deltaberechnung ausgeführt wird.
-Es handelt sich nicht um einen Datenstrom.
-Die Ingestion ist nicht die erste dieser Datenquelle oder hat einen benutzerdefinierten Speicherort.
-Die Datenquelle ist keine Updatequelle.
-In \cref{algo:delta-calc} ist zu sehen, wie aus zwei DataFrames die Änderungsdaten erzeugt werden.
+Um nicht auf ein externes Change-Data-Capture-System angewiesen zu sein, gibt es eine interne Lösung, die auf alle (semi-)strukturierten Daten angewendet werden kann.
+Der \cref{algo:delta-calc} zeigt, wie aus zwei DataFrames die Änderungsdaten erzeugt werden.
 Als Eingabe werden ein linkes DataFrame, mit dem aktuellen internen Stand, eine rechtes DataFrame, mit den neuen Daten und der Name der Id-Spalte benötigt.
 Das Ergebnis ist ein DataFrame mit allen aktualisierten Datensätzen.
 Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte, die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
@@ -52,15 +45,86 @@ Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spa
 
 \end{algorithm}
 
-Die letzte Phase ist das Speichern.
-Für Datenströme wird entweder der benutzerdefinierte Speicherort gewählt, oder die Daten werden über den "`append"'-Modus in eine Delta Tabelle geschrieben.
-Bei File- und Pull-Ingestions gibt es ebenfalls zuerst die Unterscheidung ob ein benutzerdefinierter Speicher verwendet wird oder nicht.
-Wenn die Daten intern gespeichert werden sollen gelten nachfolgende Regeln.
-Eine neue Delta Tabelle wird erstellt, wenn es sich um die erste Ingestion einer Datenquelle handelt, die keine Updatequelle ist.
-Sonst werden die Änderungsdaten in die Delta Tabelle der Zieldatenquelle eingepflegt.
-Für Updatequellen ist die Zieldatenquelle über die Konfiguration festgelegt und für eine normalen Datenquelle ist sie es selbst.
 Das Einpflegen der Änderungen wird über die Delta Lake API gelöst.
 Dazu werden die Änderungsdaten mit den aktuellen Daten über die Id-Spalte zusammengeführt.
 Dabei können verschieden Fälle definiert werden.
 Wenn die Ids einer Zeile gleich sind und die Spalte "`cd\_deleted"' $true$ enthält, wird die Zeile aus den Daten gelöscht, ansonsten wird der Datensatz aktualisiert.
 Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted'" $false$ ist, dir der Datensatz als neue Zeile eingefügt.
+
+\subsection{Plugins verwalten}
+Für jede Ingestion wird auf dem Speichersystem des Mircoservices ein temporärer Ordner angelegt, in den die Plugins und deren Abhänigkeiten installiert werden.
+Nach der Installation wird noch eine Datei angelegt, die für alle Packete die Versionen enthält.
+Das dient dazu, bei einer erneuten Ausfürhung auf dem Service nicht alle Packete neu installieren zu müssen, sondern nur die mit geänderten Version.
+Das beschleunigt die Ausführung der Ingestion.
+Zum Schluss wird der Ordner, in den die Packete installiert wurden an den Python-Pfad mit angehangen.
+Damit wird dieser während der Ausführung manipuliert und die Packete sind verfügbar.
+Da jede Ingestion in einem eigenen Prozess beinflussen die Änderungen an dem Python-Pfad den Ingestion-Service oder andere Prozesse nicht.
+
+Im zweiten Schritt wird jede Python-Datei im Pluginordner als Modul geladen.
+Die im Modul verfügbaren Methoden werden dann überprüft, ob sie auf eine Definition der möglichen Plugins passen.
+Dazu wird der \fref{algo:check-method} verwendet.
+Deisem werden das geladene Modul, ein Name der Methode, ein optionaler Rückgabetyp der Methode und eine Liste von Parameter, bei denen Name und Typ definiert ist.
+Zur Überprüfung können alle Methoden in dem Modul auf ihren Namen geprüft werden.
+Wenn eine Methode gefunden wurde, wird eine Signatur erzeugt und mit der übergebenen Definition verglichen.
+Das Ergebnis sagt dann, ob diese Methode ein Plugin ist oder nicht.
+
+Jedes geladene Modul wird auf Load- oder AfterLoad-Methoden geprüft.
+Eine gefundene Load-Methode überschreibt immer die letzte gefunden, da bei einer Ausführung auch das Ergebnis dieser Methoden überschireben werden würde.
+Die AfterLoad-Methoden dagegen werden in einer Liste gespeichert.
+
+
+\begin{algorithm}
+    \caption{Pluginmethode überprüfen}
+    \label{algo:check-method}
+
+    \KwData{$plugin$, $name$, $return\_type$, $parameters$}
+
+    \KwResult{$matches$}
+
+    \If{plugin has NOT method with name $name$}{
+        \Return{false}
+    }
+
+    $signature \gets$ signature of mehtod $name$
+
+    \If{$return\_type$ is given AND $signature$ NOT returns type of $return\_type$}{
+        \Return{false}
+    }
+
+    \ForAll{$param$ in $parameters$}{
+        \If{$signature$ has NOT a parameter named $param.name$}{
+            \Return{false}
+        }
+
+        \If{$signature$ type of parameter $param.name$ is NOT $parameter.type$}{
+            \Return{false}
+        }
+    }
+
+    \Return{true}
+
+\end{algorithm}
+
+\subsection{Ausführung der Ingestion}
+\label{sec:ingestion-run}
+Die Ausführung startet mit der Initialisierung, die die für die Ingestion benötigte Daten lädt.
+Das ist zum Beispiel die DatasourceDefinition zu der Id aus den Events.
+Danach wird entschieden ob eine Ingestion über Spark notwendig ist.
+Hier spielt der Lese-Typ eine große Rolle.
+Eine Ingestion von Daten-Dateien benötigt keine Spark, es werden einfach direkt die Dateien in das entsprechende Zielverzeichniss kopiert.
+Für alle anderen Typen wird im nächsten Schritt die Ingestion vorbereitet.
+Es werden die Plugins aus dem HDFS geladen und eine SparkSession erstellt.
+Das Laden der Daten in ein DataFrame geschieht anshcließend entweder über ein Plugin in oder das standard Vorgehen.
+Falls auch After-Load-Plugins vorhanden sind werden diese ausgeführt.
+Für die geladenen Daten wird dann entschieden, ob es sich um Änderungsdaten handelt oder welche berechnet werden müssen.
+Je nach Schreib-Typ werden dann die Daten beziehungsweise Ädneurngsdaten gespeichert.
+Für Datenströme wird am Ende noch ein Hintergrund Task gestartet, der auf Kafka Events zum stoppen dieser Ingestion wartet.
+Hierfür wird die Topic "`dls\_\_ingestion\_\_stop\_ingestion"' mit der Id als Wert verwendet.
+Wenn die Ingestion beendet wurde, wird zum Schluss die SparkSession gestoppt.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{Grafiken/Umsetzung-Ingestion-Ablauf.pdf}
+    \caption{Ablauf einer Ingestion}
+    \label{fig:umsetz-ingestion-ablauf}
+\end{figure}

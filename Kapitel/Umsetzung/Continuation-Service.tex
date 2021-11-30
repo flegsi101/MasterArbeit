@@ -2,30 +2,55 @@
 
 Der Continuation-Service ist ein einzelner Prozess.
 In einer Schleife werden erst alle Datenquellen überprüft, die eine Zeitsteuerung enthalten.
+Hier wird eine Ingestion gestartet, wenn der Status des letzten IngestionEvents "`STOPPED"' oder "`FINISHED"' ist.
 Im zweiten Schritt werden alle Datenquellen mit Datenströmen geprüft.
+Datenströme werden nur bei einem Status von "`FINSIHED"' automtaisch gestartet, da "`STOPPED"' bedeutet, dass die Ausfühurng beabsichtigt beendet wurde.
 Dabei wird die Schleife maximal einmal jede Minute durchlaufen, da über die Zeitsteuerung keine schneller Ausführung möglich ist.
 In \cref{algo:ci-loop} ist die Logik eines Durchlaufes zu sehen.
 
 \begin{algorithm}
-\caption{Continuation loop}
-\label{algo:ci-loop}
-loopStart $\gets$ now \
-checkSources $\gets$ query datasource with timers \
-\ForAll {sources in checkSources} {
-    timers $\gets$ timers of source \
-    \ForAll {timer in timers} {
-        \If {timer is now} {
-            \If {source is not running} {
-                send run event \
+    \caption{Continuation loop}
+    \label{algo:ci-loop}
+
+    loopStart $\gets$ now \
+
+    definitions $\gets$ query DatasourceDefinitions with continuation timers \
+
+    \ForAll {definition in definitions} {
+
+        timers $\gets$ timers of source \
+
+        \If {state is STOPPED or FINISHED} {
+
+            \ForAll {timer in timers} {
+
+                \If {timer is now} {
+
+                    send run event \
+
+                    end check for this DatasourceDefinition \
+                }
             }
         }
     }
-}
-looEnd $\gets$ now \
-loopDuration $\gets$ loopEnd - loopStart \
-\If {loopDuration $<$ 60 sec} {
-    sleep for 60 sec - loopDuration \
-}
+
+    definitions $\gets$ query DatasourceDefinitions with type STREAM \
+    \ForAll {definition in definitions} {
+
+        \If {state is FINISHED} {
+
+            send run event \
+        }
+    }
+
+    looEnd $\gets$ now \
+
+    loopDuration $\gets$ loopEnd - loopStart \
+
+    \If {loopDuration $<$ 60 sec} {
+
+        sleep for 60 sec - loopDuration \
+    }
 
 \end{algorithm}
 

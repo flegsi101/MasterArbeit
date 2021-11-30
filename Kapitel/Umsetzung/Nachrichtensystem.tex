@@ -5,17 +5,18 @@ Diese koordinieren als Mittelsmann die Verteilung der Nachrichten an verschieden
 Das hat den Vorteil, dass der Sender unabhängig von den Empfängern wird und die Kommunikation asynchron statt finden kann \parencite{message-broker}.
 
 Es gibt mittlerweile einige Projekte, diese Aufgabe auf verschiedene Arten lösen.
-Hier wird dafür \textit{Apache Kafka} verwendet, welches im Big Data Bereich weit verbreitet ist um Datenströme zu verarbeiten.
+Hier wird dafür Apache Kafka verwendet, welches im Big Data Bereich weit verbreitet ist um Datenströme zu verarbeiten.
 Daher macht es Sinn, dieses in das Data-Lake-System zu integrieren und darin bereit zu stellen.
 Um das System dabei nicht unnötig komplex und zu groß werden zu lassen, wird daher auf einen anderen Message-Broker verzichtet.
 
-Durch die Verwendung von \textit{Kafka} als Message-Broker müssen die Topics der Nachrichten festgelegt werden.
-Hier kann es zu Konflikten sowohl mit internen Nachrichten als auch bei anderen Datenströmen kommen, wenn die Namen falsch gewählt werden.
-Daher sollten Topics, die zur internen Kommunikation des Data-Lake-Systems gehören immer mit "`dls\_\_"' als Prefix benannt werden.
-Danach folgt der Bereich in dem die Nachricht verwendet wird, hier zum Beispiel "`ingestion"'.
+Da Kafka ein Event-Streaming-System ist, wird ab hier nicht mehr vom Austausch von Nachtrichten, sondern von Events gesprochen.
+Für diese Events müssen Topics zur Einordnung fetsgelegt werden.
+Die Schlüssel sollten dabei so gewählt werden, dass Kafka auch für andere Datenströme verwendet werden kann, ohne, dass zu Konflikten kommt.
+Daher werden die Topics der internen Kommunikation des Data-Lake-Systems immer mit "`dls\_\_"' als Prefix benannt werden.
+Danach folgt der Bereich, den das Event betrifft, hier zum Beispiel "`ingestion"'.
 An diesen Namen kann dann noch weiter Unterscheidung angehängt werden.
-Im Fall der Nachricht für das Ausführen einer Ingestion wäre dann die Topic "`dls\_\_ingestion\_\_run"'.
+Für das Ausführen einer Ingestion wäre damit die Topic "`dls\_\_ingestion\_\_run"'.
 
-Wenn mehrere Consumer in einer Gruppe für eine Topic sind, werden Nachrichten nicht an alle sonder immer nur an einen aus der Gruppe gesendet.
+Wenn mehrere Consumer in einer Gruppe für eine Topic sind, werden Events nicht an alle sondern immer nur an einen aus der Gruppe gesendet.
 Dieser Mechanismus kann für den Lastausgleich an bestimmten Stellen verwendet werden.
 Für die Ingestion kann so der Ingestion-Services einfach repliziert werden.
