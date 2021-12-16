@@ -9,7 +9,9 @@ Das Prinzip der Plugins kann auch über die Ingestion hinaus im System angewende
 Für die Ingestion gibt es zwei Stellen an denen die Möglichkeit für Plugins gegeben sein sollte.
 Die erste ist wie durch die Anforderung gefordert das Laden von Daten.
 Genauer bedeutet das, dass das Plugin die Aufgabe übernimmt eine DataFrame zu erstellen, dass später wieder gespeichert wird.
-Das Plugin erstzt die normale Funktion zum Laden in ein DataFrame.
+Das Plugin ersetzt die normale Funktion zum Laden in ein DataFrame.
+Dies wird bei der Ingestion von Daten aus einer REST-Api zum Beispiel benötigt.
+Da es in Spark nicht möglich ist eine Reihen von Anfragen zu spezifizieren, aus denen ein DataFrame erzeugt wird, muss man die Daten erst auf einen andere Art und Weise in Python laden und dann aus diesen Daten manuell ein DataFrame erzeugen.
 
 Als zweite sollte es Plugins geben, mit denen man nach dem Laden das DataFrame manipulieren kann.
 Das streng gesehen gegen das Prinzip eines Data Lakes, Daten unverändert in ihrem Rohzustand zu speichern.

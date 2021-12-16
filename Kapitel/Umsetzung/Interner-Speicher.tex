@@ -13,7 +13,7 @@ Das ist das gleiche Format, das auch der Delta Lake verwendet.
 Werden so wie sie hochgeladen wurden im HDFS abgelegt.
 
 Die Ordner werden folgendermaßen organisiert.
-Für alle Daten wird im Root-Verzeichnis des HDFS ein Ordner "datalake" angelegt.
+Für alle Daten wird im Root-Verzeichnis des HDFS ein Ordner "`datalake"' angelegt.
 Dieser enthält die Unterordner für die Hochgeladenen Quell-Dateien "`sources"', die Plugins "`plugins"' und die geladenen Daten "`data"'.
 In den Ordnern "`sources"' und "`plugins'" werden dann für jede Datenquelle Ordner mit deren Id angelegt, in denen die hochgeladenen Dateien abgelegt werden.
 Für die geladenen Daten wird noch einmal und die Ordner "`structured"' für Daten mit Struktur, "´unstructured'" für unstrukturierte Daten und "`delta'" für die Delta Tabellen angelegt.

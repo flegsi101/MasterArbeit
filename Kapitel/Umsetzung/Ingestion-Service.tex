@@ -14,7 +14,23 @@ Der Datensatz mit den Änderungsdaten darf außerdem nur geänderte Daten enthal
 Aus diesem Format können, wie später gezeigt, die drei Operationen abgeleitet werden.
 
 Um nicht auf ein externes Change-Data-Capture-System angewiesen zu sein, gibt es eine interne Lösung, die auf alle (semi-)strukturierten Daten angewendet werden kann.
-Der \cref{algo:delta-calc} zeigt, wie aus zwei DataFrames die Änderungsdaten erzeugt werden.
+Dazu eignet sich der in \fref{sec:snaps} genannte Ansatz.
+Dieser ist zwar langsamer als alle anderen, aber auch als einziger unabhängig der Quellen und innerhalb des Data-Lake-Systems anwendbar.
+
+\textcite{snapshot_algos} haben einen Algorithmus vorgestellte, der diese Aufgabe mit der Hilfe von Join-Operationen löst.
+Für den Vergleich werden für jeden Eintrag eindeutige Schlüssel benötigt.
+Das Feld "`id\_column"' in der DatasourceDefintion ist dafür da den Namen der Spalte oder des Feldes in den Daten anzugeben.
+Join-Algorithmen sind in der Informatik, zum Beispiel in \cite{joins}, schon viel besprochen worden.
+Wenn man die Einträge beider Snapshots über ihren Schlüssel verknüpft, kann man so durch einen Vergleich der Ergebnisse alle geänderten Einträge finden.
+Um dann noch alle Einfügungen und Löschungen zu finden, kann man einen Outerjoin durchführen.
+Bei einem Outerjoin erhält man alle Daten, die nur in einem der beiden Datensätze auftauchen.
+Je nachdem in welchem Datensatz die Daten auftauchen, handelt es sich dann um eine Einfügung oder Löschung.
+Da durch SparkSQL eine gute Unterstützung für Join-Operationen ist dieser Ansatz gut für den Einsatz im Data Lake geeignet.
+
+Der \cref{algo:delta-calc} zum Vergleich von DataFrames orientiert sich an diesem Vorgehen.
+Die Daten werden aber über einen Fulljoin Verknüpft. 
+Das heißt, auch Datensätze für die in einer der beiden DataFrames kein passendes Gegenstück gefunden wurde werden in das Ergebnis mit aufgenommen.
+Der Outerjoin wird dann durch eine Null-Wert-Überprüfung ersetzt, bei der die Ids aus beiden Datensätzen überprüft werden.
 Als Eingabe werden ein linkes DataFrame, mit dem aktuellen internen Stand, eine rechtes DataFrame, mit den neuen Daten und der Name der Id-Spalte benötigt.
 Das Ergebnis ist ein DataFrame mit allen aktualisierten Datensätzen.
 Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte, die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
