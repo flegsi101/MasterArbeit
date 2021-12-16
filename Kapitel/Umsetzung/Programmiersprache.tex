@@ -1,18 +1,18 @@
 \section{Programmiersprache}
 
 Durch die Verwendung von Apache Spark ist die Auswahl der Programmiersprachen auf Java, Python und Scala eingegrenzt.
-Da der Prototyp in Python geschrieben wurde und dieser zum Api-Service erweitert werden soll, ist Python hierfür die Wahl.
+Da der Prototyp in Python geschrieben wurde und dieser zum Api-Service erweitert werden soll, wird hierfür Python verwendet.
 Auch für die Implementierung des Ingestion-Service bietet Python einige Vorteile.
 
-Bei der Verwendung von Java und Scala wird ein fertig kompiliert mit dem Befehl "`spark-submit"' zur Ausführung an Spark gesendet.
+Bei der Verwendung von Java und Scala wird ein fertig kompilierter Job mit dem Befehl "`spark-submit"' zur Ausführung an Spark gesendet.
 Das bedeutet, dass der Code dieser Jobs bereits feststehen muss.
-Neben dieser Option gibt es in Python auch die Möglichkeit, dass sich der Interpreter zur Laufzeit um die korrekte Ausführung der Jobs kümmert.
-So ist es möglich ebenfalls für jede Anfrage speziell konfigurierte Jobs zu erstellen, die nicht vorher schon kompiliert sein müssen.
+Neben dieser Option gibt es in Python auch die Möglichkeit, dass der Interpreter zur Laufzeit um die korrekte Ausführung der Jobs kümmert.
+So ist es möglich für jede Anfrage speziell konfigurierte Jobs zu erstellen, die nicht vorher schon kompiliert werden und somit feststehen müssen.
 Das senkt die Komplexität bei der Entwicklung der Ingestion \parencite{pyspark-int}.
 
 Auch für die Plugins hat Python einen Vorteil.
 Man kann dynamisch Programmcode aus Dateien laden und inspizieren.
 So können für jede Ausführung die Plugins einer Datenquelle frisch geladen werden.
-Es muss nur dafür gesorgt werden, dass auch die Abhängigkeiten alle erfüllt sind.
+Es muss nur dafür gesorgt werden, dass auch alle Abhängigkeiten erfüllt sind.
 
 Um die Entwicklung einheitlich zu halten, wird auch der Continuation-Service in Python implementiert.

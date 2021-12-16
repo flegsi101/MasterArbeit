@@ -2,16 +2,16 @@
 
 Für die Übermittlung von Nachrichten zwischen verschiedenen Anwendungen gibt es sogenannte Message-Broker.
 Diese koordinieren als Mittelsmann die Verteilung der Nachrichten an verschiedene Empfänger.
-Das hat den Vorteil, dass der Sender unabhängig von den Empfängern wird und die Kommunikation asynchron statt finden kann \parencite{message-broker}.
+Das hat den Vorteil, dass das Senden und Empfangen asynchron und damit unabhängig von einander statt findet \parencite{message-broker}.
 
 Es gibt mittlerweile einige Projekte, diese Aufgabe auf verschiedene Arten lösen.
 Hier wird dafür Apache Kafka verwendet, welches im Big Data Bereich weit verbreitet ist um Datenströme zu verarbeiten.
 Daher macht es Sinn, dieses in das Data-Lake-System zu integrieren und darin bereit zu stellen.
 Um das System dabei nicht unnötig komplex und zu groß werden zu lassen, wird daher auf einen anderen Message-Broker verzichtet.
 
-Da Kafka ein Event-Streaming-System ist, wird ab hier nicht mehr vom Austausch von Nachrichten, sondern von Events gesprochen.
+Da Kafka ein Event-Streaming-System ist, wird ab hier nicht mehr von dem Austausch von Nachrichten, sondern von Events gesprochen.
 Für diese Events müssen Topics zur Einordnung festgelegt werden.
-Die Schlüssel sollten dabei so gewählt werden, dass Kafka auch für andere Datenströme verwendet werden kann, ohne, dass zu Konflikten kommt.
+Die Namen sollten dabei so gewählt werden, dass Kafka auch für andere Datenströme verwendet werden kann, ohne, dass zu Konflikten kommt.
 Daher werden die Topics der internen Kommunikation des Data-Lake-Systems immer mit "`dls\_\_"' als Prefix benannt werden.
 Danach folgt der Bereich, den das Event betrifft, hier zum Beispiel "`ingestion"'.
 An diesen Namen kann dann noch weiter Unterscheidung angehängt werden.
@@ -20,3 +20,10 @@ Für das Ausführen einer Ingestion wäre damit die Topic "`dls\_\_ingestion\_\_
 Wenn mehrere Consumer in einer Gruppe für eine Topic sind, werden Events nicht an alle sondern immer nur an einen aus der Gruppe gesendet.
 Dieser Mechanismus kann für den Lastausgleich an bestimmten Stellen verwendet werden.
 Für die Ingestion kann so der Ingestion-Services einfach repliziert werden.
+Man muss jedoch beachten, ob es wichtig ist, wie die Events zugeordnet werden.
+
+Sollen zum Beispiel alle Events einer Topic an einen Service gehen, müssen vorher entsprechende Partitionen für die Topic eingerichtet werden und beim Senden der Events der Schlüssel gesetzt werden.
+Das spielt aber für die Ingestion keine Rolle.
+Diese kann hintereinander auf verschiedenen Services gestartet werden, ohne dass es zu Problemen kommt.
+Wäre das nicht der Fall könnte es durch die Aufteilung passieren, dass ein Service immer zwei sehr aufwändige Ingestions zugewiesen bekommt und der zweite zwei sehr einfache.
+Hier wäre dann die Skalierung nicht mehr so effektiv.
