@@ -1,5 +1,26 @@
 \chapter{Implementierung}
 
+In diesem Kapitel wird die Implementierung der Ingestion-Schnittstelle besprochen.
+In \cref{fig:impl-arch} ist die Systemarchitektur zu sehen.
+Diese zeigt alle Komponenten der Schnittstelle und wie diese interagieren.
+In den folgenden Abschnitten wird deren Funktionsweise erklärt.
+Dabei wird darauf eingegangen, welche Techniken angewendet wurden und warum diese gewählt wurden.
+Bei den implementierten Mircoservices wird auch auf entwickelte Algorithmen und Vorgehensweise eingegangen, mit den bestimmte Aufgaben gelöst werden.
+Die Beschreibungen gehen dabei nicht zu sehr ins Detail.
+Hier soll eher vermittelt werden, wie ein Problem gelöst wurde, unabhängig von gewählten Rahmenwerken oder Bibliotheken, solange diese nicht notwendig für die Lösung des Problems sind.
+Für den API-, Ingestion- und Continuation-Service werden Konfigurationsdateien im YAML-Format\footnote{https://yaml.org/} verwendet.
+Über diese werden Verbindungsinformationen und service-übergreifende Parameter konfiguriert.
+Am Ende wird auch auf die Bereitstellung eingegangen.
+Das heißt wie das fertige System gestartet und verwendet werden kann.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[height=8cm]{Grafiken/Umsetzung-System-Architektur.pdf}
+    \caption{Implementierte Systemarchitektur}
+    \label{fig:impl-arch}
+\end{figure}
+
 \input{Kapitel/Umsetzung/Programmiersprache.tex}
 \input{Kapitel/Umsetzung/Nachrichtensystem}
 \input{Kapitel/Umsetzung/Datenbank}
@@ -7,3 +28,4 @@
 \input{Kapitel/Umsetzung/API-Service}
 \input{Kapitel/Umsetzung/Continuation-Service}
 \input{Kapitel/Umsetzung/Ingestion-Service}
+\input{Kapitel/Umsetzung/Deployment}

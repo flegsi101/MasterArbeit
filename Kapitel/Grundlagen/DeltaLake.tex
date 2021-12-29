@@ -1,0 +1,27 @@
+\subsection{Delta Lake}
+
+Als eine Lösung für die Versionierung von Daten gibt es den Delta Lake
+Delta Lake ist eine extra Speicherebene, die auf dem HDFS oder eine Objektspeicher in der Cloud, wie Amazons S3, angewendet werden kann.
+Das Ziel ist es, diesen Speichern ACID-Transaktionen, schnelles Arbeiten mit Metadaten der Tabelle und eine Versionierung der Daten hinzuzufügen.
+Daten werden in sogenannten Delta-Tabellen mit Metadaten und Logs gespeichert.
+
+Eine Delta-Tabelle wird zunächst durch ein Verzeichnis im Dateisystem dargestellt.
+Die tatsächlichen Daten werden in diesem Verzeichnis als Parquet-Dateien abgelegt.
+Dabei können die Daten auch noch in Unterverzeichnisse aufgeteilt werden, zum Beispiel für jedes Datum ein Verzeichnis.
+Neben den Datenverzeichnissen gibt es in jeder Delta-Tabelle einen Ordner für die Logs in Form von JSON Dateien mit aufsteigender Nummerierung.
+Metadaten werden sowohl innerhalb der Parquet- als auch in der Log-Dateien gespeichert.
+
+Im Delta Lake wird ein Protokoll für den Zugriff verwendet, dass es mehreren Clients ermöglicht gleichzeitig Lesen zu können, aber immer nur einem das Schreiben erlaubt.
+Dabei werden beim Schreiben immer erst neue Datensätze, die zur Tabelle hinzugefügt werden sollen, in das Verzeichnis der Delta-Tabelle geschrieben.
+Danach wird eine neu Log-Datei erstellt.
+
+Beim Lesen werden die Log-Dateien als Grundlage verwendet um daraus zusammen mit den gespeicherten Daten den Zustand der Tabelle an einem bestimmten Zeitpunkt zu erzeugen.
+Standardmäßig wird beim Lesen immer die aktuellste Version verwendet, man kann aber auch eine bestimmte Version angeben.
+Um den Aufwand bei der Verarbeitung der Logs zu verringern wird periodisch ein Kontrollpunkt erzeugt, bei dem alle vorherigen Logs zusammengefügt und komprimiert werden.
+Das bedeutet, dass zum Beispiel das Operationen die sich gegenseitig aufheben nicht gespeichert werden.
+Damit reicht es aus nur den letzten Checkpoint vor der zu lesenden Version und alle darauf folgende Logs zu lesen.
+
+Durch das Design werden keine eigenen Server für die Pflege der Delta-Tabellen benötigt.
+Diese Funktionen werden von den Clients übernommen.
+Der Delta Lake unterstützt sowohl die Batch-Verarbeitung von Daten als auch Datenströme und bietet volle Integration in Spark \parencite{deltalake}.
+

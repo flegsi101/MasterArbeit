@@ -1,55 +1,63 @@
 \section{Continuation-Service}
 
-Der Continuation-Service ist ein einzelner Prozess.
-In einer Schleife werden erst alle Datenquellen überprüft, die eine Zeitsteuerung enthalten.
-Hier wird eine Ingestion gestartet, wenn der Status des letzten IngestionEvents "`STOPPED"' oder "`FINISHED"' ist.
-Im zweiten Schritt werden alle Datenquellen mit Datenströmen geprüft.
-Datenströme werden nur bei einem Status von "`FINISHED"' automatisch gestartet, da "`STOPPED"' bedeutet, dass die Ausführung beabsichtigt beendet wurde.
-Dabei wird die Schleife maximal einmal jede Minute durchlaufen, da über die Zeitsteuerung keine schneller Ausführung möglich ist.
-In \cref{algo:ci-loop} ist die Logik eines Durchlaufes zu sehen.
+Der Continuation-Service führt durchgehend eine Schleife zum überprüfen der Datenquellen aus.
+Bei der Prüfung wird immer der Status des aktuellsten IngestionEvent betrachtet.
+Je nach Datenquelle wird dann entschieden, ob eine Ingestion gestartet werden soll.
+Die Logik der Schleife besteht aus drei Teilen, wovon zwei die Datenquellen prüfen und einer die Zeit steuert, nachdem die Schleife erneut ausgeführt wird (\cref{algo:ci-loop}).
+Das soll nur maximal jede Minute geschehen, da auch keine schnellere Ausführung über die Timer definiert werden kann.
+
+Im ersten Teil werden alle Datenquellen einer Datenstrom-Ingestion kontrolliert.
+Für diese wird eine neue Ingestion gestartet, wenn der Status "`FINISHED"' ist.
+Der Status "`STOPPED"' bedeutet, dass die Ausführung mit Absicht beendet wurde und manuell gestartet werden muss.
+
+Der zweite Teil überprüft alle Datenquellen, bei denen ein oder mehrere Timer gesetzt wurden.
+Wenn der Status des letzten IngestionEvents nicht "`STOPPED"' oder "`FINISHED"' ist, wird die Überprüfung dieser Quelle abgebrochen.
+Ansonsten wird jeder Timer mit dem aktuelle Zeitpunkt verglichen.
+Hier wird die Methode $is_now$ verwendet.
+Sie wird durch eine Python-Bibliothek bereitgestellt und prüft ob ein Cron-Timer, die auch für die kontinuierliche Ingestion eingesetzt werden, zum aktuellen Zeitpunkt zutrifft.
+Trifft der Timer zu, wird eine Ingestion für die Datenquelle gestartet und sofort die nächste Datenquelle überprüft.
+
+Der dritte Teil kontrolliert die Ausführungshäufigkeit.
+Dazu wird am Anfang der Schleife der Startzeitpunkt gespeichert.
+Nachdem alle Überprüfungen beendet wurden, wird auch der Endzeitpunkt gespeichert.
+Wenn die Differenz der beiden geringer ist als eine Minute, wird die Schleife für die Dauer der Differenz angehalten.
+Damit ist sichergestellt, das sie nicht häufiger als einmal pro Minute ausgeführt wird.
 
 \begin{algorithm}
     \caption{Continuation loop}
     \label{algo:ci-loop}
-
-    loopStart $\gets$ now \
-
-    definitions $\gets$ query DatasourceDefinitions with continuation timers \
-
-    \ForAll {definition in definitions} {
-
-        timers $\gets$ timers of source \
-
-        \If {state is STOPPED or FINISHED} {
-
-            \ForAll {timer in timers} {
-
-                \If {timer is now} {
-
-                    send run event \
-
-                    end check for this DatasourceDefinition \
+    
+    \KwData{-}
+    \KwResult{-}
+    
+    $loopStart \gets$ current\_time() \;
+    
+    $streams \gets$ all\_datasource\_definition\_of\_type\_stream() \;
+    \ForAll {$definition$ in $streams$} {
+        $event \gets definition.last\_ingestion$ \;
+        \If {$event.state$ is FINISHED} {
+            publish\_run\_event\_for($definition.id$) \;
+        }
+    }
+    
+    $timed \gets$ all\_datasource\_definitions\_with\_timers() \;
+    \ForAll {$definition$ in $timed$} {
+        $event \gets definition.last\_ingestion$ \;
+        $timers \gets definition.revision.continuation\_timers$  \;
+        \If {$event.state$ is STOPPED or FINISHED} {
+            \ForAll {$timer$ in $timers$} {
+                \If {is\_now($timer$)} {
+                    publish\_run\_event\_for($definition.id$) \;
+                    \textbf{break}
                 }
             }
         }
     }
 
-    definitions $\gets$ query DatasourceDefinitions with type STREAM \
-    \ForAll {definition in definitions} {
-
-        \If {state is FINISHED} {
-
-            send run event \
-        }
-    }
-
-    looEnd $\gets$ now \
-
-    loopDuration $\gets$ loopEnd - loopStart \
-
-    \If {loopDuration $<$ 60 sec} {
-
-        sleep for 60 sec - loopDuration \
+    $loopEnd \gets$ current\_time() \;
+    $loopDuration \gets loopEnd - loopStart$ \;
+    \If {$loopDuration < 60$} {
+        sleep($60 - loopDuration$) \;
     }
 
 \end{algorithm}

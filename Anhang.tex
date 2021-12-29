@@ -1,0 +1,232 @@
+\chapter{Benchmark Ergebnisse}
+\label{sec:benchmark-tables}
+Nachfolgend sind alle Ergebnisse der Benchmarks aufgelistet.
+Zeiten sind dabei immer im Format Minuten:Sekunden.
+In den Spaltenüberschriften werden die drei Buchstaben mit folgenden Bedeutungen verwendet:
+\begin{description}
+    \item[I]: Initiale Ingestion
+    \item[U]: Ingestion mit aktualisierten Daten
+    \item[C]: Ingestion mit Änderungsdaten
+\end{description}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 964,23 KB & 00:07 & 839,32 KB & 00:07 & 841,32 KB & 00:10 \\ \hline
+        2500    & 2,39 MB   & 00:07 & 2,11 MB   & 00:07 & 2,11 MB   & 00:10 \\ \hline
+        5000    & 4,75 MB   & 00:07 & 4,22 MB   & 00:07 & 4,22 MB   & 00:10 \\ \hline
+        7500    & 7,12 MB   & 00:08 & 6,3 MB    & 00:08 & 6,30 MB   & 00:10 \\ \hline
+        10000   & 9,49 MB   & 00:08 & 8,47 MB   & 00:08 & 8,48 MB   & 00:10 \\ \hline
+        25000   & 23,67 MB  & 00:08 & 21,14 MB  & 00:08 & 24,45 MB  & 00:10 \\ \hline
+        50000   & 47,3 MB   & 00:09 & 52,77 MB  & 00:08 & 52,30 MB  & 00:11 \\ \hline
+        75000   & 70,94 MB  & 00:09 & 79,16 MB  & 00:09 & 79,23 MB  & 00:12 \\ \hline
+        100000  & 94,57 MB  & 00:09 & 105,38 MB & 00:09 & 105,70 MB & 00:13 \\ \hline
+        250000  & 236,39 MB & 00:11 & 264,5 MB  & 00:12 & 264,71 MB & 00:16 \\ \hline
+        500000  & 474,7 MB  & 00:15 & 531,68 MB & 00:16 & 529,78 MB & 00:20 \\ \hline
+        750000  & 711,06 MB & 00:18 & 796,23 MB & 00:20 & 795,46 MB & 00:25 \\ \hline
+        1000000 & 949,38 MB & 00:21 & 1,06 GB   & 00:23 & 1,06 GB   & 00:29 \\ \hline
+        2500000 & 2,37 GB   & 00:40 & 2,65 GB   & 00:48 & 2,66 GB   & 01:08 \\ \hline
+        5000000 & 4,75 GB   & 01:16 & 5,30 GB   & 01:28 & 5,32 GB   & 01:57 \\ \hline
+        7500000 & 7,12 GB   & 01:47 & 7,96 GB   & 02:12 & 7,98 GB   & 02:58 \\ \hline
+    \end{tabular}
+    \caption{Strukturierte Daten - Fall 1 - Ohne Versionierung}
+    \label{tab:sql-80-20-40-updated}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 965,76 KB & 00:12 & 4,19 MB   & 00:22 & 841,32 KB & 00:10 \\ \hline
+        2500    & 2,39 MB   & 00:12 & 7,22 MB	& 00:23 & 2,12 MB   & 00:10 \\ \hline
+        5000    & 4,76 MB   & 00:13 & 12,28 MB	& 00:23 & 4,22 MB   & 00:10 \\ \hline
+        7500    & 7,12 MB   & 00:12 & 17,32 MB	& 00:22 & 6,3 MB    & 00:10 \\ \hline
+        10000   & 9,49 MB   & 00:12 & 22,35 MB	& 00:22 & 8,48 MB   & 00:10 \\ \hline
+        25000   & 23,67 MB  & 00:13 & 52,49 MB	& 00:22 & 24,45 MB  & 00:10 \\ \hline
+        50000   & 47,30 MB  & 00:14 & 102,70 MB & 00:26 & 52,31 MB  & 00:11 \\ \hline
+        75000   & 70,94 MB  & 00:14 & 152,9 MB	& 00:26 & 79,24 MB  & 00:12 \\ \hline
+        100000  & 94,58 MB  & 00:14 & 203,10 MB	& 00:26 & 105,71 MB & 00:13 \\ \hline
+        250000  & 236,4 MB  & 00:16 & 504,28 MB	& 00:34 & 264,71 MB & 00:16 \\ \hline
+        500000  & 474,71 MB & 00:20 & 1 GB     	& 00:42 & 529,78 MB & 00:20 \\ \hline
+        750000  & 711,06 MB & 00:24 & 1,51 GB  	& 00:50 & 795,46 MB & 00:25 \\ \hline
+        1000000 & 949,38 MB & 00:27 & 2,01 GB  	& 00:56 & 1,06 GB   & 00:29 \\ \hline
+        2500000 & 2,37 GB   & 00:45 & 5,02 GB  	& 01:55 & 2,66 GB   & 01:08 \\ \hline
+        5000000 & 4,75 GB   & 01:18 & 10,05 GB	& 03:34 & 5,32 GB   & 01:57 \\ \hline
+        7500000 & 7,12 GB   & 01:53 & 15,06 GB 	& 05:12 & 7,98 GB   & 02:58 \\ \hline
+    \end{tabular}
+    \caption{Strukturierte Daten - Fall 1 - Mit Versionierung}
+    \label{tab:sql-80-20-40-cdc}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 656,95 KB & 00:08 & 794,39 KB & 00:07 & 782,68 KB & 00:10 \\ \hline
+        2500    & 16,34 MB  & 00:07 & 1,95 MB   & 00:07 & 1,93 MB   & 00:10 \\ \hline
+        5000    & 3,21 MB   & 00:07 & 3,87 MB   & 00:07 & 3,84 MB   & 00:11 \\ \hline
+        7500    & 4,8 MB    & 00:08 & 5,78 MB   & 00:07 & 5,75 MB   & 00:10 \\ \hline
+        10000   & 6,4 MB    & 00:08 & 7,69 MB   & 00:07 & 7,66 MB   & 00:10 \\ \hline
+        25000   & 15,93 MB  & 00:08 & 19,13 MB  & 00:07 & 19,14 MB  & 00:11 \\ \hline
+        50000   & 31,82 MB  & 00:08 & 38,2 MB   & 00:07 & 38,3 MB   & 00:11 \\ \hline
+        75000   & 47,74 MB  & 00:08 & 57,3 MB   & 00:07 & 57,38 MB  & 00:12 \\ \hline
+        100000  & 63,63 MB  & 00:08 & 76,37 MB  & 00:08 & 76,68 MB  & 00:12 \\ \hline
+        250000  & 159,07 MB & 00:09 & 190,92 MB & 00:10 & 191,58 MB & 00:14 \\ \hline
+        500000  & 318,16 MB & 00:12 & 381,84 MB & 00:12 & 383,28 MB & 00:17 \\ \hline
+        750000  & 477,25 MB & 00:13 & 572,76 MB & 00:14 & 573,89 MB & 00:19 \\ \hline
+        1000000 & 636,32 MB & 00:15 & 763,68 MB & 00:16 & 764,53 MB & 00:22 \\ \hline
+        2500000 & 1,59 GB   & 00:22 & 1,91 GB   & 00:25 & 1,9 GB    & 00:37 \\ \hline
+        5000000 & 3,18 GB   & 00:35 & 3,82 GB   & 00:42 & 3,81 GB   & 01:11 \\ \hline
+        7500000 & 4,77 GB   & 00:49 & 5,73 GB   & 01:00 & 5,74 GB   & 01:42 \\ \hline
+    \end{tabular}
+    \caption{Semistrukturierte Daten - Fall 1 - Ohne Versionierung}
+    \label{tab:sql-80-20-40-cdc}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 658,65 KB & 00:13 & 3,28 MB   & 00:23 & 782,68 KB & 00:10 \\ \hline
+        2500    & 1,62 MB   & 00:13 & 5,44 MB   & 00:22 & 1,94 MB   & 00:10 \\ \hline
+        5000    & 3,21 MB   & 00:12 & 9,01 MB   & 00:22 & 3,84 MB   & 00:11 \\ \hline
+        7500    & 4,8 MB    & 00:13 & 12,56 MB  & 00:23 & 5,75 MB   & 00:10 \\ \hline
+        10000   & 6,39 MB   & 00:13 & 16,1 MB   & 00:22 & 7,66 MB   & 00:10 \\ \hline
+        25000   & 15,93 MB  & 00:13 & 37,28 MB  & 00:22 & 19,14 MB  & 00:11 \\ \hline
+        50000   & 31,82 MB  & 00:13 & 72,58 MB  & 00:24 & 38,3 MB   & 00:11 \\ \hline
+        75000   & 47,74 MB  & 00:12 & 107,9 MB  & 00:24 & 57,38 MB  & 00:12 \\ \hline
+        100000  & 63,64 MB  & 00:14 & 143,32 MB & 00:24 & 76,68 MB  & 00:12 \\ \hline
+        250000  & 159,08 MB & 00:14 & 354,71 MB & 00:28 & 191,58 MB & 00:14 \\ \hline
+        500000  & 318,16 MB & 00:16 & 706,05 MB & 00:32 & 383,27 MB & 00:17 \\ \hline
+        750000  & 477,25 MB & 00:18 & 1,06 GB   & 00:38 & 573,9 MB  & 00:19 \\ \hline
+        1000000 & 636,32 MB & 00:19 & 1,4 GB    & 00:41 & 764,53 MB & 00:22 \\ \hline
+        2500000 & 1,59 GB   & 00:30 & 3,5 GB    & 01:06 & 1,9 GB    & 00:37 \\ \hline
+        5000000 & 3,18 GB   & 00:42 & 6,9 GB    & 01:49 & 3,81 GB   & 01:11 \\ \hline
+        7500000 & 4,77 GB   & 00:56 & 10,36 GB  & 02:34 & 5,74 GB   & 01:42 \\ \hline
+    \end{tabular}
+    \caption{Semistrukturierte Daten - Fall 1 - Mit Versionierung}
+    \label{tab:sql-80-20-40-cdc}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 964,23 KB & 00:07 & 1,03 MB   & 00:07 & 1,02 MB   & 00:10 \\ \hline
+        2500    & 2,39 MB   & 00:07 & 2,57 MB   & 00:07 & 2,57 MB   & 00:10 \\ \hline
+        5000    & 4,76 MB   & 00:07 & 5,15 MB   & 00:07 & 5,15 MB   & 00:09 \\ \hline
+        7500    & 7,12 MB   & 00:08 & 7,71 MB   & 00:08 & 7,71 MB   & 00:10 \\ \hline
+        10000   & 9,49 MB   & 00:07 & 10,33 MB  & 00:07 & 10,33 MB  & 00:10 \\ \hline
+        25000   & 23,67 MB  & 00:08 & 25,95 MB  & 00:08 & 34,81 MB  & 00:11 \\ \hline
+        50000   & 47,3 MB   & 00:08 & 82,51 MB  & 00:09 & 78,24 MB  & 00:11 \\ \hline
+        75000   & 70,94 MB  & 00:09 & 123,76 MB & 00:09 & 122,05 MB & 00:12 \\ \hline
+        100000  & 94,57 MB  & 00:09 & 165 MB    & 00:10 & 162,62 MB & 00:12 \\ \hline
+        250000  & 236,39 MB & 00:11 & 414,83 MB & 00:12 & 413,71 MB & 00:14 \\ \hline
+        500000  & 474,7 MB  & 00:14 & 827,02 MB & 00:19 & 827,06 MB & 00:17 \\ \hline
+        750000  & 711,06 MB & 00:17 & 1,24 GB   & 00:24 & 1,24 GB   & 00:21 \\ \hline
+        1000000 & 949,38 MB & 00:21 & 1,66 GB   & 00:30 & 1,65 GB   & 00:30 \\ \hline
+        2500000 & 2,37 GB   & 00:39 & 4,14 GB   & 01:04 & 4,14 GB   & 00:48 \\ \hline
+        5000000 & 4,75 GB   & 01:13 & 8,28 GB   & 02:02 & 8,28 GB   & 01:35 \\ \hline
+        7500000 & 7,12 GB   & 01:45 & 12,43 GB  & 03:08 & 12,46 GB  & 02:18 \\ \hline
+    \end{tabular}
+    \caption{Strukturierte Daten - Fall 2 - Ohne Versionierung}
+    \label{tab:sql-80-20-40-updated}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 965,76 KB & 00:13 & 4,75 MB   & 00:21 & 1,03 MB   & 00:10 \\ \hline
+        2500    & 2,39 MB   & 00:13 & 8,73 MB   & 00:21 & 2,57 MB	& 00:10 \\ \hline
+        5000    & 4,76 MB   & 00:12 & 15,29 MB  & 00:21 & 5,15 MB	& 00:09 \\ \hline
+        7500    & 7,12 MB   & 00:12 & 21,83 MB  & 00:21 & 7,71 MB	& 00:10 \\ \hline
+        10000   & 9,49 MB   & 00:13 & 28,36 MB	& 00:22 & 10,33 MB	& 00:10 \\ \hline
+        25000   & 23,67 MB  & 00:13 & 67,53 MB	& 00:22 & 34,81 MB	& 00:11 \\ \hline
+        50000   & 47,3 MB   & 00:13 & 132,74 MB	& 00:23 & 78,24 MB	& 00:11 \\ \hline
+        75000   & 70,94 MB  & 00:14 & 197,88 MB	& 00:24 & 122,05 MB	& 00:12 \\ \hline
+        100000  & 94,58 MB  & 00:14 & 263,1 MB	& 00:26 & 162,62 MB	& 00:12 \\ \hline
+        250000  & 236,4 MB  & 00:16 & 654,4 MB	& 00:32 & 413,71 MB	& 00:14 \\ \hline
+        500000  & 474,71 MB & 00:19 & 1,3 GB	& 00:42 & 827,06 MB	& 00:17 \\ \hline
+        750000  & 711,06 MB & 00:22 & 1,96 GB	& 00:56 & 1,24 GB   & 00:21 \\ \hline
+        1000000 & 949,38 MB & 00:27 & 2,6 GB	& 01:18 & 1,65 GB	& 00:30 \\ \hline
+        2500000 & 2,37 GB   & 00:47 & 6,51 GB	& 02:17 & 4,14 GB	& 00:48 \\ \hline
+        5000000 & 4,74 GB   & 01:19 & 13,03 GB	& 04:34 & 8,28 GB	& 01:35 \\ \hline
+        7500000 & 7,12 GB   & 01:53 & 19,54 GB	& 06:47 & 12,46 GB	& 02:18 \\ \hline
+    \end{tabular}
+    \caption{Strukturierte Daten - Fall 2 - Mit Versionierung}
+    \label{tab:sql-80-20-40-updated}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 656,95 KB & 00:10 & 1,15 MB   & 00:07 & 1,13 MB   & 00:10 \\ \hline
+        2500    & 1,62 MB   & 00:07 & 2,83 MB   & 00:07 & 2,80 MB   & 00:10 \\ \hline
+        5000    & 3,21 MB   & 00:07 & 5,62 MB   & 00:07 & 5,58 MB   & 00:11 \\ \hline
+        7500    & 4,8 MB    & 00:07 & 8,4 MB    & 00:07 & 8,36 MB   & 00:10 \\ \hline
+        10000   & 6,39 MB   & 00:07 & 11,19 MB  & 00:07 & 11,15 MB  & 00:10 \\ \hline
+        25000   & 15,93 MB  & 00:07 & 27,87 MB  & 00:08 & 27,89 MB  & 00:11 \\ \hline
+        50000   & 31,81 MB  & 00:08 & 55,68 MB  & 00:08 & 55,83 MB  & 00:11 \\ \hline
+        75000   & 47,74 MB  & 00:08 & 83,56 MB  & 00:08 & 83,61 MB  & 00:11 \\ \hline
+        100000  & 63,63 MB  & 00:08 & 111,37 MB & 00:08 & 111,65 MB & 00:12 \\ \hline
+        250000  & 159,08 MB & 00:09 & 278,4 MB  & 00:10 & 279,37 MB & 00:14 \\ \hline
+        500000  & 318,16 MB & 00:11 & 556,8 MB  & 00:13 & 558,88 MB & 00:17 \\ \hline
+        750000  & 477,25 MB & 00:12 & 835,2 MB  & 00:15 & 837,07 MB & 00:18 \\ \hline
+        1000000 & 636,32 MB & 00:13 & 1,11 GB   & 00:18 & 1,11 GB   & 00:21 \\ \hline
+        2500000 & 1,59 GB   & 00:22 & 2,78 GB   & 00:32 & 2,78 GB   & 00:36 \\ \hline
+        5000000 & 3,18 GB   & 00:39 & 5,57 GB   & 01:00 & 5,57 GB   & 01:09 \\ \hline
+        7500000 & 4,77 GB   & 00:52 & 8,35 GB   & 01:25 & 8,41 GB   & 01:36 \\ \hline
+    \end{tabular}
+    \caption{Semistrukturierte Daten - Fall 2 - Ohne Versionierung}
+    \label{tab:sql-80-20-40-updated}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|r|r|r|r|r|r|r|}
+        \hline
+        \textbf{Zeilen} & \textbf{Speicher I} & \textbf{Zeit I} & \textbf{Speicher U} & \textbf{Zeit U} & \textbf{Speicher C} & \textbf{Zeit C} \\ \hline
+        1000    & 658,64 KB & 00:13 & 3,64 MB   & 00:23 & 1,13 MB   & 00:10 \\ \hline
+        2500    & 1,61 MB   & 00:12 & 6,34 MB   & 00:22 & 2,80 MB   & 00:10 \\ \hline
+        5000    & 3,21 MB   & 00:12 & 10,80 MB  & 00:22 & 5,58 MB   & 00:11 \\ \hline
+        7500    & 4,80 MB   & 00:13 & 15,23 MB  & 00:22 & 8,36 MB   & 00:10 \\ \hline
+        10000   & 6,39 MB   & 00:13 & 19,65 MB  & 00:22 & 11,15 MB  & 00:10 \\ \hline
+        25000   & 15,92 MB  & 00:13 & 46,13 MB  & 00:23 & 27,89 MB  & 00:11 \\ \hline
+        50000   & 31,81 MB  & 00:13 & 90,38 MB  & 00:23 & 55,83 MB  & 00:11 \\ \hline
+        75000   & 47,74 MB  & 00:13 & 134,39 MB & 00:23 & 83,61 MB  & 00:11 \\ \hline
+        100000  & 63,63 MB  & 00:13 & 178,73 MB & 00:24 & 111,65 MB & 00:12 \\ \hline
+        250000  & 159,08 MB & 00:14 & 443,04 MB & 00:28 & 279,37 MB & 00:14 \\ \hline
+        500000  & 318,16 MB & 00:16 & 881,61 MB & 00:32 & 558,88 MB & 00:17 \\ \hline
+        750000  & 477,25 MB & 00:17 & 1,31 GB   & 00:39 & 837,07 MB & 00:18 \\ \hline
+        1000000 & 636,32 MB & 00:19 & 1,75 GB   & 00:45 & 1,11 GB   & 00:21 \\ \hline
+        2500000 & 1,59 GB   & 00:26 & 4,34 GB   & 01:12 & 2,78 GB   & 00:36 \\ \hline
+        5000000 & 3,18 GB   & 00:44 & 8,57 GB   & 02:16 & 5,57 GB   & 01:09 \\ \hline
+        7500000 & 4,77 GB   & 00:56 & 13,02 GB  & 03:16 & 8,41 GB   & 01:36 \\ \hline
+    \end{tabular}
+    \caption{Semistrukturierte Daten - Fall 2 - Mit Versionierung}
+    \label{tab:sql-80-20-40-updated}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

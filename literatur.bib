@@ -1,6 +1,38 @@
 % ||================================================================================================
-% || Datalake
+% || Data Warehouse
 % ||================================================================================================
+@INPROCEEDINGS{dw,
+  author={Rifaie, Mohammad and Kianmehr, Keivan and Alhajj, Reda and Ridley, Mick J.},
+  booktitle={2008 IEEE International Conference on Information Reuse and Integration}, 
+  title={Data warehouse architecture and design}, 
+  year={2008},
+  volume={},
+  number={},
+  pages={58-63},
+  doi={10.1109/IRI.2008.4583005}
+ }
+  
+% ||================================================================================================
+% || Data Lake
+% ||================================================================================================
+@article{dixon2010pentaho,
+  title={Pentaho, Hadoop, and data lakes},
+  author={Dixon, James},
+  journal={blog, Oct},
+  year={2010}
+}
+
+@article{sawadogo2021data,
+  title={On data lake architectures and metadata management},
+  author={Sawadogo, Pegdwend{\'e} and Darmont, J{\'e}r{\^o}me},
+  journal={Journal of Intelligent Information Systems},
+  volume={56},
+  number={1},
+  pages={97--120},
+  year={2021},
+  publisher={Springer}
+}
+
 @inproceedings{datalake_01,
     author    = {Fang, Huang},
     booktitle = {2015 IEEE International Conference on Cyber Technology in Automation, Control, and Intelligent Systems (CYBER)},
@@ -9,14 +41,20 @@
     pages     = {820-824}
 }
 
-@article{datalake_02,
-    title     = {Architecture of data lake},
-    author    = {Singh, Ajit and Ahmad, Sultan},
-    journal   = {International Journal of Scientific Research in Computer Science, Engineering and Information Technology},
-    volume    = {5},
-    number    = {2},
-    year      = {2019},
-    publisher = {IJSRCSEIT}
+@book{inmon2016data,
+  title={Data Lake Architecture: Designing the Data Lake and avoiding the garbage dump},
+  author={Inmon, Bill},
+  year={2016},
+  publisher={Technics publications}
+}
+
+@inproceedings{dl-zones,
+  title={Leveraging the data lake: current state and challenges},
+  author={Giebler, Corinna and Gr{\"o}ger, Christoph and Hoos, Eva and Schwarz, Holger and Mitschang, Bernhard},
+  booktitle={International Conference on Big Data Analytics and Knowledge Discovery},
+  pages={179--188},
+  year={2019},
+  organization={Springer}
 }
 
 @inproceedings{datalake_03,
@@ -37,12 +75,40 @@
     year    = {2021}
 }
 
+@inproceedings{coredb,
+author = {Beheshti, Amin and Benatallah, Boualem and Nouri, Reza and Chhieng, Van Munin and Xiong, HuangTao and Zhao, Xu},
+title = {CoreDB: A Data Lake Service},
+year = {2017},
+isbn = {9781450349185},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://printkr.hs-niederrhein.de:2062/10.1145/3132847.3133171},
+doi = {10.1145/3132847.3133171},
+abstract = {The continuous improvement in connectivity, storage and data processing capabilities allow access to a data deluge from sensors, social-media, news, user-generated, government and private data sources. Accordingly, in a modern data-oriented landscape, with the advent of various data capture and management technologies, organizations are rapidly shifting to datafication of their processes. In such an environment, analysts may need to deal with a collection of datasets, from relational to NoSQL, that holds a vast amount of data gathered from various private/open data islands, i.e. Data Lake. Organizing, indexing and querying the growing volume of internal data and metadata, in a data lake, is challenging and requires various skills and experiences to deal with dozens of new databases and indexing technologies: How to store information items? What technology to use for persisting the data? How to deal with the large volume of streaming data? How to trace and persist information about data? What technology to use for indexing the data? How to query the data lake? To address the above mentioned challenges, we present CoreDB - an open source data lake service - which offers researchers and developers a single REST API to organize, index and query their data and metadata. CoreDB manages multiple database technologies and offers a built-in design for security and tracing.},
+booktitle = {Proceedings of the 2017 ACM on Conference on Information and Knowledge Management},
+pages = {2451–2454},
+numpages = {4},
+keywords = {data api, data lake, database service},
+location = {Singapore, Singapore},
+series = {CIKM '17}
+}
+
+@ARTICLE{lambda-arch,
+  author={Munshi, Amr A. and Mohamed, Yasser Abdel-Rady I.},
+  journal={IEEE Access}, 
+  title={Data Lake Lambda Architecture for Smart Grids Big Data Analytics}, 
+  year={2018},
+  volume={6},
+  number={},
+  pages={40463-40471},
+  doi={10.1109/ACCESS.2018.2858256}}
+
 % ||================================================================================================
 % || Prototyp
 % ||================================================================================================
 @misc{prototyp,
     author      = {Alexander Martin and Marcel Thiel and Robin Kuller},
-    title       = {Development of a Data Lake System},
+    title       = {Interne Bericht - Development of a Data Lake System},
     institution = {{Hochschule Niederrhein, Fachbereich 03 Elektrotechnik und Informatik}},
     year        = {2020/21}
 }
@@ -115,21 +181,38 @@
 }
 
 @article{spark,
-    author   = {ZAHARIA, MATEI and XIN, REYNOLD S. and WENDELL, PATRICK and DAS, TATHAGATA and ARMBRUST, MICHAEL and DAVE, ANKUR and XIANGRUI, MENG and ROSEN, JOSH and VENKATARAMAN, SHIVARAM and FRANKLIN, MICHAEL J. and GHODSI, ALI and GONZALEZ, JOSEPH and SHENKER, SCOTT and STOICA, ION},
-    issn     = {00010782},
-    journal  = {Communications of the ACM},
-    keywords = {BIG data, OPEN source products, SOFTWARE frameworks, DISTRIBUTED computing, IMAGE processing software},
-    number   = {11},
-    pages    = {56 - 65},
-    title    = {Apache Spark: A Unified Engine for Big Data Processing.},
-    volume   = {59},
-    url      = {https://printkr.hs-niederrhein.de:2589/login.aspx?direct=true&db=buh&AN=119379442&site=ehost-live},
-    year     = {2016}
+  title={Apache spark: a unified engine for big data processing},
+  author={Zaharia, Matei and Xin, Reynold S and Wendell, Patrick and Das, Tathagata and Armbrust, Michael and Dave, Ankur and Meng, Xiangrui and Rosen, Josh and Venkataraman, Shivaram and Franklin, Michael J and others},
+  journal={Communications of the ACM},
+  volume={59},
+  number={11},
+  pages={56--65},
+  year={2016},
+  publisher={ACM New York, NY, USA}
 }
 
 % ||================================================================================================
 % || HDFS & Parquet
 % ||================================================================================================
+@article{mapred,
+  title={Google’s MapReduce programming model—Revisited},
+  author={L{\"a}mmel, Ralf},
+  journal={Science of computer programming},
+  volume={70},
+  number={1},
+  pages={1--30},
+  year={2008},
+  publisher={Elsevier}
+}
+
+@inproceedings{yarn,
+  title={Apache hadoop yarn: Yet another resource negotiator},
+  author={Vavilapalli, Vinod Kumar and Murthy, Arun C and Douglas, Chris and Agarwal, Sharad and Konar, Mahadev and Evans, Robert and Graves, Thomas and Lowe, Jason and Shah, Hitesh and Seth, Siddharth and others},
+  booktitle={Proceedings of the 4th annual Symposium on Cloud Computing},
+  pages={1--16},
+  year={2013}
+}
+
 @online{parquet,
     author  = {{Apache Parquet}},
     title   = {Apache Parquet},
@@ -141,7 +224,7 @@
 @article{hdfs,
     title   = {HDFS architecture},
     author  = {Borthakur, Dhruba},
-    journal = {Document on Hadoop Wiki. URL http://hadoop. apache. org/common/docs/r0},
+    journal = {Document on Hadoop Wiki. URL http://hadoop.apache.org/common/docs/r0},
     volume  = {20},
     year    = {2010}
 }
@@ -185,6 +268,17 @@
     author    = {Garg, Nishant},
     year      = {2013},
     publisher = {Packt Publishing Birmingham}
+}
+% ||================================================================================================
+% || Benchmarks
+% ||================================================================================================
+@inproceedings{bigdatabench,
+  title={Bigdatabench: A big data benchmark suite from internet services},
+  author={Wang, Lei and Zhan, Jianfeng and Luo, Chunjie and Zhu, Yuqing and Yang, Qiang and He, Yongqiang and Gao, Wanling and Jia, Zhen and Shi, Yingjie and Zhang, Shujie and others},
+  booktitle={2014 IEEE 20th international symposium on high performance computer architecture (HPCA)},
+  pages={488--499},
+  year={2014},
+  organization={IEEE}
 }
 
 % ||================================================================================================

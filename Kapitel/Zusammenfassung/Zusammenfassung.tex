@@ -1,0 +1,14 @@
+\chapter{Zusammenfassung}
+
+\subsection{Ergebnis}
+Im Rahmen dieser Arbeit wurde eine Schnittstelle entwickelt, die es ermöglicht über die eine einheitliche Definition Daten aus allen möglich Quellen in das Data-Lake-System zu integrieren.
+Die Schnittstelle kann über einen Web-Service bereitgestellt und durch beliebige Clients genutzt werden.
+
+Um eine Abdeckung aller Datenquellen zu erreichen wird neben der Verwendung von Apache Spark (\cref{sec:spark}) auch eine ein Plugin-System verwendet.
+Neben dem Laden aus Datenspeichern, können auch Dateien über die Schnittstelle in das Data-Lake-System hochgeladen werden.
+
+Die Versionierung ist für strukturierte und semistrukturierte Daten, also zum Beispiel Tabellen oder JSON-Dateien, möglich.
+Es besteht die Wahl zwischen der internen Berechnung von Änderungen zwischen zwei Versionen oder dem Einpflegen von Änderungsdaten aus eine eigenen Change-Data-Capture-Lösung (\cref{sec:cdc}).
+
+Die Architektur des bestehenden Prototyps wurde so angepasst, dass diese leicht erweiterbar ist.
+Weitere Funktionalitäten können so gut in das System integriert werden.

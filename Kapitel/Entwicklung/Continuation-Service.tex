@@ -1,20 +1,20 @@
 \section{Continuation-Service}
 
 Für die Sicherstellung der korrekten Ausführung kontinuierlicher Ingestions, müssen regelmäßig alle Datenquellen überprüft werden.
-Dabei gibt es zwei Bedingungen nach denen entscheiden wird, ob eine Ingestion werden muss.
+Dabei gibt es zwei Bedingungen nach denen entscheiden wird, ob eine Ingestion ausgeführt werden muss.
 Bei Datenströmen gilt allgemein, wenn dieser nicht läuft, dann muss die Ingestion automatisch neu gestartet werden.
-Eine Ausnahme dabei ist, wenn die Verarbeitung durch den Benutzer explizit beendet wurde.
+Die einzige Ausnahme ist, wenn die Ingestion durch den Benutzer explizit beendet wurde.
 
 Der zweite Fall ist die Zeitsteuerung.
 Für eine zeitgesteuerte kontinuierliche Ingestion werden einer Datenquelle ein oder mehrere Timer hinzugefügt.
-Der Continuation-Service prüft, ob der Timer zu diesem Zeitpunkt zutrifft oder nicht.
-Wenn das der Fall ist und bisher keine Ingestion auf der Datenquelle läuft, dann wird eine neue gestartet.
+Der Continuation-Service kontrolliert, ob der Timer zum Zeitpunkt, an dem die Datenquelle überprüft wird zutrifft oder nicht.
+Wenn das der Fall ist und bisher keine Ingestion auf der Datenquelle läuft, dann wird eine neue Ingestion gestartet.
 
 In Unix-Systemen gibt es bereits eine Lösung für die Notation solcher Timer.
 Dort gibt es die sogenannten Cron-Jobs, mit deren Hilfe Aufgaben automatisch und regelmäßig ausgeführt werden können.
 Dabei wird der Zeitpunkt der Ausführung über fünf Felder festgelegt.
 Diese geben die Minute, die Stunde, den Tag des Monats, den Monat und den Tag der Woche als Zahlen an.
-Als Erweiterung kann man "`*"' als Platzhalter für alle möglichen Werte verwenden, man kann mehrere Werte als mit Kommata getrennt angeben oder mit "`/x"' eine Liste in Schritten der Größe $x$ erzeugen \parencite{cron}.
+Als Erweiterung kann man "`*"' als Platzhalter für alle möglichen Werte verwenden, man kann mehrere Werte als mit Kommata getrennt angeben oder mit "`/x"' eine Liste in Schritten der Größe $x$ erzeugen.
 
 Diese Notation soll auch für die Zeitsteuerung der Ingestions genutzt werden.
 Als Referenz wird dabei die koordinierte Weltzeit (UTC) genommen, damit die Ausführung unabhängig vom Standort einheitlich bleibt.

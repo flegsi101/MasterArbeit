@@ -1,17 +1,7 @@
 \chapter{Entwurf}
-Nach \textcite{ingestion_01} ist der Ingestion-Prozess eines Data-Lake-Systems, als erster Schritt im Lebenszyklus der Daten, maßgebend dafür, wie gut die Daten später verwendet und verarbeitet werden können.
-Hier spielen besonders die Metadaten eine große Rolle.
-Da dieser Bereich jedoch nicht in den Rahmen dieser Arbeit passt, wird hier nur die Aufnahme und Integration der Daten behandelt.
-Hier durch fällt bereits ein Minimum an Metadaten an.
-Genau die Daten, die benötigt werden um eine Ingestion auszuführen und die, die bei der Versionierung erzeugt werden.
 
-Da ein wichtiges Prinzip bei Data Lakes das Speichern der Rohdaten ist, diese aber nicht immer passend für die weiter Verarbeitung sind, kann ein ähnliches System wie von \textcite{ingestion_02} beschireben verwendet werden.
-Die dortige Aufteilung in die drei Zonen DropZone, LandingZone und IntegrationZone wurde für einen speziellen Fall entwickelt und passt nicht in das generelle Data-Lake-System.
-Aber die Aufteilung der Zugriffe und Ändeurngen an Daten in Bereiche ist auch hier anwendbar.
-Der erste Bereich in dem Daten abgelegt werden ist der Ingestion-Bereich.
-Die Datensätze, die hier gespeichert werden repräsentieren einen bestimmte Datenquelle.
-Nur die Ingestion-Schnittstelle sollte Daten in diesem Bereich erstellen oder verändern.
-Ein Metadaten-Management-System kann diese Daten einlesen um direkt nach der Ingestion weitere Metadaten zu erstellen.
+Der Ingestion-Prozess ist, als erste Schritt im Lebenszyklus der Daten, maßgebend für deren Qualität und Aussagekraft bei der späteren Verarbeitung und Analyse \parencite{ingestion_01}.
+Daher muss schon bei dem Entwurf nicht nur auf die Anforderungen Rücksicht genommen werden, sondern auch auf das fertige Data-Lake-System.
 
 \input{Kapitel/Entwicklung/Architektur}
 \input{Kapitel/Entwicklung/Plugins}

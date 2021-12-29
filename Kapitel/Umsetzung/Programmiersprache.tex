@@ -1,18 +1,23 @@
 \section{Programmiersprache}
 
-Durch die Verwendung von Apache Spark ist die Auswahl der Programmiersprachen auf Java, Python und Scala eingegrenzt.
-Da der Prototyp in Python geschrieben wurde und dieser zum Api-Service erweitert werden soll, wird hierfür Python verwendet.
+Da Apache Spark Implementierungen für Java, Python und Scala bereitstellt, sind das auch die drei Sprachen, auf die die Auswahl begrenzt ist.
+Der Prototyp ist in Python geschrieben und da dieser zum API-Service erweitert werden soll, wird Python auch weiter für die Implementierung des API-Services verwendet.
 Auch für die Implementierung des Ingestion-Service bietet Python einige Vorteile.
 
-Bei der Verwendung von Java und Scala wird ein fertig kompilierter Job mit dem Befehl "`spark-submit"' zur Ausführung an Spark gesendet.
-Das bedeutet, dass der Code dieser Jobs bereits feststehen muss.
-Neben dieser Option gibt es in Python auch die Möglichkeit, dass der Interpreter zur Laufzeit um die korrekte Ausführung der Jobs kümmert.
+Bei der Verwendung von Java und Scala wird ein fertig kompilierter Job über den Befehl "`spark-submit"' zur Ausführung an Spark gesendet.
+Der Spark-Job muss also vor dem Submit bereits kompiliert worden sein.
+Daraus folgt, dass es zwei Möglichkeiten gibt, wie der Ingestion-Service damit umgeht.
+Zuerst wäre es möglich, dass alle Jobs, die möglicherweise benötigt werden dem Ingestion-Service bereits kompiliert vorliegen.
+Die zweite Möglichkeit wäre, dass die Jobs dynamisch angepasst und immer vor der Ausführung durch den Ingestion-Service kompiliert werden.
+Beides würde einen erheblichen Aufwand bei der Entwicklung bedeuten, da entweder ein sehr generischer Job erstellt werden müsste, der alle Ingestion-Fälle abdecken kann, oder es müsste Logik eingebaut werden, die die Quell-Dateien des Jobs bearbeitet und diesen dann kompiliert.
+
+In Python zusätzlich dazu auch die Möglichkeit, dem Interpreter die Übersetzung zur Laufzeit zu überlassen.
 So ist es möglich für jede Anfrage speziell konfigurierte Jobs zu erstellen, die nicht vorher schon kompiliert werden und somit feststehen müssen.
 Das senkt die Komplexität bei der Entwicklung der Ingestion \parencite{pyspark-int}.
 
 Auch für die Plugins hat Python einen Vorteil.
 Man kann dynamisch Programmcode aus Dateien laden und inspizieren.
 So können für jede Ausführung die Plugins einer Datenquelle frisch geladen werden.
-Es muss nur dafür gesorgt werden, dass auch alle Abhängigkeiten erfüllt sind.
+Es muss nur dafür gesorgt werden, dass auch alle Abhängigkeiten erfüllt, also auf die notwendigen auf dem Ingestion-Service installiert sind.
 
 Um die Entwicklung einheitlich zu halten, wird auch der Continuation-Service in Python implementiert.

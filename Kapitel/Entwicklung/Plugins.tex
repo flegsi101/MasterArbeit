@@ -1,19 +1,19 @@
 \section{Plugins}
 
-In \ref{ANF_04} wird durch ANF\_04 gefordert, dass zusätzlicher Code bei der Ingestion ausgeführt werden können soll.
-Das soll durch Plugins umgesetzt werden.
-Plugins werden jeder Datenquelle einzeln hinzugefügt und an verschiedenen, fest definierten Punkten ausgeführt.
+In \nameref{ANF_04} wird gefordert, dass zusätzlicher Code bei der Ingestion ausgeführt werden können soll.
+Das kann durch Plugins umgesetzt werden.
+Plugins können einer Datenquelle hinzugefügt und an verschiedenen, fest definierten Punkten ausgeführt werden.
 Da die Plugins eventuell auf Software-Bibliotheken zurückgreifen müssen, die nicht auf dem Data-Lake-System vorhanden sind, kann zusätzlich eine Liste von Abhängigkeiten der Plugins angegeben werden.
-Das Prinzip der Plugins kann auch über die Ingestion hinaus im System angewendet werden.
+Das Prinzip der Plugins kann beim Ausbau auch über die Ingestion hinaus im System angewendet werden.
 
-Für die Ingestion gibt es zwei Stellen an denen die Möglichkeit für Plugins gegeben sein sollte.
-Die erste ist wie durch die Anforderung gefordert das Laden von Daten.
-Genauer bedeutet das, dass das Plugin die Aufgabe übernimmt eine DataFrame zu erstellen, dass später wieder gespeichert wird.
+Für die Ingestion gibt es zwei Stellen, an denen die Möglichkeit für Plugins gegeben sein sollte.
+Die erste Möglichkeit ist, wie durch die Anforderung gefordert, das Laden von Daten.
+Genauer bedeutet das, dass das Plugin die Aufgabe übernimmt das DataFrame zu erstellen, welches später wieder gespeichert wird.
 Das Plugin ersetzt die normale Funktion zum Laden in ein DataFrame.
-Dies wird bei der Ingestion von Daten aus einer REST-Api zum Beispiel benötigt.
-Da es in Spark nicht möglich ist eine Reihen von Anfragen zu spezifizieren, aus denen ein DataFrame erzeugt wird, muss man die Daten erst auf einen andere Art und Weise in Python laden und dann aus diesen Daten manuell ein DataFrame erzeugen.
+Dies wird zum Beispiel bei der Ingestion von Daten aus einer REST-API benötigt.
+Hier muss ein DataFrame manuell aus Daten erzeugt werden, die erst über einen REST-Client abgefragt werden.
 
-Als zweite sollte es Plugins geben, mit denen man nach dem Laden das DataFrame manipulieren kann.
-Das streng gesehen gegen das Prinzip eines Data Lakes, Daten unverändert in ihrem Rohzustand zu speichern.
-Aber zum Beispiel bei der Anbindung von Kafka Datenströmen, werden die Daten nur als Bytestrom übertragen.
-Hier sollte es schon möglich sein, diese Bytes wieder in das Format zu bringen, dass sie vor dem Versenden hatten.
+Als zweite Möglichkeit sollte es Plugins geben, mit denen man nach dem Laden den DataFrame manipulieren kann.
+Streng genommen widerspricht diese Möglichkeit dem Data-Lake-Prinzip, Daten unverändert in ihrem Rohzustand zu speichern.
+Allerdings ist zum Beispiel bei der Anbindung von Kafka-Datenströmen eine solche Nachbearbeitung sinnvoll, da die Daten nur als Byte-Block übertragen werden.
+Für solche Fälle sollte es möglich sein, die unstrukturierten Byte-Daten in ein strukturiertes Format zu überführen.

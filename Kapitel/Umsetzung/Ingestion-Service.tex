@@ -1,118 +1,190 @@
 \section{Ingestion-Service}
 
-Wie in \fref{sec:entw-ingestion} beschrieben, wird für ein Event ein Prozess gestartet.
+Wie in \cref{sec:entw-ingestion} beschrieben, wird für eine Ingestion ein Prozess gestartet.
 Der Name der Topic des Events zum Starten einer Ingestion ist "`dls\_\_ingestion\_\_run"'.
-In \fref{sec:ingestion-run} wird der detailliere Ablauf mit den verschiedenen Wegen für Read- und SaveTypes beschrieben.
+In \cref{sec:ingestion-run} wird der detailliere Ablauf mit den verschiedenen Wegen für Read- und SaveTypes beschrieben.
 Vorher werden die benötigt Grundlagen zur Ausführung erläutert.
 
 \subsection{Berechnen und Speichern der Änderungsdaten}
-Um Änderungen in eine Delta Tabelle zu übernehmen, müssen die Änderungsdaten in einem Format sein, dass Aufschluss darüber gibt, welche Daten hinzugefügt, welche geändert und welche gelöscht worden sind.
-Das hier verwendete Format muss genau dem gleichen Schema entsprechen, wie die original Daten.
+Um Änderungen in eine Delta-Tabelle zu übernehmen, müssen die Änderungsdaten in einem Format sein, dass Aufschluss darüber gibt, welche Daten hinzugefügt, welche geändert und welche gelöscht worden sind.
+Das hier verwendete Format muss genau dem Schema der original Daten entsprechen.
 Zusätzlich soll eine Spalte oder ein Feld auf der obersten Eben mit dem Namen "`cd\_deleted"' vorhanden sein.
-Es enthält einen Boolean-Wert, der sagt, ob der Eintrag aus den Daten gelöscht wurde oder nicht.
+Darin ist ein Boolean-Wert enthalten, der aussagt, ob der Eintrag aus den Daten gelöscht wurde oder nicht.
 Der Datensatz mit den Änderungsdaten darf außerdem nur geänderte Daten enthalten.
 Aus diesem Format können, wie später gezeigt, die drei Operationen abgeleitet werden.
 
 Um nicht auf ein externes Change-Data-Capture-System angewiesen zu sein, gibt es eine interne Lösung, die auf alle (semi-)strukturierten Daten angewendet werden kann.
-Dazu eignet sich der in \fref{sec:snaps} genannte Ansatz.
-Dieser ist zwar langsamer als alle anderen, aber auch als einziger unabhängig der Quellen und innerhalb des Data-Lake-Systems anwendbar.
+Dazu eignet sich der in \cref{sec:snaps} genannte snapshot-basierte Ansatz.
+Dieser ist zwar langsamer als alle anderen, aber auch als einziger unabhängig von der Datenquellen und innerhalb des Data-Lake-Systems anwendbar.
 
-\textcite{snapshot_algos} haben einen Algorithmus vorgestellte, der diese Aufgabe mit der Hilfe von Join-Operationen löst.
+\textcite{snapshot_algos} haben einen Algorithmus vorgestellt, der diese Aufgabe mit der Hilfe von Join-Operationen löst.
 Für den Vergleich werden für jeden Eintrag eindeutige Schlüssel benötigt.
-Das Feld "`id\_column"' in der DatasourceDefintion ist dafür da den Namen der Spalte oder des Feldes in den Daten anzugeben.
-Join-Algorithmen sind in der Informatik, zum Beispiel in \cite{joins}, schon viel besprochen worden.
+Das Feld "`id\_column"' in der DatasourceDefintion enthält den Namen der Spalte oder des Feldes, das als Schlüssel fungieren soll.
+Es können auch verschachtelte Felder verwendet werden.
+Der Schlüssel kann aber nicht aus mehreren Feldern zusammengesetzt werden
+Die Namen der Felder in den einzelnen Ebenen müssen dafür mit einem "`."' getrennt werden.
+Beispielsweise "`user.id"' für: \begin{verbatim}
+    {
+        user: { 
+            id: x 
+        }
+        ...
+    }
+\end{verbatim}
+
+Join-Algorithmen sind in der Informatik schon viel besprochen worden.
 Wenn man die Einträge beider Snapshots über ihren Schlüssel verknüpft, kann man so durch einen Vergleich der Ergebnisse alle geänderten Einträge finden.
-Um dann noch alle Einfügungen und Löschungen zu finden, kann man einen Outerjoin durchführen.
-Bei einem Outerjoin erhält man alle Daten, die nur in einem der beiden Datensätze auftauchen.
-Je nachdem in welchem Datensatz die Daten auftauchen, handelt es sich dann um eine Einfügung oder Löschung.
-Da durch SparkSQL eine gute Unterstützung für Join-Operationen ist dieser Ansatz gut für den Einsatz im Data Lake geeignet.
+In einem Full-Outer-Join sind zusätzlich alle Einträge vorhanden, die nur in einem der beiden Einträge vorhanden sind.
+Die restlich Felder bekommen einen Null-Wert.
+Je nachdem auf welcher Seite die Null-Werte stehen, handelt es sich um eine Einfügung oder Löschung.
+Da durch SparkSQL eine gute Unterstützung für Join-Operationen gegeben ist, ist dieser Ansatz auch gut für den Einsatz im Data Lake geeignet.
+Diese Vorgehen funktioniert sowohl für relationale als auch semistrukturierte Daten.
+Bei dem Vergleich von semistrukturierten Daten wird jedoch nur die oberste Ebene als Spalte betrachtet.
+Alle darunter verschachtelten Objekte werden als Werte dieser Spalten betrachtet.
 
 Der \cref{algo:delta-calc} zum Vergleich von DataFrames orientiert sich an diesem Vorgehen.
-Die Daten werden aber über einen Fulljoin Verknüpft. 
-Das heißt, auch Datensätze für die in einer der beiden DataFrames kein passendes Gegenstück gefunden wurde werden in das Ergebnis mit aufgenommen.
-Der Outerjoin wird dann durch eine Null-Wert-Überprüfung ersetzt, bei der die Ids aus beiden Datensätzen überprüft werden.
-Als Eingabe werden ein linkes DataFrame, mit dem aktuellen internen Stand, eine rechtes DataFrame, mit den neuen Daten und der Name der Id-Spalte benötigt.
-Das Ergebnis ist ein DataFrame mit allen aktualisierten Datensätzen.
-Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte, die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
+Als Eingabe werden ein linkes DataFrame, mit dem aktuellen internen Stand, eine rechtes DataFrame, mit den neuen Daten und der Name des Schlüssels benötigt.
+Um den Vergleich der Zeilen später einfacher zu machen, wird zuerst für jede Zeile der zu vergleichenden Datensätze ein Hashwert über alle Spalten berechnet.
+Außerdem wird eine weitere Spalte mit dem Namen "`\char`~ id"' hinzugefügt, die den Wert des Schlüssels zugewiesen bekommt.
+Da wie bereits erwähnt bei semistrukturierte Daten nur die oberste Ebene als Spalten betrachtet wird, ist es so erst möglich  Einträge über verschachtelte Schlüssel zu verknüpfen.
+Danach wird ein Full-Outer-Join über den Daten ausgeführt.
+Im nächsten Schritt werden alle Zeilen, in denen die Hashwerte gleich sind aus dem Datensatz entfernt, da diese keine Relevanz für die Ändeurngsdaten haben.
+Zu den gefilterten Daten wird nun die Spalte "`cd\_deleted"' hinzugefügt.
+Ist in den alten Daten eine Zeile vorhanden, in den neuen aber nicht mehr, so ist der Hashwert auf der rechten Seite $Null$.
+In diesem Fall bekommt die Spalte "`cd\_deleted"' den Wert $true$ für alle andere ist der Wert $false$.
+Da das Ergebnis der Join-Operation alle Spalten doppelt enthält, einmal von links und einmal von rechts, enthält, müssen diese noch zusammengeführt werden.
+Dazu können immer, außer bei dem Schlüssel, die Werte der rechten Seite genommen werden, da diese die neuen Werte enthält.
+Der Wert für den Schlüssel wird auch von der rechten Seite übernommen, es sei denn dieser ist $Null$ (bei gelöschten Zeilen), dann muss der linke Wert verwendet werden, da der Schlüssel nicht $Null$ sein darf.
+Zum Schluss müssen die zusätzlich, für den Vergleich, hinzugefügten Spalten wieder entfernt werden.
+Das Ergebnis ist ein DataFrame mit allen Änderungen.
+Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte "`cd\_deleted"', die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
 
 \begin{algorithm}
     \caption{Deltaberechnung}
     \label{algo:delta-calc}
-    \KwData{leftDataFrame, rightDataFrame, idColumn}
-    \KwResult{changeDataFrame}
-    $leftDataFrame \gets$ add column with row hash \;
-    $leftDataFrame \gets$ prefix column names with "`left\_"' \;
-    $rightDataFrame \gets$ add column with row hash \;
-    $rightDataFrame \gets$ prefix columnnames with "`right\_"' \;
+    \textbf{Input:} $left$: DataFrame, $right$: DataFrame, $id\_column$: String  \\
+    \textbf{Output:} $change\_data$: DataFrame \\
+    
+    \ForAll{$df$ \textbf{in} $[left, right]$}{
+        $df$.add\_column($name$: "`hash"', $value$: $df$.hash\_over\_all\_rows())\;
+        $df$.add\_column($name$: "`\char`~ id"', $value$: $df$.get\_value($id\_column$))\;
+    }
 
-    $changeDataFrame \gets$ full join over $idColumn$ of $leftDataFrame$ and $rightDataFrame$ \;
+    $change\_data \gets$ $left$.join($right$, $type$: full-outer, $column$: "`\char`~ id"')\;
+    $change\_data$.remove\_all\_row($condition$: $left.hash$ equals $right.hash$)\;
+    $change\_data$.add\_column($name$: "`cd\_deleted"', $value$: $false$)\;
 
-    $changeDataFrame \gets$ remove all rows where $left\_hash$ equals $right\_hash$ \;
-
-    $changeDataFrame \gets$ remove hash columns
-
-    $changeDataFrame \gets$ add row $cd\_deleted$ \;
-    \eIf{$right\_idColumn$ is $null$}{$cd\_deleted = true$}{$cd\_deleted = false$}
-
-    $changeDataFrame \gets$ merge left and right $idColumn$ into one $idColumn$
-    \eIf{$left\_idColumn$ is not $null$}{$idColumn = left\_idColumn$}{$idColun = right\_idColumn$}
-
-    $changeDataFrame \gets$ merge remaining columns with left and right value by always taking the right and removing prefix
+    \ForAll{$row$ \textbf{in} $change\_data.rows$}{
+        \If{$row.right.hash$ \textbf{is} $Null$}{
+            $row.cd\_deleted \gets true$\;
+        }
+    }
+    
+    \ForAll{$column$ \textbf{in} $left.columns$}{
+        \eIf{$column$ \textbf{is} $id\_column$}{
+            \ForAll{$row$ \textbf{in} $change\_data.rows$}{
+                \eIf{$row.right.hash$ \textbf{is} $Null$}{
+                    $row.id\_column \gets row.left.id\_column$\;
+                } {
+                    $row.id\_column \gets row.right.id\_column$\;
+                }
+            }
+        }{
+            \ForAll{$row$ \textbf{in} $change\_data.rows$}{
+                $row.column \gets row.right.column$\;
+            }
+        }
+        $change\_data$.remove\_column($right.column$)\;
+        $change\_data$.remove\_column($left.column$)\;
+    }
+    $change\_data$.remove\_column("`\char`~ id"')\;
+    $change\_data$.remove\_column("`hash"')\;
 
 \end{algorithm}
 
-Das Einpflegen der Änderungen wird über die Delta Lake API gelöst.
-Dazu werden die Änderungsdaten mit den aktuellen Daten über die Id-Spalte zusammengeführt.
-Dabei können verschieden Fälle definiert werden.
+Das Einpflegen der Änderungen unterscheidet sich je nach dem gewählten Speicherziel.
+Für Delta-Tabellen wird die Delta Lake API verwendet.
+Dazu werden die Änderungsdaten mit den aktuellen Daten über den Schlüssel zusammengeführt.
+Dabei können verschiedene Fälle definiert werden.
 Wenn die Ids einer Zeile gleich sind und die Spalte "`cd\_deleted"' $true$ enthält, wird die Zeile aus den Daten gelöscht, ansonsten wird der Datensatz aktualisiert.
-Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted'" $false$ ist, dir der Datensatz als neue Zeile eingefügt.
+Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted"' $false$ ist, dir der Datensatz als neue Zeile eingefügt.
 
-\subsection{Plugins verwalten}
-Für jede Ingestion wird auf dem Speichersystem des Mircoservices ein temporärer Ordner angelegt, in den die Plugins und deren Abhängigkeiten installiert werden.
-Nach der Installation wird noch eine Datei angelegt, die für alle Pakete die Versionen enthält.
-Das dient dazu, bei einer erneuten Ausführung auf dem Service nicht alle Pakete neu installieren zu müssen, sondern nur die mit geänderten Version.
+Für Parquet-Dateien werden die Änderungsdaten über Spark mit den Bestandsdaten zusammengeführt.
+Beide Datensätze werden über einen Full-Outer-Join verknüpft.
+Danach werden alle Zeilen, in denen das Feld "`cd\_deleted"' den Wert $true$ werden gelöscht.
+Ähnlich zu der Deltaberechnung werden die übrigen Daten wieder auf das original Schema gebracht.
+Dabei werden für allen Zeilen, bei denen entweder kein Eintrag aus den Bestandsdaten existiert oder die Änderungsdaten sich von ihnen unterscheiden die Werte der Änderungsdaten übernommen.
+In den anderen Zeilen bleiben die Bestandsdaten beibehalten.
+
+\subsection{Plugin-Management}
+
+Da Python verwendet wird kann nicht, wie zum Beispiel in Java, ein Interface definiert werden, dass ein Plugin dann implementieren muss.
+Es ist aber möglich die Namen, Parameter und Rückgabetyp einer Methode zu überprüfen.
+Mit diesem Ansatz können Methoden aus den hochgeladen Plugin-Dateien validiert werden.
+Für die Ingestion werden diese zwei Methoden Definiert: \begin{enumerate}
+    \item Load-Methode: \begin{verbatim}
+        Name: "load"
+        Rückgabetyp: DataFrame
+        Parameter:
+            - Name: "spark"
+              Typ: SparkSession
+    \end{verbatim}
+    \item After-Load-Methode: \begin{verbatim}
+        Name: "after_load"
+        Rückgabetyp: DataFrame
+        Parameter:
+            - Name: "dataframe"
+              Typ: DataFrame
+    \end{verbatim}
+\end{enumerate}
+
+Für jede Ingestion wird auf dem Speichersystem des Mircoservices ein temporärer Ordner angelegt, in den die Plugin-Dateien abgelegt und deren Abhängigkeiten installiert werden.
+Nach der Installation wird noch eine Datei angelegt, die für alle Pakete die Versionsnummern enthält.
+Das dient dazu, bei einer erneuten Ausführung auf dem Service nicht alle Pakete neu installieren zu müssen, sondern nur die mit einer geänderten Versionsnummer.
 Das beschleunigt die Ausführung der Ingestion.
-Zum Schluss wird der Ordner, in den die Pakete installiert wurden an den Python-Pfad mit angehangen.
+Zum Schluss wird der Ordner, mit den installierten Paketen, zum Python-Pfad hinzugefügt.
 Damit wird dieser während der Ausführung manipuliert und die Pakete sind verfügbar.
-Da jede Ingestion in einem eigenen Prozess beeinflussen die Änderungen an dem Python-Pfad den Ingestion-Service oder andere Prozesse nicht.
+Da jede Ingestion in einem eigenen Prozess ausgeführt wird, beeinflussen die Änderungen an dem Python-Pfad den Ingestion-Service oder andere Prozesse nicht.
 
-Im zweiten Schritt wird jede Python-Datei im Pluginordner als Modul geladen.
-Die im Modul verfügbaren Methoden werden dann überprüft, ob sie auf eine Definition der möglichen Plugins passen.
-Dazu wird der \fref{algo:check-method} verwendet.
+Im zweiten Schritt wird jede Plugin-Datei als Python-Modul geladen.
+Jedes Modul enthält dann die in der Plugin-Datei definierten Methoden.
+Diese Methoden können mit den Definitionen verglichen.
+Dazu wird der \cref{algo:check-method} verwendet.
 Diesem werden das geladene Modul, ein Name der Methode, ein optionaler Rückgabetyp der Methode und eine Liste von Parameter, bei denen Name und Typ definiert ist.
 Zur Überprüfung können alle Methoden in dem Modul auf ihren Namen geprüft werden.
 Wenn eine Methode gefunden wurde, wird eine Signatur erzeugt und mit der übergebenen Definition verglichen.
 Das Ergebnis sagt dann, ob diese Methode ein Plugin ist oder nicht.
 
-Jedes geladene Modul wird auf Load- oder AfterLoad-Methoden geprüft.
-Eine gefundene Load-Methode überschreibt immer die letzte gefunden, da bei einer Ausführung auch das Ergebnis dieser Methoden überschrieben werden würde.
-Die AfterLoad-Methoden dagegen werden in einer Liste gespeichert.
-
+Jedes geladene Modul wird auf die Load- oder AfterLoad-Methoden geprüft.
+Eine gefundene Load-Methode überschreibt immer die vorher gefundene, da jede Ingestion nur einen Weg zum Laden der Daten haben darf.
+Die After-Load-Methoden dagegen werden in einer Liste gespeichert.
+Es kann jedoch immer nur eine After-Load-Methode pro Plugin-Datei geben.
+Diese können dann auch hintereinander ausgeführt werden, um auf einem DataFrame mehrere Modifikationen auszuführen.
+Alle gefunden Methoden werden in einem Plugin-Manager gespeichert um während der Ingestion aufgerufen werden zu können.
+Die Reihenfolge der Ausführung entspricht der Reihenfolge, wie die Plugin-Dateien bei der Erstellung in der Liste angegeben wurden.
 
 \begin{algorithm}
     \caption{Pluginmethode überprüfen}
     \label{algo:check-method}
 
-    \KwData{$plugin$, $name$, $return\_type$, $parameters$}
+    \textbf{Input:} $plugin$: Python-Modul, $name$: String, $return\_type$: Typ, $parameters$: Liste \\
+    \textbf{Output:} $matches$: Boolean \\
 
-    \KwResult{$matches$}
-
-    \If{plugin has NOT method with name $name$}{
+    \If{$plugin$ \textbf{has no} method $name$}{
         \Return{false}
     }
 
     $signature \gets$ signature of mehtod $name$
 
-    \If{$return\_type$ is given AND $signature$ NOT returns type of $return\_type$}{
+    \If{$signature.return\_type$ \textbf{is not} $return\_type$}{
         \Return{false}
     }
 
-    \ForAll{$param$ in $parameters$}{
-        \If{$signature$ has NOT a parameter named $param.name$}{
+    \ForAll{$param$ \textbf{in} $parameters$}{
+        \If{$signature$ \textbf{has no} parameter $param.name$}{
             \Return{false}
         }
-
-        \If{$signature$ type of parameter $param.name$ is NOT $parameter.type$}{
+        \If{$signature.parameter.type$ \textbf{is not} $parameter.type$}{
             \Return{false}
         }
     }
@@ -125,16 +197,17 @@ Die AfterLoad-Methoden dagegen werden in einer Liste gespeichert.
 \label{sec:ingestion-run}
 Die Ausführung startet mit der Initialisierung, die die für die Ingestion benötigte Daten lädt.
 Das ist zum Beispiel die DatasourceDefinition zu der Id aus den Events.
-Danach wird entschieden ob eine Ingestion über Spark notwendig ist.
+Danach wird entschieden, ob eine Ingestion über Spark notwendig ist.
 Hier spielt der Lesetyp eine große Rolle.
-Eine Ingestion von Datendateien benötigt keine Spark, es werden einfach direkt die Dateien in das entsprechende Zielverzeichnis kopiert.
+Bei der Ingestion von Unstrukturierten Daten wird Spark nicht benötigt.
+Hier können die Dateien, über die WebHDFS-Schnittstelle direkt im HDFS verschoben werden.
 Für alle anderen Typen wird im nächsten Schritt die Ingestion vorbereitet.
 Es werden die Plugins aus dem HDFS geladen und eine SparkSession erstellt.
 Das Laden der Daten in ein DataFrame geschieht anschließend entweder über ein Plugin in oder das Standardvorgehen.
-Falls auch After-Load-Plugins vorhanden sind werden diese ausgeführt.
+Falls auch After-Load-Plugins vorhanden sind, werden diese ausgeführt.
 Für die geladenen Daten wird dann entschieden, ob es sich um Änderungsdaten handelt oder welche berechnet werden müssen.
 Je nach Schreib-Typ werden dann die Daten beziehungsweise Ändeurngsdaten gespeichert.
-Für Datenströme wird am Ende noch ein Hintergrund Task gestartet, der auf Kafka Events zum stoppen dieser Ingestion wartet.
+Für Datenströme wird am Ende noch ein Hintergrund Task gestartet, der auf Kafka Events zum Stoppen dieser Ingestion wartet.
 Hierfür wird die Topic "`dls\_\_ingestion\_\_stop\_ingestion"' mit der Id als Wert verwendet.
 Wenn die Ingestion beendet wurde, wird zum Schluss die SparkSession gestoppt.
 

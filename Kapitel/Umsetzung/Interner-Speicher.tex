@@ -1,20 +1,35 @@
-\section{Interner Datenspeicher}
+\section{Datenspeicher}
 
-Die Entwicklung einer eigenen Lösung zum Speichern von Daten mit Versionierung passt nicht in den zeitlichen Rahmen dieser Arbeit.
-Daher wird der Delta Lake verwendet, da dieser alle benötigten Funktionen für die Versionierung bietet und eine voll unterstützte Schnittstelle zu Spark hat.
-Da das System auf eigenen Server laufen soll, wird als Speicher für den Delta Lake ein HDFS Cluster verwendet.
-Auch die Quelldateien der Ingestion und die Plugins können im HDFS abgelegt werden und sind damit für alle Microservices abrufbar.
-Der Zugriff zum Speichern der Daten geschieht über den Delta Lake beziehungsweise Spark und für die Quelldateien und Plugins über die WebHDFS REST-Schnittstelle.
-
+Für das Speichern von Daten mit einer Versionierung ist Delta Lake eine gut gepflegte und in Spark integrierte Lösung.
 Neben den versionierten müssen auch Daten mit und ohne Struktur gespeichert werden.
-Auch hierfür wird das HDFS verwendet.
-Strukturierte und semistrukturierte Daten können im Parquet Format abgelegt werden.
-Das ist das gleiche Format, das auch der Delta Lake verwendet.
-Werden so wie sie hochgeladen wurden im HDFS abgelegt.
+Für strukturierte und semistrukturierte Daten kommt das Parquet-Format zum Einsatz.
+Unstrukturierte Daten werden im ursprünglichen Format im HDFS abgelegt.
 
-Die Ordner werden folgendermaßen organisiert.
-Für alle Daten wird im Root-Verzeichnis des HDFS ein Ordner "`datalake"' angelegt.
-Dieser enthält die Unterordner für die Hochgeladenen Quell-Dateien "`sources"', die Plugins "`plugins"' und die geladenen Daten "`data"'.
-In den Ordnern "`sources"' und "`plugins'" werden dann für jede Datenquelle Ordner mit deren Id angelegt, in denen die hochgeladenen Dateien abgelegt werden.
-Für die geladenen Daten wird noch einmal und die Ordner "`structured"' für Daten mit Struktur, "´unstructured'" für unstrukturierte Daten und "`delta'" für die Delta Tabellen angelegt.
+Als Speicher wird das HDFS verwendet.
+In diesem können sowohl die Delta Tabellen als auch andere Parquet-, Quell- und Plugin-Dateien abgelegt werden.
+Alle Microservices haben über die WebHDFS-Schnittstelle Zugriff auf die Daten.
+Im HDFS wird eine Verzeichnisstruktur (\cref{fig:hdfs-folder}) für alle Daten des Data Lakes angelegt.
+Diese geht von dem Ordner "`datalake"' aus, der im Root-Verzeichnis des HDFS angelegt wird.
+In diesem Ordner werden die Unterordner
+\begin{itemize}
+    \item "`sources"' für Quell-Dateien,
+    \item "`plugins"' für Plugin-Dateien und
+    \item "`data"' für die Ablage von geladenen Daten erstellt.
+\end{itemize}
+
+In den Ordnern "`sources"' und "`plugins"' werden dann für jede Datenquelle Ordner mit deren Id angelegt, in denen die hochgeladenen Dateien abgelegt werden.
+
+Für die geladenen Daten werden die Ordner \begin{itemize}
+    \item "`structured"' für semi-/strukturierte Daten ohne Versionierung,
+    \item "`unstructured"' für unstrukturierte Daten und 
+    \item "`delta"' für semi-/strukturierte Daten mit Versionierung.
+\end{itemize}
+innerhalb des Ordners "`data"' angelegt.
 Diese unterteilen sich dann ebenfalls wieder in Ordner für jede Datenquelle mit der Id als Name.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.6\textwidth]{Grafiken/Umsetzung-Verzeichnisse.pdf}
+    \caption{HDFS Verzeichnisstruktur}
+    \label{fig:hdfs-folder}
+\end{figure}

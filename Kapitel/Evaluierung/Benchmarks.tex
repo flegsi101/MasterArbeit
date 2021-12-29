@@ -1,0 +1,147 @@
+\section{Benchmarks}
+
+Benchmarks sind ein allgemeines Mittel um Systeme zu bewerten.
+Dabei werden festgelegte Operationen ausgeführt und bestimmte Parameter, die einen Interessieren gemessen.
+Im Big-Data-Bereich wird meistens die Menge der Daten, die verarbeitet werden könne bewertet.
+Hier sind Beispiele der Bigdatabench \parencite{bigdatabench} oder der TPCx-BB\footnote{http://tpc.org/tpcx-bb/default5.asp} und TCPx-HS\footnote{http://tpc.org/tpch/default5.asp}.
+Diese Messen verschiedene Verarbeitungsoperationen mit großen Datenmengen auf einem bestehenden System.
+Teilweise werden zusammen mit der Datenmenge auch Kosten oder Stromverbrauch gemessen.
+Neben diesen Benchmarks kann auch die Qualität des Ergebnisses einer bestimmten Verarbeitungspipline gemessen werden.
+
+Für die Bewertung der Ingestion-Schnittstelle sind solche Benchmarks nicht geeignet.
+Da die Geschwindigkeit oder Menge der Datenverarbeitung von Cluster zu Cluster unterschiedlich, die Schnittstelle aber für verschiedene Cluster eingesetzt werden soll.
+Hier bieten sich relative Vergleiche als eine bessere Lösung an.
+Dazu werden verschieden große Datensätze unter den gleichen Bedingungen in das System geladen und die Dauer der Ingestion und der verbrauchte Festplattenplatz gemessen.
+
+\subsection{Benchmark-Vorgehen}
+Ein wichtiger und ausschlaggebender Punkt der Ingestion ist die Versionierung und Verarbeitung von Änderungsdaten.
+Daraus folgt, dass hier für die Benchmarks das Verhalten beim Laden von Updates interessant ist.
+Dafür werden die vier Ingestion-Abläufe aus \cref{sec:tests-actual}, Updates in Parquet, Änderungsdaten in Parquet, Updates in eine Delta-Tabelle und Änderungsdaten in eine Delta-Tabelle mit schrittweise erhöhten Datenmengen durchlaufen.
+Zusätzlich werden sowohl strukturierte als auch semistrukturierte Daten verwendet.
+
+Die Beispieldatensätze wurden selber generiert um die genaue Anzahl und Inhalt bestimmen zu können.
+So bleiben die Daten auch zwischen den Strukturen vergleichbar.
+Zur Generierung wurde das Tool Synth\footnote{https://www.getsynth.com/} verwendet.
+Bei diesem wird in einer JSON-Datei ein Schema definiert.
+In dem Schema kann für ein Feld aus verschiedenen Generatoren gewählt werden, die zufällige oder feste Werte in den Daten erzeugen.
+Es ist auch in der Lage realitätsnahe Daten wie Namen oder E-Mail-Adressen zu generieren.
+Als Speicherziel können entweder JSON-Dateien oder einige Datenbanken gewählt werden.
+
+Bei der Datengenerierung wird zuerst ein initialer Datensatz erstellt.
+Für diesen werden dann eine bestimmte Anzahl an Änderungen, Löschungen und Einfügungen erzeugt, die einmal in einer Kopie des Datensatzes als neuer Datensatz angewendet werden und einmal in einem Datensatz in Form von Änderungsdaten gespeichert werden.
+Die Menge der Daten wird durch vier Parameter gesteuert.
+Der erste ist die Anzahl an Zeilen im initialen Datensatz.
+Die anderen drei legen die Änderungen, Löschungen und Einfügungen fest.
+Sie werden in Prozent angegeben und werden auf Basis der Anzahl an Zeilen berechnet.
+
+Für die Durchführung eines Benchmarks werden dann die folgenden Schritte ausgeführt.
+Dabei sind fast alle Schritte gleich.
+Nur Schritt vier und fünf unterscheiden sich bei der Verwendung einer veränderten Tabelle oder von Änderungsdaten.
+Für die Benchmark-Messungen kann die Dauer aus den Ingestion-Events berechnet werden, da diese die Start- und Endzeit enthalten.
+Die Größe der Dateien wird kann über eine WebHDFS-Abfrage der Eigenschaften des entsprechenden Ordners geschehen, da sowohl Parquet als auch die Delta-Tabelle in HDFS gespeichert werden.
+\begin{enumerate}
+    \item Erstellen einer DatasourceDefinition für die initialen Daten.
+    Bei Postgres wird die Tabelle angegeben und bei JSON werden die entsprechenden Dateien hochgeladen. 
+    \item Führe die erste Ingestion mit der Datenquelle aus.
+    \item Überprüfe, ob die Anzahl der Einträge in den geladenen Daten korrekt ist und erfasse Benchmark-Parameter für die initialen Daten.
+    \item Erstelle DatasourceDefinition für Änderungsdaten oder ändere die bestehende DatasourceDefinition, die veränderten Daten zu benutzen.
+    Damit bei mehrfachen Benchmarks nicht immer wieder neu die Änderungen gemacht werden müssen, wird das dadurch simuliert, dass die Datenquelle der DatasourceDefinition angepasst wird. Für Postgres wird hier einfach die Tabelle geändert und für JSON werden die Dateien mit den neuen Daten hochgeladen und die alten nicht in die Liste der Quelldateien übernommen.
+    \item Führ entweder eine erneute Ingestion der Datenquelle aus oder führe die erste Ingestion für die Änderungsdaten aus.
+    \item Überprüfe, ob die Anzahl der Daten korrekt ist und erfasse Benchmark-Parameter für die veränderten Daten.
+\end{enumerate}
+
+Die durchgeführten Benchmarks sollen zwei verschiedene Fälle abbilden.
+Der erste Fall ist eine Datenquelle in der häufig Änderungen vorkommen.
+Hier werden 80\% Änderungen, 20\% Löschungen und 40\% Löschungen verwendet.
+Im zweiten Fall geht es darum, dass hauptsächlich neue Daten eingefügt werden und Änderungen und Löschungen werden selten gemacht.
+Dafür werden 5\% Änderungen, 5\% Löschungen und 80\% Einfügungen angewendet.
+Die Benchmarks für ein Speicherziel, also Parquet oder Delta-Tabelle, werden immer zusammen ausgeführt.
+Das heißt, dass die Ingestion von aktualisierten Daten und von Änderungsdaten direkt hintereinander geschieht.
+Dadurch kann eine weiter Überprüfung mit eingebaut werden.
+Da das Speicherziel gleich ist muss für beide Durchläufe auch die Speichergröße der initialen Daten gleich sein.
+
+Als Ziele der Datengenerierung und somit auch als Datenquellen werden wie bei den Tests Postgres und JSON-Dateien verwendet.
+Die Daten selber bestehen aus jeweils 10 Feldern, wovon eines ein fortlaufenden Nummer als Id ist, eines ein Datum enthält und die anderen mit einem Zufälligen 32-Zeichen langen Text befüllt werden.
+Bei den semistrukturierten Daten werden außerdem die Felder ineinander verschachtelt.
+Die Anzahl an Einträgen wird von 1000 bis 7.500.000 gesteigert.
+Dabei wird mit 1000, der nächste Schritt ist dann 2500, dann folgen 5000 Einträge und danach 7500.
+Das wird dann für alle weiteren 10er-Potenzen wiederholt.
+
+\subsection{Benchmark-Ergebnisse}
+
+Die Benchmarks konnten nur auf einem lokalen Spark-Cluster mit einem Worker ausgeführt werden.
+Diesem standen 8 Kerne und 20 Gigabyte Arbeitsspeicher zur Verfügung.
+Es wurde auch probiert diesen Worker in zwei, mit jeweils der Hälfte der Ressourcen, auf zu teilen.
+Bei dieser Konfiguration konnten die Benchmarks aber nicht für Zeilenanzahl ab 1.000.000 erfolgreich beendet werden, da die Ressourcen nicht ausreichend waren.
+Aufgrund des verwendeten Spark-Clusters hat die Betrachtung der absoluten Zahlen keine große Aussagekraft.
+Diese ändern sich mit dem Spark-Cluster und sind nur sinnvoll, wenn der Benchmark auf dem System ausgeführt wird, dass auch beim Betrieb zum Einsatz kommen soll.
+Eine der Kern-Funktionen ist die Versionierung.
+Daher werden die Benchmark-Ergebnisse mit dem Ziel verglichen, Aussagen über diese Funktion zu treffen.
+Dazu wird jeweils ein Faktor für die zwei Fälle und die Quelle wie folgt berechnet:
+\begin{align*}
+    & p_t: \text{Zeit beim Speichern in Parquet, ohne Versionierung} \\
+    & d_t: \text{Zeit beim Speichern in Delta-Tabelle, mit Versionierung} \\
+    & f_t = d_t / p_t \\ \\
+    & p_s: \text{Speicherverbrauch in Parquet, ohne Versionierung} \\
+    & d_s: \text{Speicherverbrauch in Delta-Tabelle, mit Versionierung} \\
+    & f_s = d_s / p_s \\ \\
+\end{align*}
+Diese Werte werden für die zweite Ingestion für beide Fälle mit jeweils aktualisierten Daten oder Änderungsdaten berechnet.
+Da die initialen Daten in beiden Fällen gleich sind, werden die Faktoren hierfür nur einmal berechnet.
+
+Der Wert der Faktoren kann folgendermaßen interpretiert werden: \begin{align*} 
+    & f_t > 1: \text{Die Ingestion mit Versionierung ist langsamer als ohne} \\
+    & f_t = 1: \text{Beide Ingestions sind gleich schnell} \\
+    & f_t < 1: \text{Die Ingestion mit Versionierung ist schneller als ohne} \\ \\
+    & f_s > 1: \text{Die Ingestion mit Versionierung verbraucht mehr Speicherplatz} \\
+    & f_s = 1: \text{Beide Ingestions verbrauchen gleich viel Speicher} \\
+    & f_s < 1: \text{Die Ingestion mit Versionierung verbraucht weniger Speicherplatz}
+\end{align*}
+
+In den gezeigten Diagrammen werden nur die Ergebnisse ab 100.000 Zeilen gezeigt, da die Unterschiede vorher zu klein sind, um sie erkennbar dar zu stellen.
+Alle Ergebnisse können in den Tabellen in \cref{sec:benchmark-tables} nachgelesen werden.
+
+
+\subsubsection{Dauer der Ingestion}
+Beschreibung
+\begin{figure}
+    \centering
+    \label{fig:eval-time-c}
+    \subfigure[Dauer aus PostgreSQL]{
+        \includesvg[inkscapelatex=false,width=0.6\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Sql-Initial}
+        \label{fig:eval-time-sql-i}
+    }
+    \subfigure[Dauer aus JSON-Dateien]{
+        \includesvg[inkscapelatex=false,width=0.6\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Json-Initial}
+        \label{fig:eval-time-json-i}
+    }
+    \caption{Erste Ingestion}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \label{fig:eval-time-c}
+    \subfigure[Dauer aus PostgreSQL]{
+        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Sql-Updated}
+        \label{fig:eval-time-sql-u}
+    }
+    \subfigure[Dauer aus JSON-Dateien]{
+        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Json-Updated}
+        \label{fig:eval-time-json-u}
+    }
+    \caption{Ingestion aus aktualisierten Daten}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \label{fig:eval-time-c}
+    \subfigure[Dauer aus PostgreSQL]{
+        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Sql-Cdc}
+        \label{fig:eval-time-sql-c}
+    }
+    \subfigure[Dauer aus JSON-Dateien]{
+        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Json-Cdc}
+        \label{fig:eval-time-json-c}
+    }
+    \caption{Ingestion aus Updatequelle}
+\end{figure}

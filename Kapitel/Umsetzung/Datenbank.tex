@@ -1,10 +1,10 @@
-\section{Datenbank und Datenmodell}
+\section{Metadaten-Management-System}
 
-Da das Datenmodell einer Datenquelle eine verschachtelte Struktur hat, bietet sich hier als einfachste Lösung die Verwendung einer Dokumenten-orientierten NoSQl-Datenbank an.
-Das hat den Vorteil, dass diese Listen direkt in den Objekten der Datenquellen abgelegt werden können.
-In relationalen Datenbanken, die Tabellen verwenden, müsste man für jedes Modell eine eigene Tabelle erstellen und die Verknüpfungen über über JOIN-Operationen auflösen.
-Bei jeder Abfrage einer Datenquelle werden die verknüpften Einträge der Ingestion-Events oder Revisionen gebraucht, was somit zu einem größeren Aufwand führt.
+Da das Metadatenmodell einer Datenquelle eine verschachtelte Struktur hat, bietet sich hier als einfachste Lösung die Verwendung einer dokumenten-orientierten NoSQL-Datenbank an.
+Das hat den Vorteil, dass die Sammlungen von Revisionen und IngestionEvents direkt in den Objekten der DatasourceDefinition abgelegt werden können.
+In relationalen Datenbank-Systemen, müsste man für jedes Modell eine eigene Tabelle erstellen und die Verknüpfungen über mehrere Abfragen zusammenführen.
+Bei jeder Abfrage einer Datenquelle werden die verknüpften Einträge der IngestionEvents oder Revisionen gebraucht, was somit zu einem größeren Aufwand führt.
 Außerdem gibt es viele Anfragen auf die Datenquellen, da diese nicht zwischen den Mircoservices ausgetauscht werden und so nicht im Speicher vom Service verwaltet werden können.
 Daher ist es effizienter die relevanten Daten direkt mit einer Abfrage laden zu können.
-Hier kommt MongoDB\footnote{https://www.mongodb.com/} als Datenbank zum Einsatz.
-MongoDB kann frei verwendet werden und bei bei größeren Datenmengen verteilt eingesetzt werden.
+Hier kann auch wieder ein Komponente aus dem Prototyp übernommen werden.
+Deswegen kommt MongoDB\footnote{https://www.mongodb.com/} als Datenbank-System zum Einsatz.
