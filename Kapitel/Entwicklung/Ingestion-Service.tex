@@ -15,7 +15,7 @@ Der Ablauf einer Ingestion kann unabhängig vom Lese- und Schreib-Typ in einem a
 Als erstes wird die Ingestion vorbereitet.
 Hier werden die Plugins und deren Abhängigkeiten installiert und eine SparkSession erstellt.
 Im nächsten Schritt werden die Daten aus der Quelle geladen.
-Wenn es sich dabei um Änderungsdaten aus einer Updatequelle handelt, können diese direkt in den entsprechenden Zieldatensatz eingepflegt werden.
+Wenn es sich dabei um Änderungsdaten aus einer Update-Quelle handelt, können diese direkt in den entsprechenden Zieldatensatz eingepflegt werden.
 Ist das nicht der Fall, folgt eine Entscheidung, ob Änderungsdaten berechnet werden müssen.
 Es gelten die folgenden zwei Regeln: \begin{itemize}
     \item der Speicher-Typ ist Delta und
@@ -23,7 +23,7 @@ Es gelten die folgenden zwei Regeln: \begin{itemize}
 \end{itemize}
 Wurden Änderungsdaten berechnet, werden diese eingepflegt.
 Wurden keine berechnet, werden die Daten einfach gespeichert.
-Ist das Speicherziel dabei ein Delta Tabelle wird diese angelegt und ist es eine Parquet-Datei, dann werden die aktuellen Daten überschrieben.
+Ist das Speicherziel dabei ein Delta-Tabelle wird diese angelegt und ist es eine Parquet-Datei, dann werden die aktuellen Daten überschrieben.
 Handelt es sich nicht um einen benutzerdefinierten Speicher, werden die alten Daten mit den neuen überschrieben.
 
 \begin{figure}

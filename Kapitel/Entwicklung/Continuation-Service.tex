@@ -7,7 +7,7 @@ Die einzige Ausnahme ist, wenn die Ingestion durch den Benutzer explizit beendet
 
 Der zweite Fall ist die Zeitsteuerung.
 Für eine zeitgesteuerte kontinuierliche Ingestion werden einer Datenquelle ein oder mehrere Timer hinzugefügt.
-Der Continuation-Service kontrolliert, ob der Timer zum Zeitpunkt, an dem die Datenquelle überprüft wird zutrifft oder nicht.
+Der Continuation-Service kontrolliert, ob der Timer zum Zeitpunkt, an dem die Datenquelle überprüft wird, zutrifft oder nicht.
 Wenn das der Fall ist und bisher keine Ingestion auf der Datenquelle läuft, dann wird eine neue Ingestion gestartet.
 
 In Unix-Systemen gibt es bereits eine Lösung für die Notation solcher Timer.

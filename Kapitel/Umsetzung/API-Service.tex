@@ -26,16 +26,16 @@ Aus den Daten dieses Modells erstellt der API-Service dann die Revisionen für d
 \subsection{Hochladen von Dateien}
 
 Für jede Datenquelle können Quell- oder Plugin-Dateien hochgeladen werden.
-Um eine hochgeladene Datei in der Datenquelle auch zu verwenden, muss der Schlüssel unter dem die Datei hochgeladen wird in der entsprechenden Liste entweder unter "`source\_files"' oder unter "`plugin\_files"' hinzugefügt werden.
+Um eine hochgeladene Datei in der Datenquelle auch zu verwenden, muss der Schlüssel, unter dem die Datei hochgeladen wird, in der entsprechenden Liste entweder unter "`source\_files"' oder unter "`plugin\_files"' hinzugefügt werden.
 Alternativ können auch die Namen unter denen bereits Dateien für die Datenquelle gespeichert wurden in die Listen eingefügt werden.
 
 Bei der Verarbeitung der Eingabe prüft der API-Service für jeden Eintrag der Listen, ob eine Datei mit diesem Schlüssel hochgeladen wurde.
 Ist das der Fall, wird die entsprechende Datei in das HDFS hochgeladen.
 Der Name, unter dem die Datei gespeichert wird, setzt sich aus der Nummer der Revision, dem vergebenen Schlüssel und der Endung der Datei zusammen.
 Lädt man also eine bei der ersten Erstellung einer DatasourceDefinition eine Datei "`data.json"' mit den Schlüssel "`file"' hoch, wird diese als "`r000\_file.json"' im "`sources"'-Ordner der DarasourceDefinition gespeichert.
-Analog werden Plugin-Dateien genau so behandelt.
+Analog werden Plugin-Dateien genauso behandelt.
 
-Wenn keine Datei in der Anfrage gefunden wurde, wird geschaut ob im HDFS eine Datei mit dem Namen existiert.
+Wenn keine Datei in der Anfrage gefunden wurde, wird geschaut, ob im HDFS eine Datei mit dem Namen existiert.
 Wird eine Datei gefunden, wird der Name an die neue Revision angehangen.
 Es ist wichtig zu beachten, dass alle Dateien der alten Revision, die nicht explizit in einer der Listen angegeben werden, nicht in der neuen Revision verwendet werden.
 Sie bleiben jedoch gespeichert und können später wieder hinzugefügt werden.

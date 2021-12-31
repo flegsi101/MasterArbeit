@@ -13,25 +13,25 @@ Der Status "`STOPPED"' bedeutet, dass die Ausführung mit Absicht beendet wurde 
 Der zweite Teil überprüft alle Datenquellen, bei denen ein oder mehrere Timer gesetzt wurden.
 Wenn der Status des letzten IngestionEvents nicht "`STOPPED"' oder "`FINISHED"' ist, wird die Überprüfung dieser Quelle abgebrochen.
 Ansonsten wird jeder Timer mit dem aktuellen Zeitpunkt verglichen.
-Hier wird die Methode $is_now$ verwendet.
-Sie wird durch eine Python-Bibliothek bereitgestellt und prüft ob ein Cron-Timer, die auch für die kontinuierliche Ingestion eingesetzt werden, zum aktuellen Zeitpunkt zutrifft.
+Hier wird die Methode $is\_now$ verwendet.
+Sie wird durch eine Python-Bibliothek bereitgestellt und prüft, ob ein Cron-Timer, die auch für die kontinuierliche Ingestion eingesetzt werden, zum aktuellen Zeitpunkt zutrifft.
 Trifft der Timer zu, wird eine Ingestion für die Datenquelle gestartet und sofort die nächste Datenquelle überprüft.
 
 Der dritte Teil kontrolliert die Ausführungshäufigkeit.
 Dazu wird am Anfang der Schleife der Startzeitpunkt gespeichert.
 Nachdem alle Überprüfungen beendet wurden, wird auch der Endzeitpunkt gespeichert.
 Wenn die Differenz der beiden geringer ist als eine Minute, wird die Schleife für die Dauer der Differenz angehalten.
-Damit ist sichergestellt, das sie nicht häufiger als einmal pro Minute ausgeführt wird.
+Damit ist sichergestellt, dass sie nicht häufiger als einmal pro Minute ausgeführt wird.
 
 \begin{algorithm}
     \caption{Continuation loop}
     \label{algo:ci-loop}
-    
+
     \KwData{-}
     \KwResult{-}
-    
+
     $loopStart \gets$ current\_time() \;
-    
+
     $streams \gets$ all\_datasource\_definition\_of\_type\_stream() \;
     \ForAll {$definition$ in $streams$} {
         $event \gets definition.last\_ingestion$ \;
@@ -39,7 +39,7 @@ Damit ist sichergestellt, das sie nicht häufiger als einmal pro Minute ausgefü
             publish\_run\_event\_for($definition.id$) \;
         }
     }
-    
+
     $timed \gets$ all\_datasource\_definitions\_with\_timers() \;
     \ForAll {$definition$ in $timed$} {
         $event \gets definition.last\_ingestion$ \;

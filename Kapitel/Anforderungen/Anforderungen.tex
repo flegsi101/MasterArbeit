@@ -12,12 +12,12 @@ Am HIT werden verschiedenste Daten verarbeitet.
 Viele kommen aus Datenbanksystemen oder Dateien.
 Es gibt aber auch spezielle Systeme, die ihre Daten nur über eine REST-API zur Verfügung stellen.
 Alle diese Daten sollen mit der Ingestion-Schnittstelle geladen und gespeichert werden können.
-Dazu muss diese sowohl Daten entgegen nehmen als auch aus Systemen extrahieren können und im Data-Lake-System muss ein Speicher integriert sein, der Daten aus allen Strukturen und Formaten speichern kann.
-Um eine Flexibilität auch beim Einsatz des Systems in einer anderen Umgebung zu gewährleisten soll nicht nur der interne, sondern auch externe Systeme zum Speichern der Daten verwendet werden können.
+Dazu muss diese sowohl Daten entgegennehmen als auch aus Systemen extrahieren können und im Data-Lake-System muss ein Speicher integriert sein, der Daten aus allen Strukturen und Formaten speichern kann.
+Um eine Flexibilität auch beim Einsatz des Systems in einer anderen Umgebung zu gewährleisten, soll nicht nur der interne, sondern auch externe Systeme zum Speichern der Daten verwendet werden können.
 
 \paragraph{ANF\_01}
 \label{ANF_01}
-Die Schnittstelle muss in der Lage sein Quelldaten entgegen zu nehmen, die an das Data-Lake-System gesendet werden.
+Die Schnittstelle muss in der Lage sein Quelldaten entgegenzunehmen, die an das Data-Lake-System gesendet werden.
 Diese müssen so verwaltet werden, dass sie über Apache Spark gelesen werden können.
 
 \paragraph{ANF\_02}
@@ -94,7 +94,7 @@ Dazu muss eine Quelle mit Änderungsdaten für eine bereits aufgenommene Datenqu
 
 \section{Datenversionierung}
 \label{sec:anf-metadata}
-Metadaten spielen eine wichtige Rolle bei der Qualität der geladen Daten.
+Metadaten spielen eine wichtige Rolle bei der Qualität der geladenen Daten.
 Die Ingestion-Ebene kann schon beim Laden der Daten Metadaten erfassen.
 Für diese wird ein Metadatenmodell benötigt, dass alle Metadaten abbildet, die bei der Ingestion erfasst werden können.
 

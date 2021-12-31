@@ -1,28 +1,28 @@
 \section{Architektur}
 In dieser Arbeit kann kein komplettes Data-Lake-System entworfen werden.
 Es muss aber eine Entscheidung getroffen werden, nach welcher Architektur das System aufgebaut werden soll.
-Damit zuverlässig die Änderungen in einer Datenquelle erkannt werden können, dürfen die Daten, die von der Ingestion geschrieben wurden nicht direkt verändert werden.
+Damit zuverlässig die Änderungen in einer Datenquelle erkannt werden können, dürfen die Daten, die von der Ingestion geschrieben wurden, nicht direkt verändert werden.
 Hierfür wären sowohl die Zonen- als auch die Ponds-Architektur geeignet.
 Beide können auch als eine datenorientierte Architektur bezeichnet werden.
-Für die Implementierung des Data Lakes soll eine Microservice-Architektur zum Einsatz kommen.
+Für die Implementierung des Data Lake soll eine Microservice-Architektur zum Einsatz kommen.
 Daraus folgt, dass hier ebenfalls eine Aufteilung nach Funktionen der Komponenten notwendig ist.
-Daher reicht eine pure datenorientierte Architektur des Data Lakes nicht aus.
+Daher reicht eine pure datenorientierte Architektur des Data Lake nicht aus.
 Am besten eignet sich in diesem Fall die von \textcite{sawadogo2021data} beschriebene hybride Architektur.
 
 \subsection{Zonen-Architektur}
 Von \textcite{ingestion_02} wurde eine Architektur basierend auf drei Zonen entwickelt.
 \begin{enumerate}
     \item In der Drop Zone werden alle Daten ohne weitere Verarbeitung gespeichert.
-    Nur die Datenproduzenten haben Zugriff auf diese Zone und können Daten schreiben.
+          Nur die Datenproduzenten haben Zugriff auf diese Zone und können Daten schreiben.
     \item Die Landing Zone ist ein unveränderlicher Speicher, der Daten-Assets enthält, die jeweils zu einer Daten-Sammlung gehören. Projekte können mit den Assets aus der Landing Zone interagieren.
-    Benutzer müssen lesenden Zugriff auf bestimmte Assets über einen Governance-Prozess beantragen.
+          Benutzer müssen lesenden Zugriff auf bestimmte Assets über einen Governance-Prozess beantragen.
     \item Projekte können in der Integration-Zone angereicherte Daten speichern.
-    Diese Anreicherung kann zum Beispiel aus einer Aufarbeitung oder Umstrukturierung bestehen, die speziell für ein Projekt benötigt wird.
-    Es ist außerdem möglich Daten aus der Drop Zone wieder in die Landing Zone zu laden.
+          Diese Anreicherung kann zum Beispiel aus einer Aufarbeitung oder Umstrukturierung bestehen, die speziell für ein Projekt benötigt wird.
+          Es ist außerdem möglich Daten aus der Drop Zone wieder in die Landing Zone zu laden.
 \end{enumerate}
 Zu diesem Zeitpunkt kann noch keine Aussage darüber getroffen werden, ob diese Architektur für die komplette Umsetzung des Data-Lakes geeignet ist.
 Der Ansatz der Drop Zone jedoch, in der nur Datenproduzenten schreiben können, erfüllt genau die Bedingung, dass die Daten der Ingestion nicht durch andere verändert werden dürfen.
-Es ist hier wichtig, dass die Daten mit denen neue Daten verglichen werden, seit der letzten Ingestion nicht verändert wurden, um genaue Aussagen über die geschehen Änderungen in der Datenquelle treffen zu können.
+Es ist hier wichtig, dass die Daten mit denen neue Daten verglichen werden, seit der letzten Ingestion nicht verändert wurden, um genaue Aussagen über die geschehenen Änderungen in der Datenquelle treffen zu können.
 Daher wird zumindest eine Zonen-Architektur mit der Drop-Zone für den Entwurf übernommen.
 Die Datenproduzenten, in diesem Szenario, sind alle Microservices, die für die Speicherung von Daten zuständig sind.
 Die Aufteilung in Funktionen kann ebenfalls noch nicht abgeschlossen werden, da in dieser Arbeit die Ingestion-Schnittstelle nur als die erste Funktion entwickelt wird.
@@ -32,7 +32,7 @@ Dabei muss aber immer mit überlegt werden, ob neben den Funktionen auch weitere
 \subsection{Microservice-Architektur}
 \label{sec:arch}
 
-Neben der Architektur des Data Lakes muss auch eine Architektur für die Microservices entworfen werden.
+Neben der Architektur des Data Lake muss auch eine Architektur für die Microservices entworfen werden.
 Diese legt fest, welche Komponenten benötigt werden, welche Aufgaben sie bearbeiten und wie sie miteinander interagieren.
 Der erste Schritt dabei ist es, trennbare Aufgaben zu identifizieren und aufzuteilen.
 Der Aufbau der Microservice-Architektur kann entweder funktions- oder prozessorientiert angegangen werden.
@@ -52,7 +52,7 @@ Durch \nameref{ANF_14} ergibt sich, dass dieser ein Web-Server mit einer REST-AP
 Es geht zwar in dieser Arbeit nur um die Ingestion, aber der API-Service sollte Schnittstellen zu allen Funktionen des Data-Lake-Systems enthalten.
 
 Der \textbf{Ingestion-Service} ist dafür zuständig, die Datenquellen zu verarbeiten und den kompletten Prozess vom Laden bis zum Speichern der Daten in Apache Spark auszuführen.
-Die Ingestion soll für eine Datenquelle nur einmal gleichzeitig aber parallel für unterschiedliche Datenquellen ausgeführt werden können.
+Die Ingestion soll für eine Datenquelle nur einmal gleichzeitig, aber parallel für unterschiedliche Datenquellen ausgeführt werden können.
 
 Bei einer zeitgesteuerten oder Datenstrom-Ingestion muss die kontinuierliche Ausführung sichergestellt werden.
 Das wird durch den \textbf{Continuation-Service} übernommen.
