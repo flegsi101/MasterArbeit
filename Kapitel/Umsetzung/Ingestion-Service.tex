@@ -1,14 +1,14 @@
 \section{Ingestion-Service}
 
 Wie in \cref{sec:entw-ingestion} beschrieben, wird für eine Ingestion ein Prozess gestartet.
-Der Name der Topic des Events zum Starten einer Ingestion ist "`dls\_\_ingestion\_\_run"'.
+Zum Starten einer Ingestion wird das Topic "`dls\_\_ingestion\_\_run"' verwendet.
 In \cref{sec:ingestion-run} wird der detailliere Ablauf mit den verschiedenen Wegen für Read- und SaveTypes beschrieben.
-Vorher werden die benötigt Grundlagen zur Ausführung erläutert.
+Vorher werden die benötigten Grundlagen zur Ausführung erläutert.
 
 \subsection{Berechnen und Speichern der Änderungsdaten}
 Um Änderungen in eine Delta-Tabelle zu übernehmen, müssen die Änderungsdaten in einem Format sein, dass Aufschluss darüber gibt, welche Daten hinzugefügt, welche geändert und welche gelöscht worden sind.
 Das hier verwendete Format muss genau dem Schema der original Daten entsprechen.
-Zusätzlich soll eine Spalte oder ein Feld auf der obersten Eben mit dem Namen "`cd\_deleted"' vorhanden sein.
+Zusätzlich soll eine Spalte oder ein Feld auf der obersten Ebene mit dem Namen "`cd\_deleted"' vorhanden sein.
 Darin ist ein Boolean-Wert enthalten, der aussagt, ob der Eintrag aus den Daten gelöscht wurde oder nicht.
 Der Datensatz mit den Änderungsdaten darf außerdem nur geänderte Daten enthalten.
 Aus diesem Format können, wie später gezeigt, die drei Operationen abgeleitet werden.
@@ -21,7 +21,7 @@ Dieser ist zwar langsamer als alle anderen, aber auch als einziger unabhängig v
 Für den Vergleich werden für jeden Eintrag eindeutige Schlüssel benötigt.
 Das Feld "`id\_column"' in der DatasourceDefintion enthält den Namen der Spalte oder des Feldes, das als Schlüssel fungieren soll.
 Es können auch verschachtelte Felder verwendet werden.
-Der Schlüssel kann aber nicht aus mehreren Feldern zusammengesetzt werden
+Der Schlüssel kann aber nicht aus mehreren Feldern zusammengesetzt werden.
 Die Namen der Felder in den einzelnen Ebenen müssen dafür mit einem "`."' getrennt werden.
 Beispielsweise "`user.id"' für: \begin{verbatim}
     {
@@ -32,13 +32,13 @@ Beispielsweise "`user.id"' für: \begin{verbatim}
     }
 \end{verbatim}
 
-Join-Algorithmen sind in der Informatik schon viel besprochen worden.
+Join-Algorithmen sind in der Informatik bereits vielfach besprochen worden.
 Wenn man die Einträge beider Snapshots über ihren Schlüssel verknüpft, kann man so durch einen Vergleich der Ergebnisse alle geänderten Einträge finden.
 In einem Full-Outer-Join sind zusätzlich alle Einträge vorhanden, die nur in einem der beiden Einträge vorhanden sind.
 Die restlich Felder bekommen einen Null-Wert.
 Je nachdem auf welcher Seite die Null-Werte stehen, handelt es sich um eine Einfügung oder Löschung.
 Da durch SparkSQL eine gute Unterstützung für Join-Operationen gegeben ist, ist dieser Ansatz auch gut für den Einsatz im Data Lake geeignet.
-Diese Vorgehen funktioniert sowohl für relationale als auch semistrukturierte Daten.
+Dieses Vorgehen funktioniert sowohl für relationale als auch semistrukturierte Daten.
 Bei dem Vergleich von semistrukturierten Daten wird jedoch nur die oberste Ebene als Spalte betrachtet.
 Alle darunter verschachtelten Objekte werden als Werte dieser Spalten betrachtet.
 
@@ -48,14 +48,14 @@ Um den Vergleich der Zeilen später einfacher zu machen, wird zuerst für jede Z
 Außerdem wird eine weitere Spalte mit dem Namen "`\char`~ id"' hinzugefügt, die den Wert des Schlüssels zugewiesen bekommt.
 Da wie bereits erwähnt bei semistrukturierte Daten nur die oberste Ebene als Spalten betrachtet wird, ist es so erst möglich  Einträge über verschachtelte Schlüssel zu verknüpfen.
 Danach wird ein Full-Outer-Join über den Daten ausgeführt.
-Im nächsten Schritt werden alle Zeilen, in denen die Hashwerte gleich sind aus dem Datensatz entfernt, da diese keine Relevanz für die Ändeurngsdaten haben.
+Im nächsten Schritt werden alle Zeilen, in denen die Hashwerte gleich sind aus dem Datensatz entfernt, da diese keine Relevanz für die Änderungsdaten haben.
 Zu den gefilterten Daten wird nun die Spalte "`cd\_deleted"' hinzugefügt.
 Ist in den alten Daten eine Zeile vorhanden, in den neuen aber nicht mehr, so ist der Hashwert auf der rechten Seite $Null$.
-In diesem Fall bekommt die Spalte "`cd\_deleted"' den Wert $true$ für alle andere ist der Wert $false$.
-Da das Ergebnis der Join-Operation alle Spalten doppelt enthält, einmal von links und einmal von rechts, enthält, müssen diese noch zusammengeführt werden.
+In diesem Fall bekommt die Spalte "`cd\_deleted"' den Wert $true$ für alle anderen ist der Wert $false$.
+Da das Ergebnis der Join-Operation alle Spalten doppelt enthält, einmal von links und einmal von rechts, müssen diese noch zusammengeführt werden.
 Dazu können immer, außer bei dem Schlüssel, die Werte der rechten Seite genommen werden, da diese die neuen Werte enthält.
 Der Wert für den Schlüssel wird auch von der rechten Seite übernommen, es sei denn dieser ist $Null$ (bei gelöschten Zeilen), dann muss der linke Wert verwendet werden, da der Schlüssel nicht $Null$ sein darf.
-Zum Schluss müssen die zusätzlich, für den Vergleich, hinzugefügten Spalten wieder entfernt werden.
+Zum Schluss müssen die zusätzlich für den Vergleich hinzugefügten Spalten wieder entfernt werden.
 Das Ergebnis ist ein DataFrame mit allen Änderungen.
 Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spalte "`cd\_deleted"', die Auskunft darüber gibt, ob ein Datensatz gelöscht wurde.
 
@@ -102,26 +102,26 @@ Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spa
 
 \end{algorithm}
 
-Das Einpflegen der Änderungen unterscheidet sich je nach dem gewählten Speicherziel.
+Das Einpflegen der Änderungen unterscheidet sich nach dem gewählten Speicherziel.
 Für Delta-Tabellen wird die Delta Lake API verwendet.
 Dazu werden die Änderungsdaten mit den aktuellen Daten über den Schlüssel zusammengeführt.
 Dabei können verschiedene Fälle definiert werden.
 Wenn die Ids einer Zeile gleich sind und die Spalte "`cd\_deleted"' $true$ enthält, wird die Zeile aus den Daten gelöscht, ansonsten wird der Datensatz aktualisiert.
-Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted"' $false$ ist, dir der Datensatz als neue Zeile eingefügt.
+Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted"' $false$ ist, wird der Datensatz als neue Zeile eingefügt.
 
 Für Parquet-Dateien werden die Änderungsdaten über Spark mit den Bestandsdaten zusammengeführt.
 Beide Datensätze werden über einen Full-Outer-Join verknüpft.
-Danach werden alle Zeilen, in denen das Feld "`cd\_deleted"' den Wert $true$ werden gelöscht.
+Danach werden alle Zeilen, in denen das Feld "`cd\_deleted"' den Wert $true$ enthält, gelöscht.
 Ähnlich zu der Deltaberechnung werden die übrigen Daten wieder auf das original Schema gebracht.
-Dabei werden für allen Zeilen, bei denen entweder kein Eintrag aus den Bestandsdaten existiert oder die Änderungsdaten sich von ihnen unterscheiden die Werte der Änderungsdaten übernommen.
-In den anderen Zeilen bleiben die Bestandsdaten beibehalten.
+Dabei werden für alle Zeilen, bei denen entweder kein Eintrag aus den Bestandsdaten existiert oder die Änderungsdaten sich von ihnen unterscheiden, die Werte der Änderungsdaten übernommen.
+In den anderen Zeilen werden die Bestandsdaten beibehalten.
 
 \subsection{Plugin-Management}
 
-Da Python verwendet wird kann nicht, wie zum Beispiel in Java, ein Interface definiert werden, dass ein Plugin dann implementieren muss.
+Da Python verwendet wird, kann nicht, wie zum Beispiel in Java, ein Interface definiert werden, dass ein Plugin implementieren muss.
 Es ist aber möglich die Namen, Parameter und Rückgabetyp einer Methode zu überprüfen.
 Mit diesem Ansatz können Methoden aus den hochgeladen Plugin-Dateien validiert werden.
-Für die Ingestion werden diese zwei Methoden Definiert: \begin{enumerate}
+Für die Ingestion werden diese zwei Methoden definiert: \begin{enumerate}
     \item Load-Methode: \begin{verbatim}
         Name: "load"
         Rückgabetyp: DataFrame
@@ -148,9 +148,9 @@ Da jede Ingestion in einem eigenen Prozess ausgeführt wird, beeinflussen die Ä
 
 Im zweiten Schritt wird jede Plugin-Datei als Python-Modul geladen.
 Jedes Modul enthält dann die in der Plugin-Datei definierten Methoden.
-Diese Methoden können mit den Definitionen verglichen.
+Diese Methoden können mit den Definitionen verglichen werden.
 Dazu wird der \cref{algo:check-method} verwendet.
-Diesem werden das geladene Modul, ein Name der Methode, ein optionaler Rückgabetyp der Methode und eine Liste von Parameter, bei denen Name und Typ definiert ist.
+Diesem werden das geladene Modul, ein Name der Methode, ein optionaler Rückgabetyp der Methode und eine Liste von Parametern, bei denen Name und Typ definiert sind.
 Zur Überprüfung können alle Methoden in dem Modul auf ihren Namen geprüft werden.
 Wenn eine Methode gefunden wurde, wird eine Signatur erzeugt und mit der übergebenen Definition verglichen.
 Das Ergebnis sagt dann, ob diese Methode ein Plugin ist oder nicht.
@@ -160,7 +160,7 @@ Eine gefundene Load-Methode überschreibt immer die vorher gefundene, da jede In
 Die After-Load-Methoden dagegen werden in einer Liste gespeichert.
 Es kann jedoch immer nur eine After-Load-Methode pro Plugin-Datei geben.
 Diese können dann auch hintereinander ausgeführt werden, um auf einem DataFrame mehrere Modifikationen auszuführen.
-Alle gefunden Methoden werden in einem Plugin-Manager gespeichert um während der Ingestion aufgerufen werden zu können.
+Alle gefunden Methoden werden in einem Plugin-Manager gespeichert, um während der Ingestion aufgerufen werden zu können.
 Die Reihenfolge der Ausführung entspricht der Reihenfolge, wie die Plugin-Dateien bei der Erstellung in der Liste angegeben wurden.
 
 \begin{algorithm}
@@ -195,18 +195,18 @@ Die Reihenfolge der Ausführung entspricht der Reihenfolge, wie die Plugin-Datei
 
 \subsection{Ausführung der Ingestion}
 \label{sec:ingestion-run}
-Die Ausführung startet mit der Initialisierung, die die für die Ingestion benötigte Daten lädt.
+Die Ausführung startet mit der Initialisierung, welche die für die Ingestion benötigte Daten lädt.
 Das ist zum Beispiel die DatasourceDefinition zu der Id aus den Events.
 Danach wird entschieden, ob eine Ingestion über Spark notwendig ist.
 Hier spielt der Lesetyp eine große Rolle.
-Bei der Ingestion von Unstrukturierten Daten wird Spark nicht benötigt.
+Bei der Ingestion von unstrukturierten Daten wird Spark nicht benötigt.
 Hier können die Dateien, über die WebHDFS-Schnittstelle direkt im HDFS verschoben werden.
 Für alle anderen Typen wird im nächsten Schritt die Ingestion vorbereitet.
 Es werden die Plugins aus dem HDFS geladen und eine SparkSession erstellt.
 Das Laden der Daten in ein DataFrame geschieht anschließend entweder über ein Plugin in oder das Standardvorgehen.
 Falls auch After-Load-Plugins vorhanden sind, werden diese ausgeführt.
 Für die geladenen Daten wird dann entschieden, ob es sich um Änderungsdaten handelt oder welche berechnet werden müssen.
-Je nach Schreib-Typ werden dann die Daten beziehungsweise Ändeurngsdaten gespeichert.
+Je nach Schreib-Typ werden dann die Daten beziehungsweise Änderungsdaten gespeichert.
 Für Datenströme wird am Ende noch ein Hintergrund Task gestartet, der auf Kafka Events zum Stoppen dieser Ingestion wartet.
 Hierfür wird die Topic "`dls\_\_ingestion\_\_stop\_ingestion"' mit der Id als Wert verwendet.
 Wenn die Ingestion beendet wurde, wird zum Schluss die SparkSession gestoppt.

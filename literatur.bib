@@ -6,10 +6,7 @@
   booktitle={2008 IEEE International Conference on Information Reuse and Integration}, 
   title={Data warehouse architecture and design}, 
   year={2008},
-  volume={},
-  number={},
-  pages={58-63},
-  doi={10.1109/IRI.2008.4583005}
+  pages={58-63}
  }
   
 % ||================================================================================================
@@ -26,8 +23,6 @@
   title={On data lake architectures and metadata management},
   author={Sawadogo, Pegdwend{\'e} and Darmont, J{\'e}r{\^o}me},
   journal={Journal of Intelligent Information Systems},
-  volume={56},
-  number={1},
   pages={97--120},
   year={2021},
   publisher={Springer}
@@ -66,31 +61,20 @@
     publisher = {Springer}
 }
 
-@article{DBLP:journals/corr/abs-2106-09592,
-    author  = {Rihan Hai and
-               Christoph Quix and
-               Matthias Jarke},
+@article{datalake_02,
+    author  = {Rihan Hai and Christoph Quix and Matthias Jarke},
     title   = {Data lake concept and systems: a survey},
     journal = {CoRR},
     year    = {2021}
 }
 
 @inproceedings{coredb,
-author = {Beheshti, Amin and Benatallah, Boualem and Nouri, Reza and Chhieng, Van Munin and Xiong, HuangTao and Zhao, Xu},
-title = {CoreDB: A Data Lake Service},
-year = {2017},
-isbn = {9781450349185},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://printkr.hs-niederrhein.de:2062/10.1145/3132847.3133171},
-doi = {10.1145/3132847.3133171},
-abstract = {The continuous improvement in connectivity, storage and data processing capabilities allow access to a data deluge from sensors, social-media, news, user-generated, government and private data sources. Accordingly, in a modern data-oriented landscape, with the advent of various data capture and management technologies, organizations are rapidly shifting to datafication of their processes. In such an environment, analysts may need to deal with a collection of datasets, from relational to NoSQL, that holds a vast amount of data gathered from various private/open data islands, i.e. Data Lake. Organizing, indexing and querying the growing volume of internal data and metadata, in a data lake, is challenging and requires various skills and experiences to deal with dozens of new databases and indexing technologies: How to store information items? What technology to use for persisting the data? How to deal with the large volume of streaming data? How to trace and persist information about data? What technology to use for indexing the data? How to query the data lake? To address the above mentioned challenges, we present CoreDB - an open source data lake service - which offers researchers and developers a single REST API to organize, index and query their data and metadata. CoreDB manages multiple database technologies and offers a built-in design for security and tracing.},
-booktitle = {Proceedings of the 2017 ACM on Conference on Information and Knowledge Management},
-pages = {2451–2454},
-numpages = {4},
-keywords = {data api, data lake, database service},
-location = {Singapore, Singapore},
-series = {CIKM '17}
+    author = {Beheshti, Amin and Benatallah, Boualem and Nouri, Reza and Chhieng, Van Munin and Xiong, HuangTao and Zhao, Xu},
+    title = {CoreDB: A Data Lake Service},
+    year = {2017},
+    publisher = {Association for Computing Machinery},
+    booktitle = {Proceedings of the 2017 ACM on Conference on Information and Knowledge Management},
+    pages = {2451–2454},
 }
 
 @ARTICLE{lambda-arch,
@@ -98,51 +82,43 @@ series = {CIKM '17}
   journal={IEEE Access}, 
   title={Data Lake Lambda Architecture for Smart Grids Big Data Analytics}, 
   year={2018},
-  volume={6},
-  number={},
   pages={40463-40471},
-  doi={10.1109/ACCESS.2018.2858256}}
+}
 
 % ||================================================================================================
 % || Prototyp
 % ||================================================================================================
 @misc{prototyp,
-    author      = {Alexander Martin and Marcel Thiel and Robin Kuller},
-    title       = {Interne Bericht - Development of a Data Lake System},
-    institution = {{Hochschule Niederrhein, Fachbereich 03 Elektrotechnik und Informatik}},
-    year        = {2020/21}
+    author = {Alexander Martin and Marcel Thiel and Robin Kuller},
+    title = {Interner Bericht - Development of a Data Lake System},
+    institution = {Hochschule Niederrhein, Fachbereich 03 Elektrotechnik und Informatik},
+    year = {2021},
 }
 
 % ||================================================================================================
 % || CDC
 % ||================================================================================================
 @article{boeing,
-    author    = {Ram, P. und Do, L.},
+    author    = {Ram, P. and Do, L.},
     booktitle = {Proceedings of 16th International Conference on Data Engineering (Cat. No.00CB37073)},
     title     = {Extracting delta for incremental data warehouse maintenance},
     year      = {2000},
-    volume    = {},
-    number    = {},
     pages     = {220-229}
 }
 
 @article{delta-view_gen,
-    author    = {Mekterović, Igor und Brkić, Ljiljana},
+    author    = {Mekterović, Igor and Brkić, Ljiljana},
     booktitle = {2015 38th International Convention on Information and Communication Technology, Electronics and Microelectronics (MIPRO)},
     title     = {Delta view generation for incremental loading of large dimensions in a data warehouse},
     year      = {2015},
-    volume    = {},
-    number    = {},
     pages     = {1417-1422}
 }
 
 @article{cdc_in_nosql,
-    author    = {Schmidt, Felipe Mathias and Geyer, Claudio and Schaeffer-Filho, Alberto and DeBloch, Stefan und Hu, Yong},
+    author    = {Schmidt, Felipe Mathias and Geyer, Claudio and Schaeffer-Filho, Alberto and DeBloch, Stefan and Hu, Yong},
     booktitle = {2015 IEEE Symposium on Computers and Communication (ISCC)},
     title     = {Change data capture in NoSQL databases: A functional and performance comparison},
     year      = {2015},
-    volume    = {},
-    number    = {},
     pages     = {562-567}
 }
 
@@ -157,11 +133,10 @@ series = {CIKM '17}
     year        = {1996},
     institution = {Stanford InfoLab},
     url         = {http://ilpubs.stanford.edu:8090/170/},
-    abstract    = {Detecting and extracting modifications from information sources is an integral part of data warehousing. For unsophisticated sources, in practice it is often necessary to infer modifications by periodically comparing snapshots of data from the source. Although this snapshot differential problem is closely related to traditional joins and outerjoins, there are significant differences, which lead to simple new algorithms. In particular, we present algorithms that perform (possibly lossy) compression of records. We also present a window algorithm that works very well if the snapshots are not "very different." The algorithms are studied via analysis and an implementation of two of them; the results illustrate the potential gains achievable with the new algorithms}
 }
 
 @article{joins,
-    author  = {Priti Mishra und Margaret H. Eich},
+    author  = {Priti Mishra and Margaret H. Eich},
     title   = {Join Processing in Relational Databases},
     journal = {ACM Computing Surveys},
     year    = {1992},
@@ -184,8 +159,6 @@ series = {CIKM '17}
   title={Apache spark: a unified engine for big data processing},
   author={Zaharia, Matei and Xin, Reynold S and Wendell, Patrick and Das, Tathagata and Armbrust, Michael and Dave, Ankur and Meng, Xiangrui and Rosen, Josh and Venkataraman, Shivaram and Franklin, Michael J and others},
   journal={Communications of the ACM},
-  volume={59},
-  number={11},
   pages={56--65},
   year={2016},
   publisher={ACM New York, NY, USA}
@@ -198,8 +171,6 @@ series = {CIKM '17}
   title={Google’s MapReduce programming model—Revisited},
   author={L{\"a}mmel, Ralf},
   journal={Science of computer programming},
-  volume={70},
-  number={1},
   pages={1--30},
   year={2008},
   publisher={Elsevier}
@@ -233,9 +204,7 @@ series = {CIKM '17}
 % || Ingestion
 % ||================================================================================================
 @article{ingestion_01,
-    author  = {Yan Zhao and
-               Imen Megdiche and
-               Franck Ravat},
+    author  = {Yan Zhao and Imen Megdiche and Franck Ravat},
     title   = {Data Lake Ingestion Management},
     journal = {CoRR},
     year    = {2021}
@@ -246,10 +215,7 @@ series = {CIKM '17}
     booktitle = {2019 IEEE 5th International Conference on Collaboration and Internet Computing (CIC)},
     title     = {Experiences with Managing Data Ingestion into a Corporate Datalake},
     year      = {2019},
-    volume    = {},
-    number    = {},
-    pages     = {101-109},
-    doi       = {10.1109/CIC48465.2019.00021}
+    pages     = {101-109}
 }
 
 % ||================================================================================================
@@ -289,14 +255,8 @@ series = {CIKM '17}
     title       = {Rethink Data Report 2020},
     year        = 2020,
     url         = {https://www.seagate.com/files/www-content/our-story/rethink-data/files/rethink-data-report-2020-de-de.pdf},
-    lastchecked = {06.07.2021},
+    urldate = {2021-07-06},
     file        = {d5ce837d-c9f8-4ee9-b433-9652e671d156:C\:\\Users\\acces\\AppData\\Local\\Swiss Academic Software\\Citavi 6\\ProjectCache\\plx3rw6gm2dpk7l0i6n4v49dfckptadhed8zzybg8651kyj1\\Remote Attachments\\d5ce837d-c9f8-4ee9-b433-9652e671d156.pdf:pdf}
-}
-
-@manual{cron,
-    title = {crontab(5) — Linux manual page},
-    year  = {2012},
-    month = {November}
 }
 
 @inproceedings{message-broker,
@@ -328,8 +288,6 @@ series = {CIKM '17}
     title     = {Delta lake: high-performance ACID table storage over cloud object stores},
     author    = {Armbrust, Michael and Das, Tathagata and Sun, Liwen and Yavuz, Burak and Zhu, Shixiong and Murthy, Mukul and Torres, Joseph and van Hovell, Herman and Ionescu, Adrian and {\L}uszczak, Alicja and others},
     journal   = {Proceedings of the VLDB Endowment},
-    volume    = {13},
-    number    = {12},
     pages     = {3411--3424},
     year      = {2020},
     publisher = {VLDB Endowment}

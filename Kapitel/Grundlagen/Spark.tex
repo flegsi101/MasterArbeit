@@ -2,11 +2,11 @@
 \label{sec:spark}
 
 Apache Spark ist eine Datenverabeitungs-Engine für die effiziente, verteilte Verarbeitung von Big Data.
-Das Ziel bei der Entwicklung von Apache Spark war es, ein einheitliches Rahmenwerk für Big-Data-Prozesse zu schaffen,
-Das Problem war, das die bis dahin verbreitetste Lösung, Hadoop, keine einheitliche Abfragesprache und kein einheitliches Datenmodell hat.
-Durch Spark ist das Arbeiten mit zum Beispiel mit SQL, Datenströmen, maschinellem Lernen oder Graph-Daten möglich.
+Das Ziel bei der Entwicklung von Apache Spark war es, ein einheitliches Rahmenwerk für Big-Data-Prozesse zu schaffen.
+Das Problem war, dass die bis dahin verbreitetste Lösung Hadoop keine einheitliche Abfragesprache und kein einheitliches Datenmodell hat.
+Durch Spark ist das Arbeiten mit zum Beispiel SQL, Datenströmen, maschinellem Lernen oder Graph-Daten möglich.
 Es gibt viele Bibliotheken für die Verwendung verschiedener Datenquellen in Spark.
-Durch ihre Optimierung erreichen diese ähnliche Performance wie manuell dafür implementierte Big-Data-Prozesse.
+Durch ihre Optimierung erreichen diese eine ähnliche Performance wie manuell dafür implementierte Big-Data-Prozesse.
 Spark kann entweder lokal auf einem Computer oder auf einem Spark-Cluster nach dem Master-Worker-Modell ausgeführt werden.
 
 Ein Kernprinzip ist die Abstraktion der Daten in RDDs (Resilient Distributed Datasets, deutsch: Resiliente Verteilte Datensätze).
@@ -20,9 +20,9 @@ Es gibt Bibliotheken für die Sprachen Scala, Java, Python und R.
 Auf den RDDs gibt es noch eine weitere Abstraktionsebene, die DataFrames.
 Mit DataFrames, die eine Sammlung RDDs von Datensätzen mit einem bekannten Schema sind, kann eine API benutzt werden, bei der die Bearbeitung der Daten über Funktionsaufrufe statt SparkSQL möglich ist \parencite{spark}.
 
-Die Interaktion mit einem Spark-Cluster kann über eine interaktive Shell oder eine in einer der unterstützen Sprachen geschriebenen Job geschehen.
+Die Interaktion mit einem Spark-Cluster kann über eine interaktive Shell oder einen, in einer der unterstützen Sprachen programmierten, Job geschehen.
 Informationen über die Anwendung werden im SparkContext gespeichert.
 Beim Lesen und Schreiben wird das Format der Daten angegeben.
 Spark unterstützt standardmäßig einige Formate, aber durch die Konfiguration mit zusätzlichen Bibliotheken im SparkContext, kann die Unterstützung weiterer Formate hinzugefügt werden.
 Von den verwendeten Bibliotheken und dem Format sind auch die Optionen abhängig, die beim Lesen und Schreiben gesetzt werden müssen.
-Die Optionen sind immer Schlüssel-Wert-Paare und enthalten zum Beispiel Verbindungsinformationen zu einer Datenbank oder einen Dateispeicherort \parencite{spark-website}.
+Die Optionen sind immer Schlüssel-Wert-Paare und enthalten zum Beispiel Verbindungsinformationen zu einer Datenbank oder einem Dateispeicherort \parencite{spark-website}.

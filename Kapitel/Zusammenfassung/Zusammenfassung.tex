@@ -1,14 +1,50 @@
-\chapter{Zusammenfassung}
+\chapter{Zusammenfassung und Ausblick}
 
-\subsection{Ergebnis}
-Im Rahmen dieser Arbeit wurde eine Schnittstelle entwickelt, die es ermöglicht über die eine einheitliche Definition Daten aus allen möglich Quellen in das Data-Lake-System zu integrieren.
-Die Schnittstelle kann über einen Web-Service bereitgestellt und durch beliebige Clients genutzt werden.
+Die Aufgabenstellung dieser Arbeit war die Entwicklung einer Ingestion-Schnitt\-stelle für ein Data-Lake-System, dass im Kontext des HIT-Instituts an der Hochschule Niederrhein angewendet werden soll.
+An diesem Institut werden Daten aus verschiedenen Quellen erfasst.
+Es gibt klassische Datenbank-Systeme, Dateien oder REST-APIs.
+Der Data Lake soll die zentrale Speicherlösung sein und Verarbeitungsprozesse unterstützen.
+Dazu ist es neben der Unterstützung verschiedener Datenquellen auch nötig die Daten zu versioniern.
+Dadurch verringert sich der Aufwand bei der weiteren Verarbeitung, da nur Änderungen betrachtet werden müssen.
 
-Um eine Abdeckung aller Datenquellen zu erreichen wird neben der Verwendung von Apache Spark (\cref{sec:spark}) auch eine ein Plugin-System verwendet.
-Neben dem Laden aus Datenspeichern, können auch Dateien über die Schnittstelle in das Data-Lake-System hochgeladen werden.
+In der vorliegenden Arbeit wurde eine generische Ingestion-Schnittstelle mit Versionierung für Data-Lake-Systeme entwickelt und mit funktionalen Tests und Benchmarks evaluiert.
+Dafür wurde neben der Entwicklung der bestehende Prototyp des Data Lake auf eine Microservice-Archi\-tektur umgebaut.
+Es wurden außerdem existierende Data-Lake-Systeme betrachtet und bewertet, ob diese als Lösung für die Problemstellung dienen könnten.
+Daraus ergab sich, dass eine Eigenentwicklung notwendig ist.
 
-Die Versionierung ist für strukturierte und semistrukturierte Daten, also zum Beispiel Tabellen oder JSON-Dateien, möglich.
-Es besteht die Wahl zwischen der internen Berechnung von Änderungen zwischen zwei Versionen oder dem Einpflegen von Änderungsdaten aus eine eigenen Change-Data-Capture-Lösung (\cref{sec:cdc}).
+Die Ingestion-Schnittstelle besteht aus drei Microservices.
+Der Ingestion-Ser\-vice verwaltet das Laden von Daten in das System.
+Dabei erlaubt die Verwendung von Spark und einem Plugin-System das Laden von Daten aus jeder Quelle.
+Die kontinuierliche Ausführung von Ingestions wird durch den Continuation-Service sichergestellt.
+Benutzer können über den API-Service mit der Ingestion-Schnittstelle interagieren.
+Dieser besteht aus der Integration der neuen API in den Server des Prototyps.
+Dadurch bleibt das System mit der Verwendung der alten API kompatibel.
+Aus der Eingabe, die ein Benutzer an die API sendet, wird ein generelles Metadatenmodell aufgebaut.
 
-Die Architektur des bestehenden Prototyps wurde so angepasst, dass diese leicht erweiterbar ist.
-Weitere Funktionalitäten können so gut in das System integriert werden.
+Das Metadatenmodell zur Definition einer Datenquelle enthält alle Informationen über die Datenquelle, verwendete Plugins und zugehörige Ingestions.
+Über dieses Modell werden die Informationen zu den Ingestions zwischen den Microservices ausgetauscht.
+
+Neben der Ingestion-Schnittstelle besteht der Data Lake aus weiteren Komponenten.
+Ein Kafka-Cluster wird für die Kommunikation im Data-Lake-System eingesetzt.
+Diese kann auch für die Anbindung von Datenströmen verwendet werden.
+Die Daten, die in den Data Lake geladen wurden, werden in einem HDFS gespeichert.
+Daten mit Versionierung werden in einer Delta-Tabelle des Delta Lake abgelegt.
+Für unversionierte Daten wird entweder das Parquet- oder, bei unstrukturierten Daten, das Ursprungsformat der Daten benutzt.
+Für die Verwaltung von Metadaten kommt eine MongoDB-Datenbank zum Einsatz.
+Die Datenverarbeitung geschieht über ein Spark-Cluster.
+
+Die Evaluierung der Ingestion-Schnittstelle wurde in einem durch die gegebene Hardware möglichen Rahmen durchgeführt.
+Hierfür stand kein leistungsstarkes Cluster zur Verfügung, um absolute Aussagen über die Leistung der Ingestion-Schnittstelle treffen zu können.
+Daher ist lediglich ein relativer Vergleich ausgeführt worden.
+Dabei wurden Benchmarks für verschiedene Datenmengen mit strukturierte und semistrukturierte Daten in zwei Szenarien ausgeführt.
+Die Szenarien bilden dabei eine Situation, in der viele Änderungen an Daten geschehen und eine Situation, in der hauptsächlich Daten hinzugefügt werden ab.
+
+Durch die Benchmarks und Tests wurde gezeigt, dass mit dieser Arbeit die Entwicklung der Ingestion-Schnittstelle noch nicht vollständig abgeschlossen ist.
+Die implementierte Berechnung von Änderungsdaten ist in bestimmten Fällen sehr langsam.
+Auch die Darstellung von Änderungen in verschachtelten Daten könnte durch ein anderes Vorgehen optimiert werden.
+Somit ist die Versionierung in der Ingestion-Schnittstelle ein Thema, dass in weiteren Arbeit genauer betrachtet werden kann.
+
+Weiterhin sind die Metadaten, die während der Ingestion gesammelt werden nicht ausreichend.
+Um eine Aussagekräftige Suche, Exploration und Analyse der Daten durchführen zu können, müssen direkt nach dem Laden weitere Metadaten extrahiert werden.
+Diese könnten zum Beispiel Informationen über den Inhalt oder die Struktur der Daten beinhalten.
+Auch das ist ein großes Thema, mit dem sich während der Weiterentwicklung befasst werden kann.

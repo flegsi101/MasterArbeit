@@ -3,10 +3,10 @@
 
 Basierend auf der Zielsetzung (\cref{sec:ziel}) können die Anforderungen erarbeitet werden, nach denen die Ingestion-Schnittstelle entwickelt werden soll.
 Dafür werden nachfolgend die Ziele in einzelne Abschnitte aufgeteilt.
-In diesen Abschnitt wird das Ziel nochmal genauer erläutert und die einzelnen Anforderungen herausgearbeitet.
+In diesen Abschnitten werden die Ziele nochmal genauer erläutert und die einzelnen Anforderungen herausgearbeitet.
 Auf die Erfüllung der Ziele und Anforderungen wird dann nochmal in der Evaluierung und Zusammenfassung eingegangen.
 
-\section{Quellen- und Formatunabhänigkeit}
+\section{Quellen- und Formatunabhängigkeit}
 \label{sec:anf-unab}
 Am HIT werden verschiedenste Daten verarbeitet.
 Viele kommen aus Datenbanksystemen oder Dateien.
@@ -27,12 +27,12 @@ Da Apache Spark nicht von sich aus in der Lage ist, alle Datenformate zu versteh
 \paragraph{ANF\_03}
 \label{ANF_03}
 Für die Unterstützung verschiedenster Quell- und Zielspeicher verwendet Apache Spark zum Lesen und Speichern einen Format-Parameter und variable Optionen.
-Diese sollen komplett konfigurierbar sein um alle Systeme verwenden zu können.
+Diese sollen komplett konfigurierbar sein, um alle Systeme verwenden zu können.
 
 \paragraph{ANF\_04}
 \label{ANF_04}
-Einige Quellen, zum Beispiel eine REST-API können nicht direkt über Spark in ein DataFrame gelesen werden.
-Daher muss eine Möglichkeit geben werden, die Ingestion zur Laufzeit um eigenen Programmcode zu erweitern, der ein DataFrame manuell aus einer Reihe von Abfragen aufbaut.
+Einige Quellen, zum Beispiel eine REST-API, können nicht direkt über Spark in ein DataFrame gelesen werden.
+Daher muss eine Möglichkeit gegeben werden, die Ingestion zur Laufzeit um eigenen Programmcode zu erweitern, der ein DataFrame manuell aus einer Reihe von Abfragen aufbaut.
 
 \section{Kontinuierliches Laden}
 \label{sec:anf-ci}
@@ -59,7 +59,7 @@ Daher soll sichergestellt werden, dass das System diesen Fall nicht zulässt.
 
 
 Wie bereits erwähnt, ist der Prototyp des Data-Lake-Systems eine monolithische Anwendung.
-Das bedeutet, die gesamte Anwendung ist als Komplettlösung in einem Programm entwickelt und bereitgestellt worden.
+Das bedeutet, dass die gesamte Anwendung als Komplettlösung in einem Programm entwickelt und bereitgestellt worden ist.
 Solche Ansätze sind Anfangs leichter umzusetzen, haben aber größere Nachteile in Bereichen wie Fehlertoleranz und Wartbarkeit.
 Daher soll für die Ingestion-Schnittstelle der Microservice-Ansatz verfolgt werden.
 Hierbei werden die Funktionalitäten und Aufgaben auf mehrere kleinere Anwendungen aufgeteilt.
@@ -74,7 +74,7 @@ Die Änderungen, die an Daten gemacht werden, sind wichtige Informationen, um we
 Gerade durch die kontinuierliche Ingestion von neuen Daten am HIT entsteht eine Vielzahl solcher Änderungen.
 Dabei gibt es zwei verschiedene Arten, wie Änderungen in das Data-Lake-System eingespielt werden können.
 Die erste Art ist die Ingestion von Daten aus einer externen Change-Data-Capture-Lösung (\cref{sec:cdc}) als Änderungen an einer Datenquelle, die bereits ins System geladen wurde.
-Bei der zweiten Art wird eine Datenquelle, die bereits geladen wurde, ein weiteres mal geladen.
+Bei der zweiten Art wird eine Datenquelle, die bereits geladen wurde, ein weiteres Mal geladen.
 Hierbei ist es notwendig, das die Ingestion-Schnittstelle die Änderungen zwischen den beiden Ständen erkennen kann.
 Die Änderungen an den Daten im System sollen über eine Versionierung nachvollziehbar gespeichert werden.
 
@@ -90,7 +90,7 @@ Um für alle eingehenden Daten die Möglichkeit der Versionierung im System anbi
 \paragraph{ANF\_11}
 \label{ANF_11}
 Auch die Verwendung einer eigenen CDC-Lösung für eine Datenquelle soll unterstützt werden.
-Dazu muss eine Quelle mit Änderungsdaten für eine bereits aufgenommen Datenquelle erstellt werden können.
+Dazu muss eine Quelle mit Änderungsdaten für eine bereits aufgenommene Datenquelle erstellt werden können.
 
 \section{Datenversionierung}
 \label{sec:anf-metadata}
@@ -108,9 +108,9 @@ Das Metadatenmodell soll alle Informationen enthalten, die bei der Ingestion ges
 
 \section{Architektur}
 \label{sec:anf-arch}
-Die Architektur soll die Ingestion in Mircoservices umgesetzt werden.
+Die Architektur des Data-Lake-Systems soll in Mircoservices aufgebaut werden.
 Außerdem wird eine Schnittstelle für die Interaktion mit dem System benötigt.
-Daraus ergeben sich folgende Anforderungen, an die Architektur.
+Daraus ergeben sich drei Anforderungen, an die Architektur.
 
 \paragraph{ANF\_14}
 \label{ANF_14}
@@ -118,7 +118,7 @@ Die Interaktionsschnittstelle mit dem System soll eine REST-API sein, die in das
 
 \paragraph{ANF\_15}
 \label{ANF_15}
-Durch eine klare Trennung der Aufgaben der Microservices soll deren Überschneidungen und Abhängigkeiten so gering wie möglich gehalten werden.
+Durch eine klare Trennung der Aufgaben für die Microservices sollen deren Überschneidungen und Abhängigkeiten so gering wie möglich gehalten werden.
 
 \paragraph{ANF\_16}
 \label{ANF_16}

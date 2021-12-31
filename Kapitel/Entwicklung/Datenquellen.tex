@@ -2,19 +2,19 @@
 
 Wie bereits erwähnt muss ein Modell erstellt werden, dass die Metadaten abbildet, die bei einer Ingestion erfasst werden (\cref{fig:datenmodell}).
 Zu diesen Metadaten gehören alle Informationen über die Herkunft der Daten, also die Datenquelle und das Speicherziel.
-Diese werden zum Großteil in für Spark erforderliche Parameter widergespiegelt.
+Diese werden zum Großteil in für Spark erforderlichen Parametern widergespiegelt.
 Ein weiterer Teil der Metadaten sind alle Informationen über die Ausführung einer Ingestion.
 
 \subsection{DatasourceDefinition}
 
-Das Metadatenmodell beschreibt eine Datenquelle und hat als zentrales Element das Konzept DatasourceDefinition
+Das Metadatenmodell beschreibt eine Datenquelle und hat als zentrales Element das Konzept DatasourceDefinition.
 Ein Teil des Modells besteht aus Feldern, die für Spark erforderlichen Informationen enthalten.
 Dazu gehören: \begin{itemize}
     \item zusätzliche Abhängigkeiten für Spark (spark.jars.packages),
     \item das Format und Optionen für die Reader und
-    \item und bei benutzerdefinierten Speichern das Format, die Optionen und einen Schreibmodus für die Writer.
+    \item bei benutzerdefinierten Speichersystemen das Format, die Optionen und einen Schreibmodus für die Writer.
 \end{itemize}
-Neben den Spark spezifischen werden noch folgende weiter Informationen erfasst: \begin{itemize}
+Neben den Spark spezifischen werden noch folgende weitere Informationen erfasst: \begin{itemize}
     \item ein Name für die Datenquelle,
     \item die Id einer anderen Datenquelle, falls die aktuelle eine Updatequelle ist,
     \item das Datum der Erstellung und letzten Änderung,
@@ -32,7 +32,7 @@ Bei einer Pull-Ingestion ist das System dafür verantwortlich Daten aus einer Qu
 Dies ist zum Beispiel bei Datenbanken der Fall.
 Das Gegenteil dazu ist eine Push-Ingestion, bei der die Daten direkt an den Data Lake gesendet werden.
 Diese muss jedoch nochmal in zwei unterschiedliche Typen unterteilt werden.
-Bei einer Stream-Ingestion, also bei Datenströmen, werden kontinuierlich neue Daten an das System gesendet werden.
+Bei einer Stream-Ingestion, also bei Datenströmen, werden kontinuierlich neue Daten an das System gesendet.
 Und bei einer File-Ingestion werden Dateien hochgeladen, die die Daten enthalten, wobei wichtig ist, dass alle Dateien das gleiche Dateiformat und je nach Typ eine ähnliche oder gleiche Struktur haben.
 Die Dateien können sich in Daten- und Quelldateien unterscheiden.
 Datendateien enthalten unstrukturierte Daten und werden einfach im HDFS mit abgelegt ohne weiter verarbeitet zu werden.

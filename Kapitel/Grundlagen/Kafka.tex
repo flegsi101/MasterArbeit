@@ -8,25 +8,38 @@ Events können von Produzenten veröffentlicht werden und Konsumenten können au
 Durch die Verteilung in einem Cluster kann Kafka den Ausfall einzelner Server ausgleichen.
 Zusätzlich können Ströme von Events für einen beliebigen Zeitraum gespeichert werden.
 
-Kafka besteht aus einem Cluster von Servern und verschiedenen Clients.
-Es gibt zwei Arten von Servern.
-Die sogenannten Broaker sind für die Verteilung und Verwaltung von Events zuständig.
-Andere verwenden Server Kafka Connect\footnote{https://kafka.apache.org/documentation/\#connect} um existierende Systeme, wie zum Beispiel ein Datenbank-System, in das Kafka-Cluster zu integrieren.
-Die Clients sind Anwendungen, die entweder Events produzieren oder konsumieren.
+\begin{figure}
+    \centering
+    \includegraphics{Grafiken/Grundlagen/Kafka-Cluster.pdf}
+    \caption{Kafka-Cluster}
+    \label{fig:kafka-cluster}
+\end{figure}
 
-In diesem System repräsentiert ein Event den Fakt, dass etwas "`passiert"' ist und besteht aus einem Schlüssel, einem Wert, einem Zeitstempel und optionalen Metadaten.
-Dabei werden die Werte nicht interpretiert sonder einfach als Byte-Block versendet und können so beliebige Struktur haben.
+Ein Kafka-Cluster (\cref{fig:kafka-cluster}) besteht aus mehreren Brokern, die von Apache Zookeeper verwaltet werden.
+Die Broker sind für die Verteilung und Speicherung von Events zuständig.
+Mit den Brokern sind die Client-Anwendungen als Produzenten oder Konsumenten verbunden.
+Produzenten senden Events an das Cluster und Konsumenten empfangen Events.
+Ein Event repräsentiert den Fakt, dass etwas "`passiert"' ist und besteht aus einem Schlüssel, einem Wert, einem Zeitstempel und optionalen Metadaten.
+Dabei werden die Werte nicht interpretiert, sondern einfach als Byte-Block versendet und können so eine beliebige Struktur haben.
+
 Events werden in sogenannte Topics unterteilt.
-Es kann immer mehrere Produzenten oder Konsumenten auf einem Topic geben.
 Events in einem Topic können mehrfach gelesen werden und werden nicht nach dem Konsumieren gelöscht.
 Es kann aber für jedes Topic eine Dauer festgelegt werden, nach der die Events verworfen werden.
 Um ein Topic fehlertolerant zu machen, kann dieses repliziert werden.
 
 Topics werden in Partitionen über verschiedene Broker aufgeteilt, so dass das ganze System gut skalierbar wird.
-Ein Produzenten kann zum Beispiel Events auf mehreren Brokern gleichzeitig veröffentlichen.
+Ein Produzent kann auch Events auf mehreren Brokern gleichzeitig veröffentlichen.
 Wenn ein Event in einem Topic veröffentlicht wird, wird dieses an eine der Partitionen angehängt.
-Events, die den gleichen Schlüssel haben werden immer der gleichen Partition zugeordnet und Events einer Partition kommen garantiert in der Reihenfolge des Schreibens bei dem Konsumenten der Partition an \parencite{kafka-docs}.
+Events, die den gleichen Schlüssel haben, werden immer der gleichen Partition zugeordnet.
+Dabei bleibt die Reihenfolge der Events innerhalb einer Partition garantiert erhalten. \parencite{kafka-docs}.
 
-Konsumenten können auch in Gruppen zusammengefasst werden.
+Konsumenten können auch in Gruppen zusammengefasst werden (\cref{fig:kafka-gruppen}).
 Innerhalb einer Gruppe werden Events eines Topics innerhalb der Mitglieder, die dieses Topic abonniert haben, aufgeteilt.
 Diese Funktion kann zum Beispiel für den Lastausgleich verwendet werden.
+
+\begin{figure}
+    \centering
+    \includegraphics{Grafiken/Grundlagen/Kafka-Gruppen.pdf}
+    \caption{Kafka-Gruppen}
+    \label{fig:kafka-gruppen}
+\end{figure}

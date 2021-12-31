@@ -2,24 +2,23 @@
 
 Für die Übermittlung von Nachrichten zwischen verschiedenen Anwendungen gibt es sogenannte Message-Broker.
 Diese koordinieren als Mittelsmann die Verteilung der Nachrichten an verschiedene Empfänger.
-Das hat den Vorteil, dass das Senden und Empfangen asynchron und damit unabhängig von einander stattfindet \parencite{message-broker}.
+Das hat den Vorteil, dass das Senden und Empfangen asynchron und damit unabhängig voneinander stattfindet \parencite{message-broker}.
 
 Es gibt mittlerweile einige Projekte, die diese Aufgabe auf verschiedene Art lösen.
 Hier wird Apache Kafka verwendet, welches im Big Data Bereich weit verbreitet ist um Datenströme zu verarbeiten.
-Daher macht es Sinn, dieses in das Data-Lake-System zu integrieren und darin bereit zu stellen.
+Daher macht es Sinn, dieses in das Data-Lake-System zu integrieren und darin bereitzustellen.
 Um das System dabei nicht unnötig komplex und zu groß werden zu lassen, wird daher auf einen anderen Message-Broker verzichtet.
 Außerdem ist die Verteilung der Nachrichten durch Kafka sehr flexibel gestaltbar.
 
 Da Kafka ein Event-Streaming-System ist, wird ab hier nicht mehr von dem Austausch von Nachrichten, sondern von Events gesprochen.
 Für diese Events müssen Topics zur Einordnung festgelegt werden.
 Die Namen sollten dabei so gewählt werden, dass Kafka auch für andere Datenströme verwendet werden kann, ohne, dass es zu Konflikten kommt.
-Daher werden die Topics der internen Kommunikation des Data-Lake-Systems immer mit "`dls\_\_"' als Prefix benannt werden.
+Daher werden die Topics der internen Kommunikation des Data-Lake-Systems immer mit "`dls\_\_"' als Präfix benannt werden.
 Danach folgt der Bereich, den das Event betrifft, hier zum Beispiel "`ingestion"'.
-Zu diesem Präfix können noch weiter Informationen hinzugefügt werden.
-An diesen Namen kann dann noch weiter Unterscheidung angehängt werden.
-Für das Ausführen einer Ingestion wäre damit die Topic "`dls\_\_ingestion\_\_run"'.
+Zu diesem Präfix können noch weitere Informationen hinzugefügt werden.
+Für das Ausführen einer Ingestion ist nach diesem Aufbau das Topic "`dls\_\_ingestion\_\_run"'.
 
 Im Ingestion-Service können sehr gut die Gruppen bei Kafka-Konsumenten angewendet werden.
 Dazu werden die Konsumenten jedes Ingestion-Service der selben Gruppe hinzugefügt.
-So bekommt immer nur ein Ingestion-Service das Event zum starten einer Ingestion und es muss keine weitere Logik implementiert werden, die sicherstellt, dass nicht mehrere Ingestion-Services eine Ingestion zur gleichen Quelle starten.
+So bekommt immer nur ein Ingestion-Service das Event zum Starten einer Ingestion und es muss keine weitere Logik implementiert werden, die sicherstellt, dass nicht mehrere Ingestion-Services eine Ingestion zur gleichen Quelle starten.
 Das macht die Skalierung und Verteilung der Ingestion-Services sehr einfach.

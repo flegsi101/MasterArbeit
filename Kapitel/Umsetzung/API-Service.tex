@@ -10,7 +10,7 @@ Die DatasourceDefinition bekommt den Schlüssel "`datasource-definition"'.
 Der Wert dahinter kann entweder eine JSON-Datei oder ein JSON-Text sein.
 Die Schlüssel der hochgeladenen Dateien sind frei wählbar.
 
-Die DatasourceDefinition zu Teilen aus Federn besteht, die automatisch durch die Services gefüllt werden.
+Die DatasourceDefinition besteht zu Teilen aus Feldern, die automatisch durch die Services gefüllt werden.
 Daher wird ein weiteres Datenmodell für die Eingabe von Informationen bei der REST-API benötigt.
 Dafür wird die DatasourceDefinitionInput (\cref{fig:datasource-definition-input}) verwendet.
 In diesem Modell befinden sich alle Felder, die durch den Benutzer befüllt werden können.
@@ -31,7 +31,7 @@ Alternativ können auch die Namen unter denen bereits Dateien für die Datenquel
 
 Bei der Verarbeitung der Eingabe prüft der API-Service für jeden Eintrag der Listen, ob eine Datei mit diesem Schlüssel hochgeladen wurde.
 Ist das der Fall, wird die entsprechende Datei in das HDFS hochgeladen.
-Der Name, unter dem die Datei gespeichert wird, setzt sich aus der Nummer der Revision, dem vergeben Schlüssel und der Endung der Datei zusammen.
+Der Name, unter dem die Datei gespeichert wird, setzt sich aus der Nummer der Revision, dem vergebenen Schlüssel und der Endung der Datei zusammen.
 Lädt man also eine bei der ersten Erstellung einer DatasourceDefinition eine Datei "`data.json"' mit den Schlüssel "`file"' hoch, wird diese als "`r000\_file.json"' im "`sources"'-Ordner der DarasourceDefinition gespeichert.
 Analog werden Plugin-Dateien genau so behandelt.
 

@@ -3,7 +3,7 @@
 
 Um Änderungen an Daten in Datenquellen in das Data-Lake-System einpflegen zu können, müssen diese erst erfasst werden.
 Diesen Prozess nennt man Change-Data-Capture (CDC).
-Das Ziel beim CDC ist es, die Änderungen an den Daten nur an einer Stelle zu erfassen und dann an andere Systeme weiter zu geben, damit folgende Verarbeitungsschritte nur die Änderungen berücksichtigen und nicht auf den gesamten Datenbestand zurückgreifen müssen.
+Das Ziel beim CDC ist es, die Änderungen an den Daten nur an einer Stelle zu erfassen und dann an andere Systeme weiterzugeben, damit folgende Verarbeitungsschritte nur die Änderungen berücksichtigen und nicht auf den gesamten Datenbestand zurückgreifen müssen.
 Dafür gibt es verschiedene Ansätze, die auf Datenbank-Triggern \parencite{boeing}, Log-Einträgen \parencite{delta-view_gen}, Zeitstempeln \parencite{delta-view_gen, boeing} oder Snapshots \parencite{cdc_in_nosql} basieren.
 
 \subsection{Änderungserfassung Datenbank-Triggern}
@@ -17,7 +17,7 @@ Es gibt viele Datenspeicher-Systeme, die Logs über die Aktionen auf den Daten f
 Diese werden zum Beispiel genutzt, um eine Wiederherstellung möglich zu machen.
 Ein CDC-Programm kann diese Logs auslesen und daraus die Änderungsdaten erzeugen.
 Hierdurch gibt es fast keinen zusätzlichen Aufwand für das eigentliche System.
-Aber auch hier gilt, dass diese Methode davon abhängig ist ob ein System Logs erstellt und ob diese durch externe Programme abgerufen werden können \parencite{delta-view_gen}.
+Aber auch hier gilt, dass diese Methode davon abhängig ist, ob ein System Logs erstellt und diese durch externe Programme abgerufen werden können \parencite{delta-view_gen}.
 
 
 \subsection{Zeitstempel-basierte Änderungserfassung}
@@ -36,6 +36,6 @@ Der Aufwand für diese Methode kann relativ hoch werden, da ohne Indices auf den
 Die letzte Methode ist das Vergleichen zweier Momentaufnahmen (Snapshots) eines Datensatzes.
 Dabei wird bei jedem Durchlauf zuerst ein aktueller Snapshot generiert.
 Dieser wird danach mit dem des vorherigen Durchlaufs verglichen, um alle Änderungen zu erhalten.
-Hierfür muss ein separater Speicherort für die Snapshots festgelegt werde.
+Hierfür muss ein separater Speicherort für die Snapshots festgelegt werden.
 Wie bei den Zeitstempeln ist es nicht möglich den gesamten Änderungsverlauf zwischen zwei Snapshots nachzuvollziehen.
 Außerdem müssen für den Vergleich immer alle Daten geladen werden, was zu einem hohen Rechen- und Speicheraufwand führen kann \parencite{cdc_in_nosql}.

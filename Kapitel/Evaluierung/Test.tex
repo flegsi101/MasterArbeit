@@ -1,20 +1,19 @@
 \section{Erfüllung der Anforderungen}
 
-Die ersten Anforderung die geprüft werden können, sind ANF\_12, ANF\_13 und ANF\_14, die die Architektur beziehungsweise das Design des Systems betreffen.
+Die ersten Anforderung die geprüft werden können, sind ANF\_12, ANF\_13 und ANF\_14, welche die Architektur beziehungsweise das Design des Systems betreffen.
 Die Ingestion bietet eine REST-Schnittstelle, wie durch die Anforderung gefordert.
-Die drei Microservices sind nicht untereinander Abhängig und die Kommunikation mit Kafka ist so flexibel, dass es kein Problem gibt neue Services zu integrieren.
+Die drei Microservices sind nicht voneinander abhängig und die Kommunikation mit Kafka ist so flexibel, dass es kein Problem gibt neue Services zu integrieren.
 
 Auch ANF\_09, das Speichern von Änderungen, ist durch die Verwendung von Delta Lake gegeben.
 Die Erfüllung der restlichen Anforderungen muss durch Tests überprüft werden.
 Hierzu werden Tests verwendet, die das komplette System im Zusammenhang überprüfen.
 Hier bedeutet das, dass mehrere Ingestions ausgeführt werden, die alle Funktionen abdecken.
-Mit den folgenden Schritten kann die korrekte Funktion einer Ingestion getestet werden. \begin{enumerate}
-    \item Erstelle die Datenquelle die in der Ingestion verwendet wird. 
-    Hiermit können zum Beispiel JSON-Dateien oder eine SQL-Tabelle gemeint sein.
-    \item Erstelle eine DatasourceDefinition für die Datenquelle.
-    \item Vergleiche die DatasourceDefinition aus in der Datenbank des Systems mit einer vordefinierten Soll-Definition.
-    \item Führe die Ingestion aus.
-    \item Vergleiche die Daten im System nach der Ingestion mit einem vordefinierten Soll-Datensatz
+Mit den folgenden Schritten kann die korrekte Funktion einer Ingestion getestet werden: \begin{enumerate}
+    \item Erstellen einer Datenquelle, zum Beispiel JSON-Dateien oder Postgres-Ta\-bellen, die in der Ingestion verwendet wird.
+    \item Erstellen einer DatasourceDefinition für die Datenquelle.
+    \item Vergleichen der DatasourceDefinition aus der Datenbank des Systems mit einer vordefinierten Soll-Definition.
+    \item Starten der Ingestion.
+    \item Vergleichen der Daten im System nach der Ingestion mit einem vordefinierten Soll-Datensatz
 \end{enumerate}
 Mit diesem Vorgehen kann auch die Aktualisierung von Daten getestet werden.
 Dazu muss es zweimal hintereinander ausgeführt werden.
@@ -23,29 +22,29 @@ Im ersten Durchlauf werden die initialen Daten geladen und im zweiten wird dann 
 \subsection{Durchgeführte Tests}
 \label{sec:tests-actual}
 Nachfolgend werden die durchgeführten Tests geschildert.
-Die ersten Tests sollen zeigen, dass sowohl das das laden von veränderten Daten als auch von Änderungsdaten für strukturierte und unstrukturierte Daten funktioniert.
+Die ersten Tests sollen zeigen, dass sowohl das Laden von veränderten Daten als auch von Änderungsdaten für strukturierte und unstrukturierte Daten funktioniert.
 Damit wird auch indirekt die korrekte Ingestion überprüft.
 
 Ein verwendeter Datensatz muss aus einer Mindestanzahl an Einträgen bestehen, die alle möglichen Operation bei einer Änderung abdecken.
 Der erste Eintrag bleibt in den Update-Daten unverändert, der zweite wird gelöscht und der dritte wird in einem Feld verändert.
 Zusätzlich muss noch ein weiterer Eintrag hinzugefügt werden.
-Damit Änderungen berechnet und eingepflegt werden könne muss ein Feld festgelegt werden, dass als Id verwendet wird.
+Damit Änderungen berechnet und eingepflegt werden können muss ein Feld festgelegt werden, dass als Id verwendet wird.
 Hier muss auch der Fall geprüft werden, dass die Id sich in einem verschachtelten Feld befindet.
 
 Für den Test von strukturierten Daten wird eine Postgres Datenbank und für semistrukturierte JSON-Dateien verwendet.
 Damit werden der Upload von Dateien und das Laden von Daten aus einer Datenquelle abgedeckt.
 Für beide wird sowohl die Ingestion von veränderten Daten der gleichen Quelle als auch Änderungsdaten ausgeführt.
 Dabei werden jeweils eine Delta-Tabelle und Parquet als Speicherziel verwendet.
-Das Speichern in einem externen Ziel wird hier nicht gemacht, da die Versionierung nur für interne Speicher unterstützt wird.
+Das Speichern in einem externen Ziel wird hier nicht getestet, da die Versionierung nur für interne Speicher unterstützt wird.
 Der erfolgreiche Abschluss der Tests hat gezeigt, dass diese Ingestion-Abläufe bei veränderten Daten funktionieren: \begin{itemize}
-    \item Neuen Stand einer Datenquelle in Parquet speichern.
-    \item Änderungsdaten aus einer externen Quelle in Bestandsdaten aus Parquet einpflegen.
-    \item Änderungsdaten aus einem neuem Stand einer Datenquelle berechnen und in einer Delta-Tabelle speichern.
+    \item neuen Stand einer Datenquelle in Parquet speichern,
+    \item Änderungsdaten aus einer externen Quelle in Bestandsdaten aus Parquet einpflegen,
+    \item Änderungsdaten aus einem neuem Stand einer Datenquelle berechnen und in einer Delta-Tabelle speichern und
     \item Ändeurngsdaten aus einer externen Quelle in eine Delta-Tabelle einpflegen.
 \end{itemize}
 
 Bei den Tests für weitere Quellen genügt es nur noch eine Ingestion auszuführen.
 Hier werden die Ingestion aus einem Kafka-Datenstrom und aus einer REST-Api überprüft.
-Die Ingestion des Datenstroms verwendet dabei ein After-Load-Plugin um die tatsächlichen Daten aus der Nachricht zu extrahieren.
-Das Load-Plugin wird bei der REST-Api-Ingestion mit geprüft.
+Die Ingestion des Datenstroms verwendet dabei ein After-Load-Plugin, um die tatsächlichen Daten aus der Nachricht zu extrahieren.
+Das Load-Plugin wird bei der Ingestion aus einer REST-API mit geprüft.
 Auch diese Tests sind erfolgreich durchgelaufen.

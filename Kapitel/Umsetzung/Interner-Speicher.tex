@@ -1,7 +1,7 @@
 \section{Datenspeicher}
 
 Für das Speichern von Daten mit einer Versionierung ist Delta Lake eine gut gepflegte und in Spark integrierte Lösung.
-Neben den versionierten müssen auch Daten mit und ohne Struktur gespeichert werden.
+Da im Delta Lake Datensätze immer versioniert werden, muss auch ein Speicher für unversionierte Daten bereitgestellt werden.
 Für strukturierte und semistrukturierte Daten kommt das Parquet-Format zum Einsatz.
 Unstrukturierte Daten werden im ursprünglichen Format im HDFS abgelegt.
 
@@ -22,7 +22,7 @@ In den Ordnern "`sources"' und "`plugins"' werden dann für jede Datenquelle Ord
 Für die geladenen Daten werden die Ordner \begin{itemize}
     \item "`structured"' für semi-/strukturierte Daten ohne Versionierung,
     \item "`unstructured"' für unstrukturierte Daten und 
-    \item "`delta"' für semi-/strukturierte Daten mit Versionierung.
+    \item "`delta"' für semi-/strukturierte Daten mit Versionierung
 \end{itemize}
 innerhalb des Ordners "`data"' angelegt.
 Diese unterteilen sich dann ebenfalls wieder in Ordner für jede Datenquelle mit der Id als Name.

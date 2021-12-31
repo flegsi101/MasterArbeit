@@ -5,13 +5,13 @@ Es handelt sich hierbei um eine Client-Server-Anwendung.
 Der Client besteht aus einer Web-Anwendung über die Benutzer mit dem Data-Lake-System interagieren.
 Er kommuniziert mit dem Server über eine REST-API, die auch durch andere Clients verwendet werden könnte.
 Die Datenverarbeitung wird über ein Spark-Cluster gelöst.
-Zum Speichern der Daten stehen drei verschieden System zu Verfügung.
-Eine PostgreSQL Datenbank für strukturierte, eine MongoDB für semistrukturierte und ein HDFS für unstrukturierte Daten.
+Zum Speichern der Daten stehen drei verschiedene System zu Verfügung.
+Es kommen eine PostgreSQL Datenbank für strukturierte, eine MongoDB für semistrukturierte und ein HDFS für unstrukturierte Daten zum Einsatz.
 
 \begin{figure}
     \centering
     \includegraphics{Grafiken/Prototyp-Architektur.pdf}
-    \caption{Architektur des Prototypen, \citetitle[Quelle:][S. 2]{prototyp}}
+    \caption[Architektur des Prototypen]{Architektur des Prototypen}
     \label{fig:prototyp-architektur}
 \end{figure}
 
@@ -32,6 +32,11 @@ So ist es nicht möglich während der Laufzeit neue Datenquellen zu integrieren.
         \label{fig:prototyp-file-ingeston}
         \includegraphics[width=.45\textwidth]{Grafiken/file_ingestion.pdf}
     }
-    \caption{Ingestion-Verarbeitung des Prototypen, \citetitle[Quelle:][S. 3]{prototyp}}
+    \caption[Ingestion-Verarbeitung des Prototypen]{Ingestion-Verarbeitung des Prototypen, \citetitle[Quelle:][S. 3]{prototyp}}
     \label{fig:prototyp-ingestion}
 \end{figure}
+
+Im Vorlauf dieser Arbeit wurde ein Refactoring des Prototypen durchgeführt.
+Dabei wurde festgestellt, dass die Erweiterung des Data-Lake-Systems um die Kompatibilität mit weiteren Datenquellen ein aufwändiger Prozess ist.
+Auch durch die gewählten Speichersysteme für die geladenen Daten erschweren die Integration einer Lösung für die Versionierung der Daten.
+Daher wurde beschlossen, dass eine dedizierte Ingestion-Schnittstelle für das System entwickelt werden soll.

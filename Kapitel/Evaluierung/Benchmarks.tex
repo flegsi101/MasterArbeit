@@ -1,15 +1,14 @@
 \section{Benchmarks}
 
 Benchmarks sind ein allgemeines Mittel um Systeme zu bewerten.
-Dabei werden festgelegte Operationen ausgeführt und bestimmte Parameter, die einen Interessieren gemessen.
-Im Big-Data-Bereich wird meistens die Menge der Daten, die verarbeitet werden könne bewertet.
+Dabei werden festgelegte Operationen ausgeführt und bestimmte Parameter gemessen, um Aussagen über ein System treffen zu können.
+Im Big-Data-Bereich wird meistens die Menge der Daten, die verarbeitet werden können, bewertet.
 Hier sind Beispiele der Bigdatabench \parencite{bigdatabench} oder der TPCx-BB\footnote{http://tpc.org/tpcx-bb/default5.asp} und TCPx-HS\footnote{http://tpc.org/tpch/default5.asp}.
-Diese Messen verschiedene Verarbeitungsoperationen mit großen Datenmengen auf einem bestehenden System.
+Diese messen verschiedene Verarbeitungsoperationen mit großen Datenmengen auf einem bestehenden System.
 Teilweise werden zusammen mit der Datenmenge auch Kosten oder Stromverbrauch gemessen.
-Neben diesen Benchmarks kann auch die Qualität des Ergebnisses einer bestimmten Verarbeitungspipline gemessen werden.
+Neben diesen Benchmarks kann auch die Qualität des Ergebnisses einer bestimmten Verarbeitungspipeline gemessen werden.
 
-Für die Bewertung der Ingestion-Schnittstelle sind solche Benchmarks nicht geeignet.
-Da die Geschwindigkeit oder Menge der Datenverarbeitung von Cluster zu Cluster unterschiedlich, die Schnittstelle aber für verschiedene Cluster eingesetzt werden soll.
+Für die Bewertung der Ingestion-Schnittstelle sind solche Benchmarks nicht geeignet, da die Geschwindigkeit oder Menge der Datenverarbeitung von Cluster zu Cluster unterschiedlich ist, die Schnittstelle aber für verschiedene Cluster eingesetzt werden soll.
 Hier bieten sich relative Vergleiche als eine bessere Lösung an.
 Dazu werden verschieden große Datensätze unter den gleichen Bedingungen in das System geladen und die Dauer der Ingestion und der verbrauchte Festplattenplatz gemessen.
 
@@ -19,7 +18,7 @@ Daraus folgt, dass hier für die Benchmarks das Verhalten beim Laden von Updates
 Dafür werden die vier Ingestion-Abläufe aus \cref{sec:tests-actual}, Updates in Parquet, Änderungsdaten in Parquet, Updates in eine Delta-Tabelle und Änderungsdaten in eine Delta-Tabelle mit schrittweise erhöhten Datenmengen durchlaufen.
 Zusätzlich werden sowohl strukturierte als auch semistrukturierte Daten verwendet.
 
-Die Beispieldatensätze wurden selber generiert um die genaue Anzahl und Inhalt bestimmen zu können.
+Die Beispieldatensätze wurden selber generiert, um die genaue Anzahl und den Inhalt bestimmen zu können.
 So bleiben die Daten auch zwischen den Strukturen vergleichbar.
 Zur Generierung wurde das Tool Synth\footnote{https://www.getsynth.com/} verwendet.
 Bei diesem wird in einer JSON-Datei ein Schema definiert.
@@ -38,7 +37,7 @@ Für die Durchführung eines Benchmarks werden dann die folgenden Schritte ausge
 Dabei sind fast alle Schritte gleich.
 Nur Schritt vier und fünf unterscheiden sich bei der Verwendung einer veränderten Tabelle oder von Änderungsdaten.
 Für die Benchmark-Messungen kann die Dauer aus den Ingestion-Events berechnet werden, da diese die Start- und Endzeit enthalten.
-Die Größe der Dateien wird kann über eine WebHDFS-Abfrage der Eigenschaften des entsprechenden Ordners geschehen, da sowohl Parquet als auch die Delta-Tabelle in HDFS gespeichert werden.
+Die Größe der Dateien wird über eine WebHDFS-Abfrage der Eigenschaften des entsprechenden Ordners geschehen, da sowohl Parquet als auch die Delta-Tabelle in HDFS gespeichert werden.
 \begin{enumerate}
     \item Erstellen einer DatasourceDefinition für die initialen Daten.
     Bei Postgres wird die Tabelle angegeben und bei JSON werden die entsprechenden Dateien hochgeladen. 
@@ -46,38 +45,37 @@ Die Größe der Dateien wird kann über eine WebHDFS-Abfrage der Eigenschaften d
     \item Überprüfe, ob die Anzahl der Einträge in den geladenen Daten korrekt ist und erfasse Benchmark-Parameter für die initialen Daten.
     \item Erstelle DatasourceDefinition für Änderungsdaten oder ändere die bestehende DatasourceDefinition, die veränderten Daten zu benutzen.
     Damit bei mehrfachen Benchmarks nicht immer wieder neu die Änderungen gemacht werden müssen, wird das dadurch simuliert, dass die Datenquelle der DatasourceDefinition angepasst wird. Für Postgres wird hier einfach die Tabelle geändert und für JSON werden die Dateien mit den neuen Daten hochgeladen und die alten nicht in die Liste der Quelldateien übernommen.
-    \item Führ entweder eine erneute Ingestion der Datenquelle aus oder führe die erste Ingestion für die Änderungsdaten aus.
+    \item Führe entweder eine erneute Ingestion der Datenquelle aus oder führe die erste Ingestion für die Änderungsdaten aus.
     \item Überprüfe, ob die Anzahl der Daten korrekt ist und erfasse Benchmark-Parameter für die veränderten Daten.
 \end{enumerate}
 
-Die durchgeführten Benchmarks sollen zwei verschiedene Fälle abbilden.
+Die durchgeführten Benchmarks bilden zwei verschiedene Szenarien ab.
 Der erste Fall ist eine Datenquelle in der häufig Änderungen vorkommen.
-Hier werden 80\% Änderungen, 20\% Löschungen und 40\% Löschungen verwendet.
+Hier werden 80\% Änderungen, 20\% Löschungen und 40\% Einfügungen verwendet.
 Im zweiten Fall geht es darum, dass hauptsächlich neue Daten eingefügt werden und Änderungen und Löschungen werden selten gemacht.
 Dafür werden 5\% Änderungen, 5\% Löschungen und 80\% Einfügungen angewendet.
 Die Benchmarks für ein Speicherziel, also Parquet oder Delta-Tabelle, werden immer zusammen ausgeführt.
 Das heißt, dass die Ingestion von aktualisierten Daten und von Änderungsdaten direkt hintereinander geschieht.
-Dadurch kann eine weiter Überprüfung mit eingebaut werden.
+Dadurch kann eine weitere Überprüfung mit durchgeführt werden.
 Da das Speicherziel gleich ist muss für beide Durchläufe auch die Speichergröße der initialen Daten gleich sein.
 
 Als Ziele der Datengenerierung und somit auch als Datenquellen werden wie bei den Tests Postgres und JSON-Dateien verwendet.
-Die Daten selber bestehen aus jeweils 10 Feldern, wovon eines ein fortlaufenden Nummer als Id ist, eines ein Datum enthält und die anderen mit einem Zufälligen 32-Zeichen langen Text befüllt werden.
+Die Daten selbst bestehen aus jeweils zehn Feldern, wovon eines eine fortlaufende Nummer als Id ist, eines ein Datum enthält und die anderen mit einem zufälligen 32-Zeichen langen Text befüllt werden.
 Bei den semistrukturierten Daten werden außerdem die Felder ineinander verschachtelt.
-Die Anzahl an Einträgen wird von 1000 bis 7.500.000 gesteigert.
-Dabei wird mit 1000, der nächste Schritt ist dann 2500, dann folgen 5000 Einträge und danach 7500.
-Das wird dann für alle weiteren 10er-Potenzen wiederholt.
+Die Anzahl der Einträge wird in Zehner-Potenzen erhöht.
+Dabei der werden die Faktoren $1$, $2,5$, $5$ und $7,5$ mit den Potenzen $10^3$ bis $10^6$ verwendet.
 
 \subsection{Benchmark-Ergebnisse}
 
 Die Benchmarks konnten nur auf einem lokalen Spark-Cluster mit einem Worker ausgeführt werden.
 Diesem standen 8 Kerne und 20 Gigabyte Arbeitsspeicher zur Verfügung.
-Es wurde auch probiert diesen Worker in zwei, mit jeweils der Hälfte der Ressourcen, auf zu teilen.
-Bei dieser Konfiguration konnten die Benchmarks aber nicht für Zeilenanzahl ab 1.000.000 erfolgreich beendet werden, da die Ressourcen nicht ausreichend waren.
+Es wurde auch probiert diesen Worker in zwei, mit jeweils der Hälfte der Ressourcen, aufzuteilen.
+Bei dieser Konfiguration konnten die Benchmarks aber nicht für eine Zeilenanzahl ab 1.000.000 erfolgreich beendet werden, da die Ressourcen nicht ausreichend waren.
 Aufgrund des verwendeten Spark-Clusters hat die Betrachtung der absoluten Zahlen keine große Aussagekraft.
-Diese ändern sich mit dem Spark-Cluster und sind nur sinnvoll, wenn der Benchmark auf dem System ausgeführt wird, dass auch beim Betrieb zum Einsatz kommen soll.
+Diese ändern sich mit dem Spark-Cluster und sind nur sinnvoll, wenn der Benchmark auf dem System ausgeführt wird, das auch beim Betrieb zum Einsatz kommen soll.
 Eine der Kern-Funktionen ist die Versionierung.
 Daher werden die Benchmark-Ergebnisse mit dem Ziel verglichen, Aussagen über diese Funktion zu treffen.
-Dazu wird jeweils ein Faktor für die zwei Fälle und die Quelle wie folgt berechnet:
+Dazu wird jeweils ein Faktor für die zwei Szenarien und die Quelle wie folgt berechnet:
 \begin{align*}
     & p_t: \text{Zeit beim Speichern in Parquet, ohne Versionierung} \\
     & d_t: \text{Zeit beim Speichern in Delta-Tabelle, mit Versionierung} \\
@@ -98,50 +96,88 @@ Der Wert der Faktoren kann folgendermaßen interpretiert werden: \begin{align*}
     & f_s < 1: \text{Die Ingestion mit Versionierung verbraucht weniger Speicherplatz}
 \end{align*}
 
-In den gezeigten Diagrammen werden nur die Ergebnisse ab 100.000 Zeilen gezeigt, da die Unterschiede vorher zu klein sind, um sie erkennbar dar zu stellen.
+In den gezeigten Diagrammen werden nur die Ergebnisse ab 100.000 Zeilen gezeigt, da die Unterschiede vorher zu klein sind, um sie erkennbar darzustellen.
 Alle Ergebnisse können in den Tabellen in \cref{sec:benchmark-tables} nachgelesen werden.
+Die Diagramme sind jeweils so aufgebaut, dass eines die Werte der initialen Ingestion, eines die Werte der Ingestion aus einer aktualisierten Quelle und eines die Werte der Ingestion einer Update-Quelle zeigt.
 
 
 \subsubsection{Dauer der Ingestion}
-Beschreibung
+
+Allgemein ist zu sehen, dass die Ingestion mit einer Versionierung immer länger dauert als ohne.
+Bei der ersten Ingestion (\cref{fig:eval-time-i}) und der aus einer Update-Quelle (\cref{fig:eval-time-c}) ist die Differenz annähernd konstant.
+Sie kann damit erklärt werden, dass in den Delta-Tabellen neben den Daten selbst noch extra Informationen zur Versionierung gespeichert werden.
+Bei der Ingestion aus einer aktualisierten Datenquelle (\cref{fig:eval-time-u}) ist die Differenz jedoch deutlich höher.
+Hierfür ist die Berechnung der Änderungsdaten verantwortlich, die für die Versionierung erforderlich sind.
+
+Ein weiterer Punkt, der bei allen Ingestions zu beobachten ist, ist, dass die Ingestion von semistrukturierten Daten schneller ist, als die von strukturierten Daten.
+Das liegt an der bereits angesprochenen Eigenschaft von verschachtelten Daten in Spark.
+Beide Datensätze haben gleich viele Felder, da aber bei verschachtelten Daten nur die oberste Ebene als Spalte betrachtet wird, haben diese effektiv weniger Spalten.
+Da Parquet, und damit auch in Delta-Tabellen, für jede Spalte zusätzliche Informationen enthält, müssen bei semistrukturierten Daten Informationen gespeichert werden.
+
+Auch zwischen den zwei Szenarien für die Mengen der Änderungen sind Unterschiede zu erkennen.
+Im zweiten Szenario ist die Ingestion aus einer aktualisierten Datenquelle wesentlich langsamer als im Ersten.
+Hier liegt der Grund in der Menge der eingefügten Daten.
+Im ersten Szenario sind dies nur 40\% aber im zweiten 80\%.
+Das Ergebnis der Join-Operation bei der Berechnung von Änderungsdaten ist also im zweiten Szenario größer als im ersten, was zu einer längeren Berechnungszeit führt.
+Im Gegensatz dazu, ist dies bei einer Ingestion aus einer Update-Quelle genau anders, da insgesamt im ersten Szenario mehr Änderungen an dem Datensatz gemacht werden.
+
+
 \begin{figure}
     \centering
-    \label{fig:eval-time-c}
-    \subfigure[Dauer aus PostgreSQL]{
-        \includesvg[inkscapelatex=false,width=0.6\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Sql-Initial}
-        \label{fig:eval-time-sql-i}
-    }
-    \subfigure[Dauer aus JSON-Dateien]{
-        \includesvg[inkscapelatex=false,width=0.6\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Json-Initial}
-        \label{fig:eval-time-json-i}
-    }
-    \caption{Erste Ingestion}
+    \caption{Dauer erste Ingestion}
+    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Zeit-Initial}
+    \label{fig:eval-time-i}
 \end{figure}
 
 \begin{figure}
     \centering
-    \label{fig:eval-time-c}
-    \subfigure[Dauer aus PostgreSQL]{
-        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Sql-Updated}
-        \label{fig:eval-time-sql-u}
-    }
-    \subfigure[Dauer aus JSON-Dateien]{
-        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Json-Updated}
-        \label{fig:eval-time-json-u}
-    }
-    \caption{Ingestion aus aktualisierten Daten}
+    \caption{Dauer Ingestion aus aktualisierten Daten}
+    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Zeit-Update}
+    \label{fig:eval-time-u}
 \end{figure}
 
 \begin{figure}
     \centering
+    \caption{Dauer Ingestion aus Updatequelle}
+    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Zeit-Cdc}
     \label{fig:eval-time-c}
-    \subfigure[Dauer aus PostgreSQL]{
-        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Sql-Cdc}
-        \label{fig:eval-time-sql-c}
-    }
-    \subfigure[Dauer aus JSON-Dateien]{
-        \includesvg[inkscapelatex=false,width=0.8\textwidth]{Grafiken/Evaluierung/Evaluierung_Zeit_Json-Cdc}
-        \label{fig:eval-time-json-c}
-    }
-    \caption{Ingestion aus Updatequelle}
+\end{figure}
+
+\subsubsection{Speicherverbrauch}
+
+Für die initial Ingestion \cref{fig:eval-storage-i} ist kein Unterschied im Speicherverbrauch zu erkennen.
+Bei Betrachtung der genauen Werte ist zu sehen, dass dieser minimal vorhanden ist.
+Das liegt daran, dass Delta-Tabellen die Daten auch in Parquet speichern und nach der ersten Ingestion noch keine Versionierungsinformationen vorhanden sind.
+Diese treten erst bei einer weiteren Ingestion auf.
+
+Bei einer Ingestion von aktualisierten Daten (\cref{fig:eval-storage-u}) und aus einer Update-Quelle (\cref{fig:eval-storage-c}) ist der Speicherverbrauch gleich.
+Beide Quellen enthalten die gleichen Änderungen, weshalb auch das gespeicherte Ergebnis gleich sein muss.
+Der Unterschied zwischen den Szenarien liegt darin, dass im zweiten Szenario mehr Daten eingefügt und weniger gelöscht werden, so dass am Ende mehr Daten im Datensatz enthalten sind.
+
+Auch beim Speicherverbrauch kommt die Eigenschaft der verschachtelten Daten in Spark zum Tragen.
+Man sieht, dass weniger Spalteninformationen gespeichert werden müssen, was den Verbrauch niedriger hält.
+Daraus lässt sich aber auch schließen, dass ohne weitere Verarbeitung weniger Informationen über Änderungen vorhanden sind.
+Das heißt, dass bei einer Änderungen in einem verschachtelten Feld nur erkannt wird, dass sich das Feld auf der obersten Ebene darüber verändert hat.
+Die genaue Änderungen müssen, durch zum Beispiel einen Vergleich der Versionen, nachträglich berechnet werden.
+
+
+\begin{figure}
+    \centering
+    \label{fig:eval-storage-i}
+    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Speicher-Initial}
+    \caption{Speicherverbrauch nach der ersten Ingestion}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \label{fig:eval-storage-u}
+    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Speicher-Update}
+    \caption{Speicherverbrauch nach der Ingestion aus aktualisierten Daten}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \label{fig:eval-storage-c}
+    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Speicher-Cdc}
+    \caption{Speicherverbrauch nach der Ingestion aus Updatequelle}
 \end{figure}

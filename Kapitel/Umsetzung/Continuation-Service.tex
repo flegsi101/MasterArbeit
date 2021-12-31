@@ -1,6 +1,6 @@
 \section{Continuation-Service}
 
-Der Continuation-Service führt durchgehend eine Schleife zum überprüfen der Datenquellen aus.
+Der Continuation-Service führt durchgehend eine Schleife zum Überprüfen der Datenquellen aus.
 Bei der Prüfung wird immer der Status des aktuellsten IngestionEvent betrachtet.
 Je nach Datenquelle wird dann entschieden, ob eine Ingestion gestartet werden soll.
 Die Logik der Schleife besteht aus drei Teilen, wovon zwei die Datenquellen prüfen und einer die Zeit steuert, nachdem die Schleife erneut ausgeführt wird (\cref{algo:ci-loop}).
@@ -12,7 +12,7 @@ Der Status "`STOPPED"' bedeutet, dass die Ausführung mit Absicht beendet wurde 
 
 Der zweite Teil überprüft alle Datenquellen, bei denen ein oder mehrere Timer gesetzt wurden.
 Wenn der Status des letzten IngestionEvents nicht "`STOPPED"' oder "`FINISHED"' ist, wird die Überprüfung dieser Quelle abgebrochen.
-Ansonsten wird jeder Timer mit dem aktuelle Zeitpunkt verglichen.
+Ansonsten wird jeder Timer mit dem aktuellen Zeitpunkt verglichen.
 Hier wird die Methode $is_now$ verwendet.
 Sie wird durch eine Python-Bibliothek bereitgestellt und prüft ob ein Cron-Timer, die auch für die kontinuierliche Ingestion eingesetzt werden, zum aktuellen Zeitpunkt zutrifft.
 Trifft der Timer zu, wird eine Ingestion für die Datenquelle gestartet und sofort die nächste Datenquelle überprüft.
