@@ -16,7 +16,7 @@ Dazu gehören: \begin{itemize}
 \end{itemize}
 Neben den Spark spezifischen werden noch folgende weitere Informationen erfasst: \begin{itemize}
     \item ein Name für die Datenquelle,
-    \item die Id einer anderen Datenquelle, falls die aktuelle eine Updatequelle ist,
+    \item die Id einer anderen Datenquelle, falls die aktuelle eine Update-Quelle ist,
     \item das Datum der Erstellung und letzten Änderung,
     \item den Namen der Id-Spalte in den Daten (wird später für die Deltaberechnung benötigt),
     \item den Typ, der zu lesenden Daten,
@@ -35,7 +35,7 @@ Diese muss jedoch nochmal in zwei unterschiedliche Typen unterteilt werden.
 Bei einer Stream-Ingestion, also bei Datenströmen, werden kontinuierlich neue Daten an das System gesendet.
 Und bei einer File-Ingestion werden Dateien hochgeladen, die die Daten enthalten, wobei wichtig ist, dass alle Dateien das gleiche Dateiformat und je nach Typ eine ähnliche oder gleiche Struktur haben.
 Die Dateien können sich in Daten- und Quelldateien unterscheiden.
-Datendateien enthalten unstrukturierte Daten und werden einfach im HDFS mit abgelegt ohne weiter verarbeitet zu werden.
+Datendateien enthalten unstrukturierte Daten und werden einfach im HDFS mit abgelegt, ohne weiter verarbeitet zu werden.
 Das könnten zum Beispiel Bilder oder Videos sein.
 Quelldateien enthalten mindestens semistrukturierte Daten und dienen dem Zweck, in ein anderes Speicherformat, wie zum Beispiel Parquet oder eine Delta-Tabelle geschrieben zu werden.
 Es ist nicht möglich, Daten direkt an die API zu senden.
@@ -53,7 +53,7 @@ Die DatasourceDefinition selbst hält dann nur noch eine Liste aller Revisionen 
 \subsection{IngestionEvent}
 
 Das Modell für den Ablauf einer Ingestion ist das IngestionEvent.
-Dieses enthält wie die Revision eine fortlaufende Nummer, ein Start- und Enddatum, den aktuellen Status indem es sich befindet, die Nummer der Revision mit der es gestartet wurde und eine Fehlernachricht, falls ein Fehler aufgetreten ist.
+Dieses enthält, wie die Revision, eine fortlaufende Nummer, ein Start- und Enddatum, den aktuellen Status indem es sich befindet, die Nummer der Revision mit der es gestartet wurde und eine Fehlernachricht, falls ein Fehler aufgetreten ist.
 
 Das IngestionEvent kann auch zur DatasourceDefinition hinzugefügt werden.
 Dafür werden Felder hinzugefügt, die alle IngestionEvents, die Nummer des letzten und die Nummer des letzten erfolgreichen IngestionEvents enthalten.

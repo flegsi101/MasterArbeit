@@ -7,7 +7,7 @@ Vorher werden die benötigten Grundlagen zur Ausführung erläutert.
 
 \subsection{Berechnen und Speichern der Änderungsdaten}
 Um Änderungen in eine Delta-Tabelle zu übernehmen, müssen die Änderungsdaten in einem Format sein, dass Aufschluss darüber gibt, welche Daten hinzugefügt, welche geändert und welche gelöscht worden sind.
-Das hier verwendete Format muss genau dem Schema der original Daten entsprechen.
+Das hier verwendete Format muss genau dem Schema der Originaldaten entsprechen.
 Zusätzlich soll eine Spalte oder ein Feld auf der obersten Ebene mit dem Namen "`cd\_deleted"' vorhanden sein.
 Darin ist ein Boolean-Wert enthalten, der aussagt, ob der Eintrag aus den Daten gelöscht wurde oder nicht.
 Der Datensatz mit den Änderungsdaten darf außerdem nur geänderte Daten enthalten.
@@ -46,11 +46,11 @@ Der \cref{algo:delta-calc} zum Vergleich von DataFrames orientiert sich an diese
 Als Eingabe werden ein linkes DataFrame, mit dem aktuellen internen Stand, eine rechtes DataFrame, mit den neuen Daten und der Name des Schlüssels benötigt.
 Um den Vergleich der Zeilen später einfacher zu machen, wird zuerst für jede Zeile der zu vergleichenden Datensätze ein Hashwert über alle Spalten berechnet.
 Außerdem wird eine weitere Spalte mit dem Namen "`\char`~ id"' hinzugefügt, die den Wert des Schlüssels zugewiesen bekommt.
-Da wie bereits erwähnt bei semistrukturierte Daten nur die oberste Ebene als Spalten betrachtet wird, ist es so erst möglich  Einträge über verschachtelte Schlüssel zu verknüpfen.
+Da wie bereits erwähnt bei semistrukturierten Daten nur die oberste Ebene als Spalten betrachtet wird, ist es so erst möglich  Einträge über verschachtelte Schlüssel zu verknüpfen.
 Danach wird ein Full-Outer-Join über den Daten ausgeführt.
 Im nächsten Schritt werden alle Zeilen, in denen die Hashwerte gleich sind aus dem Datensatz entfernt, da diese keine Relevanz für die Änderungsdaten haben.
 Zu den gefilterten Daten wird nun die Spalte "`cd\_deleted"' hinzugefügt.
-Ist in den alten Daten eine Zeile vorhanden, in den neuen aber nicht mehr, so ist der Hashwert auf der rechten Seite $Null$.
+Ist in den alten Daten eine Zeile vorhanden und in den neuen nicht mehr, so ist der Hashwert auf der rechten Seite $Null$.
 In diesem Fall bekommt die Spalte "`cd\_deleted"' den Wert $true$ für alle anderen ist der Wert $false$.
 Da das Ergebnis der Join-Operation alle Spalten doppelt enthält, einmal von links und einmal von rechts, müssen diese noch zusammengeführt werden.
 Dazu können immer, außer bei dem Schlüssel, die Werte der rechten Seite genommen werden, da diese die neuen Werte enthält.
@@ -64,7 +64,7 @@ Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spa
     \label{algo:delta-calc}
     \textbf{Input:} $left$: DataFrame, $right$: DataFrame, $id\_column$: String  \\
     \textbf{Output:} $change\_data$: DataFrame \\
-    
+
     \ForAll{$df$ \textbf{in} $[left, right]$}{
         $df$.add\_column($name$: "`hash"', $value$: $df$.hash\_over\_all\_rows())\;
         $df$.add\_column($name$: "`\char`~ id"', $value$: $df$.get\_value($id\_column$))\;
@@ -79,7 +79,7 @@ Es hat das gleiche Schema wie die Ursprungsdaten, aber mit der zusätzlichen Spa
             $row.cd\_deleted \gets true$\;
         }
     }
-    
+
     \ForAll{$column$ \textbf{in} $left.columns$}{
         \eIf{$column$ \textbf{is} $id\_column$}{
             \ForAll{$row$ \textbf{in} $change\_data.rows$}{
@@ -112,7 +112,7 @@ Wenn die Ids nicht übereinstimmen und die Spalte "`cd\_deleted"' $false$ ist, w
 Für Parquet-Dateien werden die Änderungsdaten über Spark mit den Bestandsdaten zusammengeführt.
 Beide Datensätze werden über einen Full-Outer-Join verknüpft.
 Danach werden alle Zeilen, in denen das Feld "`cd\_deleted"' den Wert $true$ enthält, gelöscht.
-Ähnlich zu der Deltaberechnung werden die übrigen Daten wieder auf das original Schema gebracht.
+Ähnlich zu der Deltaberechnung werden die übrigen Daten wieder auf das Originalschema gebracht.
 Dabei werden für alle Zeilen, bei denen entweder kein Eintrag aus den Bestandsdaten existiert oder die Änderungsdaten sich von ihnen unterscheiden, die Werte der Änderungsdaten übernommen.
 In den anderen Zeilen werden die Bestandsdaten beibehalten.
 
@@ -188,7 +188,6 @@ Die Reihenfolge der Ausführung entspricht der Reihenfolge, wie die Plugin-Datei
             \Return{false}
         }
     }
-
     \Return{true}
 
 \end{algorithm}
@@ -208,7 +207,7 @@ Falls auch After-Load-Plugins vorhanden sind, werden diese ausgeführt.
 Für die geladenen Daten wird dann entschieden, ob es sich um Änderungsdaten handelt oder welche berechnet werden müssen.
 Je nach Schreib-Typ werden dann die Daten beziehungsweise Änderungsdaten gespeichert.
 Für Datenströme wird am Ende noch ein Hintergrund Task gestartet, der auf Kafka Events zum Stoppen dieser Ingestion wartet.
-Hierfür wird die Topic "`dls\_\_ingestion\_\_stop\_ingestion"' mit der Id als Wert verwendet.
+Hierfür wird das Topic "`dls\_\_ingestion\_\_stop\_ingestion"' mit der Id als Wert verwendet.
 Wenn die Ingestion beendet wurde, wird zum Schluss die SparkSession gestoppt.
 
 \begin{figure}

@@ -1,8 +1,8 @@
 \section{Data Lake}
-In der Einleitung (\cref{sec:einleitung-datalake}) wurde der Data Lake als Lösung für die Probleme im Big-Data-Bereich bereits kurz beschrieben. 
+In der Einleitung (\cref{sec:einleitung-datalake}) wurde der Data Lake als Lösung für die Probleme im Big-Data-Bereich bereits kurz beschrieben.
 In diesem Abschnitt wird noch einmal genauer auf Data-Lake-Systeme, deren Definition, Architektur und existierende Systeme eingegangen.
 
-\subsection{Definition eines Data Lakes}
+\subsection{Definition eines Data Lake}
 Neben der Definition, die in der Einleitung gegeben wird, wurde von \textcite{sawadogo2021data} eine detailliertere Definition für Data Lakes aufgestellt.
 Hiernach sind Data-Lake-Systeme ein skalierbarer Speicher für Daten jeden Typs.
 Die Daten werden im Rohformat gespeichert und hauptsächlich durch Datenspezialisten, wie Statistiker oder Analysten, für die Extraktion von Wissen verwendet.
@@ -22,24 +22,24 @@ Einige Ponds führen zudem weitere Verarbeitungen der Daten, wie Aufbereitung od
 Inmon hat eine Architektur aus fünf Ponds aufgestellt (\cref{fig:datalake-ponds}).
 \begin{enumerate}
     \item Daten werden im Raw Data Pond im Rohformat gespeichert und fließen von dort aus in andere Ponds.
-    Dieser dient also als Eintrittspunkt in das System für neue Daten.
-    Nach dem Verlassen des Pond werden die Daten aus diesem gelöscht.
+          Dieser dient also als Eintrittspunkt in das System für neue Daten.
+          Nach dem Verlassen des Pond werden die Daten aus diesem gelöscht.
     \item Der Analog Data Pond enthält analoge Daten, meist von IoT-Geräten.
-    Diese werden hier auf ein aussagekräftiges und verwaltbares Volumen reduziert und umstrukturiert.
+          Diese werden hier auf ein aussagekräftiges und verwaltbares Volumen reduziert und umstrukturiert.
     \item In den Application Data Pond kommen Daten, die von Software-Anwendungen erzeugt wurden.
-    Diese sind häufig strukturierte Daten aus relationalen Daten\-bank-Systemen.
-    Sie werden für Analysen integriert und aufbereitet.
+          Diese sind häufig strukturierte Daten aus relationalen Daten\-bank-Systemen.
+          Sie werden für Analysen integriert und aufbereitet.
     \item Der Textual Data Pond enthält unstrukturierte Daten und Prozesse, die deren Analyse erleichtern.
     \item Im Archival Data Pond werden alle Daten gespeichert, die nicht mehr aktiv verwendet, aber eventuell in der Zukunft nochmal gebraucht werden.
 \end{enumerate}
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{Grafiken/Grundlagen-Ponds.pdf}
-    \caption{Ponds-Architektur eine Data Lakes nach Inmon}
+    \caption{Ponds-Architektur eines Data Lake nach Inmon}
     \label{fig:datalake-ponds}
 \end{figure}
 
-Ein anderer Ansatz ist die Unterteilung des Data Lakes in Zonen (\cref{fig:datalake-zones}).
+Ein anderer Ansatz ist die Unterteilung des Data Lake in Zonen (\cref{fig:datalake-zones}).
 Hier werden die Daten nach ihrem Verfeinerungsgrad in einer entsprechenden Zone abgelegt.
 Dabei durchlaufen sie die einzelnen Zonen hintereinander.
 Die Anzahl der Zonen und deren Verfeinerungsgrad ist dabei je nach Anwendung unterschiedlich \parencite{dl-zones}.
@@ -54,13 +54,13 @@ Die Anzahl der Zonen und deren Verfeinerungsgrad ist dabei je nach Anwendung unt
 Eine speziellere Architektur ist die Lambda-Architektur, die für die verteilte Verarbeitung von Echtzeit- und Batch-Daten verwendet wird.
 Eine Lambda-Architektur besteht aus drei Ebenen (Layers) \parencite{lambda-arch}: \begin{enumerate}
     \item Die Batch Layer hat zwei Aufgaben.
-    Die erste Aufgabe ist das verteilte Speichern von wachsenden Daten.
-    Dafür kann zum Beispiel das HDFS verwendet werden.
-    Als zweite Aufgabe werden Batch Views für die verteilten Daten vorberechnet, um Anfragen schneller beantworten zu können.
+          Die erste Aufgabe ist das verteilte Speichern von wachsenden Daten.
+          Dafür kann zum Beispiel das HDFS verwendet werden.
+          Als zweite Aufgabe werden Batch Views für die verteilten Daten vorberechnet, um Anfragen schneller beantworten zu können.
     \item In der Speed Layer werden inkrementell Echtzeit-Views auf Daten verwaltet.
-    Dadurch wird die Lücke gefüllt, die bei den Views in der Batch-Ebene entstehen können.
-    Die Speed Layer enthält immer nur aktuelle Daten.
-    Ältere Daten werden durch die Batch Layer aufgenommen.
+          Dadurch wird die Lücke gefüllt, die bei den Views in der Batch-Ebene entstehen können.
+          Die Speed Layer enthält immer nur aktuelle Daten.
+          Ältere Daten werden durch die Batch Layer aufgenommen.
     \item Die Serving Layer enthält Indices über alle Batch Views um Anfragen mit geringer Latenz bearbeiten zu können. Sie ist dafür verantwortlich die Views aus der Batch und der Speed Layer zusammenzuführen um Echtzeitergebnisse über alle Daten bereit zu stellen.
 \end{enumerate}
 
@@ -71,16 +71,16 @@ Ein Beispiel ist die Architektur aus der Einleitung von \textcite{datalake_03}.
 In hybriden Architekturen können auch beide Ansätze kombiniert werden.
 
 \subsection{Existierende Data-Lake-Systeme und Rahmenwerke}
-Es gibt bereits verschiedene Rahmenwerke oder Systeme für die Umsetzung eines Data Lakes.
+Es gibt bereits verschiedene Rahmenwerke oder Systeme für die Umsetzung eines Data Lake.
 Nachfolgend wird eine Auswahl daraus vorgestellt.
 
-\paragraph{CoreDB} CoreDB ist ein Service, der es erlaubt über eine einzige REST-API Daten und Metadaten in einem Data Lake zu organisieren, zu indizieren und abzufragen. 
+\paragraph{CoreDB} CoreDB ist ein Service, der es erlaubt über eine einzige REST-API Daten und Metadaten in einem Data Lake zu organisieren, zu indizieren und abzufragen.
 Es können sowohl relationale als NoSQL-Datenbanksysteme mit CoreDB verwendet werden.
 Für die Suche in den Daten wird elastic\footnote{https://www.elastic.co/} verwendet.
 Das Design von CoreDB unterstützt sowohl Sicherheit und Zugriffskontrolle als auch Verfolgung und Herkunft um überwachende Metadaten sammeln zu können \parencite{coredb}.
 
 \paragraph{Azure Data Lake} In dem Cloud-Angebot von Microsoft gibt es den Azure Data Lake\footnote{https://azure.microsoft.com/de-de/solutions/data-lake/}.
-Hier werden viele Funktionen, die für den Aufbau eines Data Lakes notwendig sind als Cloud-Lösung bereitgestellt.
+Hier werden viele Funktionen, die für den Aufbau eines Data Lake notwendig sind als Cloud-Lösung bereitgestellt.
 Dazu gehören unter anderem Hadoop, Apache Spark und ein Speichersystem zum Speichern aller Daten.
 Außerdem gibt es weitere Dienste zur Analyse oder Integration der Daten.
 
@@ -95,8 +95,8 @@ Zu den Features von Hudi gehört zum Beispiel die Indizierung von Änderung und 
 Hudi unterstützt sowohl inkrementelle Abfragen als auch Batch-Verarbeitung von Daten.
 
 \paragraph{}
-Bei diesen System fehlen entweder eine ausführliche Metadatenpflege oder eine Daten Versionierung, sie bilden nur einen bestimmten Teil eines Data Lakes oder sind für spezielle Anwendungsfälle.
-Daher wurde bisher kein geeignetes Data-Lake-System für die Anwendung am HIT gefunden.
+Bei diesen System fehlen entweder eine ausführliche Metadatenpflege oder eine Daten Versionierung, sie bilden nur einen bestimmten Teil eines Data Lake oder sind für spezielle Anwendungsfälle.
+Daher wurde bisher kein geeignetes Data-Lake-System für die Anwendung am HIT gefunden
 
 \input{Kapitel/Grundlagen/DeltaLake}
 \input{Kapitel/Grundlagen/Prototyp}

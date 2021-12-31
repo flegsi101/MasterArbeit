@@ -36,15 +36,15 @@ Die Datenverarbeitung geschieht über ein Spark-Cluster.
 Die Evaluierung der Ingestion-Schnittstelle wurde in einem durch die gegebene Hardware möglichen Rahmen durchgeführt.
 Hierfür stand kein leistungsstarkes Cluster zur Verfügung, um absolute Aussagen über die Leistung der Ingestion-Schnittstelle treffen zu können.
 Daher ist lediglich ein relativer Vergleich ausgeführt worden.
-Dabei wurden Benchmarks für verschiedene Datenmengen mit strukturierte und semistrukturierte Daten in zwei Szenarien ausgeführt.
+Dabei wurden Benchmarks für verschiedene Datenmengen mit strukturierten und semistrukturierten Daten in zwei Szenarien ausgeführt.
 Die Szenarien bilden dabei eine Situation, in der viele Änderungen an Daten geschehen und eine Situation, in der hauptsächlich Daten hinzugefügt werden ab.
 
 Durch die Benchmarks und Tests wurde gezeigt, dass mit dieser Arbeit die Entwicklung der Ingestion-Schnittstelle noch nicht vollständig abgeschlossen ist.
 Die implementierte Berechnung von Änderungsdaten ist in bestimmten Fällen sehr langsam.
 Auch die Darstellung von Änderungen in verschachtelten Daten könnte durch ein anderes Vorgehen optimiert werden.
-Somit ist die Versionierung in der Ingestion-Schnittstelle ein Thema, dass in weiteren Arbeit genauer betrachtet werden kann.
+Somit ist die Versionierung in der Ingestion-Schnittstelle ein Thema, dass in einer anschließenden Arbeit genauer betrachtet werden kann.
 
-Weiterhin sind die Metadaten, die während der Ingestion gesammelt werden nicht ausreichend.
+Weiterhin sind die Metadaten, die während der Ingestion gesammelt werden, nicht ausreichend.
 Um eine Aussagekräftige Suche, Exploration und Analyse der Daten durchführen zu können, müssen direkt nach dem Laden weitere Metadaten extrahiert werden.
 Diese könnten zum Beispiel Informationen über den Inhalt oder die Struktur der Daten beinhalten.
 Auch das ist ein großes Thema, mit dem sich während der Weiterentwicklung befasst werden kann.

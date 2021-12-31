@@ -1,7 +1,7 @@
 \section{Bereitstellung}
 
-Bei der Bereitstellung des gesamten Systems gibt es einen wichtigen Punkt der beachtet werden muss.
-Viele der eingesetzten Services funktionieren als Cluster und benötigen mehrere Server um ausgeführt zu werden.
+Bei der Bereitstellung des gesamten Systems gibt es einen wichtigen Punkt, der beachtet werden muss.
+Viele der eingesetzten Services funktionieren als Cluster und benötigen mehrere Server, um ausgeführt zu werden.
 Nicht jede Umgebung kann diese Anzahl an Servern bereitstellen.
 Daher müssen diese virtualisiert werden.
 Dazu wird hier Docker\footnote{https://docker.com} verwendet.
@@ -19,7 +19,7 @@ Das Ziel ist es, den gesamten Data Lake in Containern bereit zu stellen.
 Dabei treten allerdings ein paar Hürden auf, da die verwendeten Rahmenwerke nicht alle auf die Verwendung in Containern ausgelegt sind.
 Als erstes muss darauf geachtet werden, dass Container von sich aus keine Persistenz besitzen.
 Jenen Daten beziehungsweise Ordnern im Container, die nicht bei einem Neustart verloren gehen dürfen, müssen Volumes\footnote{https://docs.docker.com/storage/volumes/} zugeordnet werden.
-Außerdem müssen alle Container im selben Netzwerk sein, damit diese untereinander Kommunizieren können.
+Außerdem müssen alle Container im selben Netzwerk sein, damit diese untereinander kommunizieren können.
 Da die IP-Adressen, welche die Container in diesen Netzwerken bekommen, nicht außerhalb des Netzwerks erreichbar sind, müssen sowohl das HDFS als auch die SparkSession so konfiguriert werden, dass sie die Host-Namen der Name- und DataNodes verwenden.
 Die Host-Namen müssen dann auf die IP-Adresse des Servers aufgelöst werden, auf dem die Container laufen.
 Um die Services in den Containern von außen erreichen zu können, müssen die verwendeten Ports freigegeben werden.
@@ -40,7 +40,7 @@ Bei den Ports wird die Notation von Docker benutzt, bei der erst der Host-Port u
 Alle Container liegen in dem gleichen Docker-Netzwerk.
 Die grau hinterlegten Gruppen dienen nur der Verdeutlichung der Cluster.
 Die Anzahl der Spark-Worker, DataNodes oder Kafka-Broker kann je nach Hardware-Ressourcen angepasst werden.
-Alle Container bei denen der Docker-Image-Name mit "`datalake/"' beginnt sind selber für den Data Lake gebaut.
+Alle Container bei denen der Docker-Image-Name mit "`datalake/"' beginnt sind etxra für den Data Lake erstellt.
 Das Docker-Image "`datalake/spark"' basiert auf "`bitnami/spark"' und wurde angepasst, die gleiche Python-Version zu verwenden, die auch bei den Services zum Einsatz kommt.
 
 \begin{figure}
