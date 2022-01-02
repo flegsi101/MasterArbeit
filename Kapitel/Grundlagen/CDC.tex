@@ -28,7 +28,7 @@ Das CDC-Programm überprüft regelmäßig alle Zeitstempel der Einträge in den 
 Wenn diese zwischen dem letzten und dem aktuellen Durchlauf liegen wird die Änderung erfasst.
 Hierbei werden nur kumulierte Änderungen seit dem letzten Durchlauf erfasst.
 Es ist nicht möglich nachzuvollziehen, welche und wie viele Änderungen in der Zeit gemacht wurden.
-Außerdem lassen sich auch mit dieser Methode kein Löschungen erfassen \parencite{delta-view_gen}.
+Außerdem lassen sich auch mit dieser Methode keine Löschungen erfassen \parencite{delta-view_gen}.
 Der Aufwand für diese Methode kann relativ hoch werden, da ohne Indices auf den Zeitstempeln immer die gesamten Daten gelesen werden müssen \parencite{boeing}.
 
 \subsection{Snapshot-basiert Änderungserfassung}

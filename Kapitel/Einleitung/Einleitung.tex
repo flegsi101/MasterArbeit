@@ -2,11 +2,11 @@
 
 Heutzutage spielen Daten eine immer wichtigere Rolle.
 In vielen Firmen und Forschungseinrichtungen wächst die Zahl an unterschiedlichen Daten stetig.
-Im \textit{Rethink Data Report 2020} \textcite{rethink_data_2020} wurde eine Studie durchgeführt, die eine Steigerung von 42\% der Menge an anfallenden Daten pro Jahr prognostiziert.
+Im Rethink Data Report 2020 \parencite{rethink_data_2020} wurde eine Studie durchgeführt, die eine Steigerung von 42\% der Menge an anfallenden Daten pro Jahr prognostiziert.
 Diese Daten sind zum Beispiel auf den vermehrten Einsatz von IoT-Geräten oder ausführlicher werdende Analysen zurückzuführen.
-Auch, dass es durch moderne Cloud-Speicher-Lösungen einfacher geworden ist große Datenmengen zu speichern, begünstigt diese Entwicklung.
+Auch wird diese Entwicklung dadurch begünstigt, dass es durch moderne Cloud-Speicher-Lösungen einfacher geworden ist große Datenmengen zu speichern.
 Daten sind eine wertvolle Ressource und müssen entsprechend gut verwaltet werden.
-Durch die unterschiedlichen Formate und Strukturen, zum Beispiel Datenbanktabellen, JSON-Dateien oder Bilder ist die Verwaltung ein komplexes Thema.
+Durch die unterschiedlichen Formate und Strukturen, zum Beispiel Datenbanktabellen, JSON-Dateien oder Bilder, ist die Verwaltung ein komplexes Thema.
 Die Bewältigung der organisatorischen Aufgaben fällt in den Bereich Data Governance.
 Diese Arbeit beschäftigt sich mit den technischen Herausforderungen Daten aus einer Vielzahl von Datenquellen zu verwalten.
 
@@ -31,7 +31,7 @@ Es sollen große Datenmengen möglichst kostensparend gespeichert und verschiede
 Diese Systeme verfolgen dabei den ELT (Extract Load Transform) Ansatz.
 Das Kernprinzip ist die Speicherung der Daten in ihrem Rohformat.
 Die Transformation findet erst statt, nachdem die Daten für weitere Verarbeitungen geladen wurden.
-Dadurch fällt der Aufwand für eine Transformation vor dem Speichern, wie bei einem Data Warehouse, weg und Daten sind schneller für weitere Verarbeitungen bereit.
+Dadurch fällt der Aufwand für eine Transformation vor dem Speichern weg und Daten sind schneller für weitere Verarbeitungen bereit.
 Außerdem gehen dabei keine Informationen mehr verloren.
 
 Wie in \cref{fig:datalake} gezeigt wird, basiert ein Data-Lake-System auf vier verschiedenen Ebenen.
@@ -76,31 +76,31 @@ In einem Masterprojekt wurde bereits ein Prototyp für ein generelles Data-Lake-
 Es wurde so aufgebaut, dass der einfache Einsatz in verschiedenen Anwendungsbereichen möglich ist.
 Es beinhaltet Komponenten für die Umsetzung der in \cref{fig:datalake} und durch \citeauthor{datalake_03} beschriebenen Funktionen und die dafür notwendigen Komponenten.
 
-Mit dem Prototypen als Grundlage wird in dieser Arbeit eine Schnittstelle für die Ingestion entwickelt.
+Mit dem Prototyp als Grundlage wird in dieser Arbeit eine Schnittstelle für die Ingestion entwickelt.
 Dabei müssen drei allgemeine Bedingungen erfüllt werden: \begin{itemize}
     \item die Schnittstelle soll unabhängig von und mit allen Datenquellen verwendet werden können,
     \item eine Aktualisierung der Daten soll kontinuierlich und automatisch möglich sein und
     \item die Daten sollen mit einer Versionierung gespeichert werden können.
 \end{itemize}
 Genauer betrachtet ergeben sich daraus folgende Aufgaben und Fragestellungen: \begin{itemize}
-    \item Entwicklung einer Ingestion, die mit geringem spezifischen Aufwand mit allen Datenquellen kompatibel ist \begin{itemize}
+    \item Entwicklung einer Ingestion, die mit geringem spezifischem Aufwand mit allen Datenquellen kompatibel ist: \begin{itemize}
         \item Wie sieht eine Ingestion aus?
         \item Wie werden Datenströme geladen?
         \item Wie werden Daten aus einer API geladen?
         \item Lässt sich daraus eine allgemeine Art der Definition ableiten, die von der Ingestion-Schnittstelle verwendet werden kann?
     \end{itemize}
-    \item Die Erkennung und Speicherung von Änderungen zwischen dem aktuellen Stand im System und dem Stand der Datenquelle \begin{itemize}
+    \item Die Erkennung und Speicherung von Änderungen zwischen dem aktuellen Stand im System und dem Stand der Datenquelle: \begin{itemize}
         \item Wie erkennt man  die Änderungen zwischen den Daten?
         \item Wann soll diese Erkennung gemacht werden?
         \item Lässt sich die Erkennung für alle Datenquellen gleich gestalten?
         \item Lässt sich die Erkennung erweiterbar gestalten, um komplexere Situationen abzubilden?
         \item Wie wird die Deltaerkennung in den Ingestion-Ablauf integriert?
     \end{itemize}
-    \item Speichern und Verwalten der Versionierung von Daten \begin{itemize}
+    \item Speichern und Verwalten der Versionierung von Daten: \begin{itemize}
         \item Wie speichert man die Daten mit Versionierung?
         \item Wie können Abfragen über die Datenversionen gestellt werden?
     \end{itemize}
-    \item Evaluierung des Systems \begin{itemize}
+    \item Evaluierung des Systems: \begin{itemize}
         \item Anwendung des Systems mit Daten, die verschiedene Datenquellen abbilden
     \end{itemize}
 \end{itemize}
@@ -121,4 +121,4 @@ Außerdem werden wichtige Implementierungsdetails erläutert.
 Auf genaue Beschreibungen der Programmierung wird verzichtet, da diese nicht bestimmend für das System sind.
 In Kapitel 5 wird das System evaluiert.
 Die Evaluierung teilt sich in funktionale Tests und in Benchmarks auf.
-Die Arbeit schließt mit einer Zusammenfassung über der wichtigsten Ergebnisse und einem Ausblick auf weitere Arbeiten.
+Die Arbeit schließt mit einer Zusammenfassung der wichtigsten Ergebnisse und einem Ausblick auf weitere Arbeiten.

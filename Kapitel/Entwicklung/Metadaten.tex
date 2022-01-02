@@ -16,12 +16,12 @@ Dazu gehören: \begin{itemize}
 \end{itemize}
 Neben den Spark spezifischen werden noch folgende weitere Informationen erfasst: \begin{itemize}
     \item ein Name für die Datenquelle,
-    \item die Id einer anderen Datenquelle, falls die aktuelle eine Update-Quelle ist,
+    \item wenn eine Update-Quelle erstellt wird, die Id der Datenquelle, welche die Update-Quelle aktualisieren soll,
     \item das Datum der Erstellung und letzten Änderung,
     \item den Namen der Id-Spalte in den Daten (wird später für die Deltaberechnung benötigt),
     \item den Typ, der zu lesenden Daten,
     \item eine Liste der zu laden Dateien, wenn es sich um eine Datei-Ingestion handelt,
-    \item den Typ, wie die Daten geschrieben werden müssen,
+    \item den Typ, wie die Daten geschrieben werden,
     \item eine Liste mit der Zeitsteuerung für eine kontinuierliche Ingestion,
     \item eine Liste mit Plugindateien und
     \item eine Liste mit Abhängigkeiten der Plugins.
@@ -33,7 +33,7 @@ Dies ist zum Beispiel bei Datenbanken der Fall.
 Das Gegenteil dazu ist eine Push-Ingestion, bei der die Daten direkt an den Data Lake gesendet werden.
 Diese muss jedoch nochmal in zwei unterschiedliche Typen unterteilt werden.
 Bei einer Stream-Ingestion, also bei Datenströmen, werden kontinuierlich neue Daten an das System gesendet.
-Und bei einer File-Ingestion werden Dateien hochgeladen, die die Daten enthalten, wobei wichtig ist, dass alle Dateien das gleiche Dateiformat und je nach Typ eine ähnliche oder gleiche Struktur haben.
+Und bei einer File-Ingestion werden Dateien hochgeladen, welche die Daten enthalten, wobei wichtig ist, dass alle Dateien das gleiche Dateiformat und je nach Typ eine ähnliche oder gleiche Struktur haben.
 Die Dateien können sich in Daten- und Quelldateien unterscheiden.
 Datendateien enthalten unstrukturierte Daten und werden einfach im HDFS mit abgelegt, ohne weiter verarbeitet zu werden.
 Das könnten zum Beispiel Bilder oder Videos sein.

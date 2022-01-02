@@ -1,9 +1,9 @@
 \section{Architektur}
 In dieser Arbeit kann kein komplettes Data-Lake-System entworfen werden.
-Es muss aber eine Entscheidung getroffen werden, nach welcher Architektur das System aufgebaut werden soll.
+Es muss jedoch die Entscheidung getroffen werden, nach welcher Architektur das System aufgebaut werden soll.
 Damit zuverlässig die Änderungen in einer Datenquelle erkannt werden können, dürfen die Daten, die von der Ingestion geschrieben wurden, nicht direkt verändert werden.
-Hierfür wären sowohl die Zonen- als auch die Ponds-Architektur geeignet.
-Beide können auch als eine datenorientierte Architektur bezeichnet werden.
+Hierfür ist nur die Zonen-Architektur geeignet, da Daten bei Verlassen des Raw Data Pond aus diesem glöscht werden.
+Die Zonen-Architektur kann auch als eine datenorientierte Architektur bezeichnet werden.
 Für die Implementierung des Data Lake soll eine Microservice-Architektur zum Einsatz kommen.
 Daraus folgt, dass hier ebenfalls eine Aufteilung nach Funktionen der Komponenten notwendig ist.
 Daher reicht eine pure datenorientierte Architektur des Data Lake nicht aus.
@@ -20,10 +20,10 @@ Von \textcite{ingestion_02} wurde eine Architektur basierend auf drei Zonen entw
           Diese Anreicherung kann zum Beispiel aus einer Aufarbeitung oder Umstrukturierung bestehen, die speziell für ein Projekt benötigt wird.
           Es ist außerdem möglich Daten aus der Drop Zone wieder in die Landing Zone zu laden.
 \end{enumerate}
-Zu diesem Zeitpunkt kann noch keine Aussage darüber getroffen werden, ob diese Architektur für die komplette Umsetzung des Data-Lakes geeignet ist.
+Zu diesem Zeitpunkt kann noch keine Aussage darüber getroffen werden, ob diese Architektur für die komplette Umsetzung des Data Lake geeignet ist.
 Der Ansatz der Drop Zone jedoch, in der nur Datenproduzenten schreiben können, erfüllt genau die Bedingung, dass die Daten der Ingestion nicht durch andere verändert werden dürfen.
 Es ist hier wichtig, dass die Daten mit denen neue Daten verglichen werden, seit der letzten Ingestion nicht verändert wurden, um genaue Aussagen über die geschehenen Änderungen in der Datenquelle treffen zu können.
-Daher wird zumindest eine Zonen-Architektur mit der Drop-Zone für den Entwurf übernommen.
+Daher wird zumindest eine Zonen-Architektur mit der Drop Zone für den Entwurf übernommen.
 Die Datenproduzenten, in diesem Szenario, sind alle Microservices, die für die Speicherung von Daten zuständig sind.
 Die Aufteilung in Funktionen kann ebenfalls noch nicht abgeschlossen werden, da in dieser Arbeit die Ingestion-Schnittstelle nur als die erste Funktion entwickelt wird.
 Weitere Funktionen werden erst im Verlauf der Entwicklung hinzugefügt.
@@ -44,7 +44,7 @@ Da diese aber ein zusammenhängender Arbeitsablauf sind, der in einem Spark-Job 
 
 Hier ist der prozessorientierte Ansatz besser geeignet.
 Dabei werden die technischen Abläufe betrachtet, um eine Unterteilung abzuleiten.
-Bei der Ingestion-Schnittstelle lassen sich ergeben sich die API, das kontinuierliche Ausführen und die Ausführung der Ingestion mit Spark.
+Bei der Ingestion-Schnittstelle ergeben sich die API, das kontinuierliche Ausführen und die Ausführung der Ingestion mit Spark.
 In \cref{fig:system-architektur} ist die Architektur für die Ingestion-Schnittstelle dargestellt.
 
 Bei dem \textbf{API-Service} handelt es sich um den Service für die Interaktion mit dem Data-Lake-System.
@@ -56,7 +56,7 @@ Die Ingestion soll für eine Datenquelle nur einmal gleichzeitig, aber parallel 
 
 Bei einer zeitgesteuerten oder Datenstrom-Ingestion muss die kontinuierliche Ausführung sichergestellt werden.
 Das wird durch den \textbf{Continuation-Service} übernommen.
-Für alle Datenquellen muss regelmäßig geprüft werden, ob für diese gerade eine Ingestion ausgeführt wird und ausgeführt werden sollten.
+Für alle Datenquellen muss regelmäßig geprüft werden, ob für diese gerade eine Ingestion ausgeführt wird und ausgeführt werden sollte.
 Falls keine Ingestion ausgeführt wird, aber ausgeführt werden sollte, wird die Ingestion für diese Datenquelle gestartet.
 
 Neben diesen Mircoservices wird noch ein Nachrichtensystem benötigt.

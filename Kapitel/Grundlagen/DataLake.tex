@@ -1,5 +1,5 @@
 \section{Data Lake}
-In der Einleitung (\cref{sec:einleitung-datalake}) wurde der Data Lake als Lösung für die Probleme im Big-Data-Bereich bereits kurz beschrieben.
+In der Einleitung (\cref{sec:einleitung-datalake}) wurde der Data Lake als Lösung für die Probleme der Datenerfassung im Big-Data-Bereich bereits kurz beschrieben.
 In diesem Abschnitt wird noch einmal genauer auf Data-Lake-Systeme, deren Definition, Architektur und existierende Systeme eingegangen.
 
 \subsection{Definition eines Data Lake}
@@ -35,7 +35,7 @@ Inmon hat eine Architektur aus fünf Ponds aufgestellt (\cref{fig:datalake-ponds
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{Grafiken/Grundlagen-Ponds.pdf}
-    \caption{Ponds-Architektur eines Data Lake nach Inmon}
+    \caption{Ponds-Architektur \parencite[nach: ][S. 27]{inmon2016data}}
     \label{fig:datalake-ponds}
 \end{figure}
 
@@ -70,14 +70,14 @@ Die funktionsorientierten Architekturen dagegen teilen das Data-Lake-System nach
 Ein Beispiel ist die Architektur aus der Einleitung von \textcite{datalake_03}.
 In hybriden Architekturen können auch beide Ansätze kombiniert werden.
 
-\subsection{Existierende Data-Lake-Systeme und Rahmenwerke}
+\subsection{Data-Lake-Systeme und Rahmenwerke}
 Es gibt bereits verschiedene Rahmenwerke oder Systeme für die Umsetzung eines Data Lake.
 Nachfolgend wird eine Auswahl daraus vorgestellt.
 
 \paragraph{CoreDB} CoreDB ist ein Service, der es erlaubt über eine einzige REST-API Daten und Metadaten in einem Data Lake zu organisieren, zu indizieren und abzufragen.
-Es können sowohl relationale als NoSQL-Datenbanksysteme mit CoreDB verwendet werden.
+Es können sowohl relationale als auch NoSQL-Datenbanksysteme mit CoreDB verwendet werden.
 Für die Suche in den Daten wird elastic\footnote{https://www.elastic.co/} verwendet.
-Das Design von CoreDB unterstützt sowohl Sicherheit und Zugriffskontrolle als auch Verfolgung und Herkunft um überwachende Metadaten sammeln zu können \parencite{coredb}.
+Das Design von CoreDB unterstützt Funktionen für die Sicherheit und Zugriffskontrolle und die Verfolgung und Herkunft, um überwachende Metadaten sammeln zu können \parencite{coredb}.
 
 \paragraph{Azure Data Lake} In dem Cloud-Angebot von Microsoft gibt es den Azure Data Lake\footnote{https://azure.microsoft.com/de-de/solutions/data-lake/}.
 Hier werden viele Funktionen, die für den Aufbau eines Data Lake notwendig sind als Cloud-Lösung bereitgestellt.
@@ -95,7 +95,7 @@ Zu den Features von Hudi gehört zum Beispiel die Indizierung von Änderung und 
 Hudi unterstützt sowohl inkrementelle Abfragen als auch Batch-Verarbeitung von Daten.
 
 \paragraph{}
-Bei diesen System fehlen entweder eine ausführliche Metadatenpflege oder eine Daten Versionierung, sie bilden nur einen bestimmten Teil eines Data Lake oder sind für spezielle Anwendungsfälle.
+Bei diesen Systemen fehlen entweder eine ausführliche Metadatenpflege oder eine Datenversionierung, sie bilden nur einen bestimmten Teil eines Data Lake oder sind für spezielle Anwendungsfälle.
 Daher wurde bisher kein geeignetes Data-Lake-System für die Anwendung am HIT gefunden
 
 \input{Kapitel/Grundlagen/DeltaLake}
