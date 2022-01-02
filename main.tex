@@ -41,10 +41,11 @@
 \usepackage{listings}         % for code samples
 \usepackage{fancyhdr}         % for header line
 
-\usepackage[backend=biber, style=authoryear-icomp]{biblatex}
+\usepackage[backend=biber, style=authoryear, maxbibnames=99]{biblatex}
 \addbibresource{literatur.bib}
-% \usepackage{natbib}
-% Hier bei Bedarf die Seitenränder einstellen
+\DeclareNameAlias{default}{family-given}
+\DeclareNameAlias{sortname}{family-given}
+
 \usepackage[german]{algorithm2e}
 \RestyleAlgo{ruled}
 
@@ -59,9 +60,17 @@
     \newpage
 }
     
-\usepackage[printonlyused]{acronym}
 \usepackage{multirow, multicol, tabularx}
 \usepackage{csquotes}
+
+\usepackage{ifluatex}
+\ifluatex
+  \usepackage{pdftexcmds}
+  \makeatletter
+  \let\pdfstrcmp\pdf@strcmp
+  \let\pdffilemoddate\pdf@filemoddate
+  \makeatother
+\fi
 \usepackage{svg}
 
 \hyphenation{Data-Frame Data-Frames}
@@ -74,8 +83,8 @@
 
 \let\origdoublepage\cleardoublepage
 \newcommand{\clearemptydoublepage}{%
-  \clearpage
-  {\pagestyle{empty}\origdoublepage}%
+    \clearpage
+    {\pagestyle{empty}\origdoublepage}%
 }
 
 \pagestyle{empty}
@@ -96,18 +105,17 @@
 \include{Kapitel/Grundlagen/Grundlagen}
 \include{Kapitel/Anforderungen/Anforderungen}
 \include{Kapitel/Entwicklung/Entwicklung}
-\include{Kapitel/Umsetzung/Umsetzung}
+\include{Kapitel/Implementierung/Implementierung}
 \include{Kapitel/Evaluierung/Evaluierung}
 \include{Kapitel/Zusammenfassung/Zusammenfassung}
 
-\chapter{Abbildungsverzeichnis}
+\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
 \listoffigures
 
-\chapter{Literaturverzeichnis}
 \printbibliography
+\addcontentsline{toc}{chapter}{Listeraturverzeichnis}
 
 \appendix
-\chapter{Benchmark-Ergebnisse}
 \include{Anhang}
 
 

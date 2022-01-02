@@ -12,11 +12,11 @@ Am besten eignet sich in diesem Fall die von \textcite{sawadogo2021data} beschri
 \subsection{Zonen-Architektur}
 Von \textcite{ingestion_02} wurde eine Architektur basierend auf drei Zonen entwickelt.
 \begin{enumerate}
-    \item In der Drop Zone werden alle Daten ohne weitere Verarbeitung gespeichert.
+    \item In der \emph{Drop Zone} werden alle Daten ohne weitere Verarbeitung gespeichert.
           Nur die Datenproduzenten haben Zugriff auf diese Zone und können Daten schreiben.
-    \item Die Landing Zone ist ein unveränderlicher Speicher, der Daten-Assets enthält, die jeweils zu einer Daten-Sammlung gehören. Projekte können mit den Assets aus der Landing Zone interagieren.
+    \item Die \emph{Landing Zone} ist ein unveränderlicher Speicher, der Daten-Assets enthält, die jeweils zu einer Daten-Sammlung gehören. Projekte können mit den Assets aus der Landing Zone interagieren.
           Benutzer müssen lesenden Zugriff auf bestimmte Assets über einen Governance-Prozess beantragen.
-    \item Projekte können in der Integration-Zone angereicherte Daten speichern.
+    \item Projekte können in der \emph{Integration Zone} angereicherte Daten speichern.
           Diese Anreicherung kann zum Beispiel aus einer Aufarbeitung oder Umstrukturierung bestehen, die speziell für ein Projekt benötigt wird.
           Es ist außerdem möglich Daten aus der Drop Zone wieder in die Landing Zone zu laden.
 \end{enumerate}
@@ -59,8 +59,8 @@ Das wird durch den \textbf{Continuation-Service} übernommen.
 Für alle Datenquellen muss regelmäßig geprüft werden, ob für diese gerade eine Ingestion ausgeführt wird und ausgeführt werden sollte.
 Falls keine Ingestion ausgeführt wird, aber ausgeführt werden sollte, wird die Ingestion für diese Datenquelle gestartet.
 
-Neben diesen Mircoservices wird noch ein Nachrichtensystem benötigt.
-Das Nachrichtensystem stellt die Kommunikation zwischen den Microservices dar.
+Neben diesen Mircoservices wird noch ein Nachrichten-Service benötigt.
+Der Nachrichten-Service stellt die Kommunikation zwischen den Microservices dar.
 Hier ist es wichtig, dass es einem Sender möglich ist, Nachrichten an einen oder auch an mehrere Empfänger zu senden.
 So soll sichergestellt werden, dass bestehende Microservices einfach repliziert und neue eingefügt werden können.
 Für das Speichern von Daten und Metadaten wird jeweils ein Speichersystem benötigt.

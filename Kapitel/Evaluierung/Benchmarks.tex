@@ -57,49 +57,87 @@ Dafür werden 5\% Änderungen, 5\% Löschungen und 80\% Einfügungen angewendet.
 Die Benchmarks für ein Speicherziel, also Parquet oder Delta-Tabelle, werden immer zusammen ausgeführt.
 Das heißt, dass die Ingestion von aktualisierten Daten und von Änderungsdaten direkt hintereinander geschieht.
 Dadurch kann eine weitere Überprüfung mit durchgeführt werden.
-Da das Speicherziel gleich ist muss für beide Durchläufe auch die Speichergröße der initialen Daten gleich sein.
+Da das Speicherziel gleich ist muss für beide Durchläufe auch die Festplattenspeichergröße der initialen Daten gleich sein.
 
-Als Ziele der Datengenerierung und somit auch als Datenquellen werden wie bei den Tests Postgres und JSON-Dateien verwendet.
-Die Daten selbst bestehen aus jeweils zehn Feldern, wovon eines eine fortlaufende Nummer als Id ist, eines ein Datum enthält und die anderen mit einem zufälligen 32-Zeichen langen Text befüllt werden.
-Bei den semistrukturierten Daten werden außerdem die Felder ineinander verschachtelt.
-Die Anzahl der Einträge wird in Zehner-Potenzen erhöht.
-Dabei der werden die Faktoren $1$, $2,5$, $5$ und $7,5$ mit den Potenzen $10^3$ bis $10^6$ verwendet.
+Die strukturierten Daten bestehen aus zehn Feldern.
+Davon ist eines eine fortalufende Nummer, die als Id dient, eines ein Datum und alle anderen ein 32 Zeichen langer zufälliger Text (Listing \ref{lst:pg-benchmark}).
+Die semistrukturierten Daten haben ähnlich viele Felder, wobei einige verschachtelt wurden (Listing: \cref{lst:json-benchmark}).
+Dadurch hat dieser Datensatz im vergleich weniger Felder, die tatsächlich Daten enthalten und verbraucht damit weniger Platz auf der Festplatte.
 
+\begin{lstlisting}[caption=Strukturierte Benchmark-Daten,label={lst:pg-benchmark}]
+{
+    id: long,
+    field_0: date,
+    field_1: string(len: 32),
+    field_2: string(len: 32),
+    field_3: string(len: 32),
+    field_4: string(len: 32),
+    field_5: string(len: 32),
+    field_6: string(len: 32),
+    field_7: string(len: 32),
+    field_8: string(len: 32),
+    field_9: string(len: 32)
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Semistrukturierte Benchmark-Daten, label={lst:json-benchmark}]
+    {
+        "object": {
+          "date": date,
+          "id": long
+        },
+        "field_1": {
+          "field_2": string(len: 32),
+          "field_3": string(len: 32)
+        },
+        "field_4": {
+          "field_5": string(len: 32),
+          "field_6": {
+            "field_7": string(len: 32)
+          },
+          "field_8": string(len: 32)
+        },
+        "field_9": string(len: 32)
+      },
+\end{lstlisting}
+
+Zum Speichern der generierten Daten und als Datenquelle für die Ingestion der Benchmarks werden Postgres für strukturierte und JSON-Dateien für semistrukturierte Daten verwendet.
+Die Angabe der generierten Daten wird in Zeilen gemacht, wobei jede Zeile ein Eintrag im Datensatz ist.
+Für die Anzahl an Zeilen werden die Faktoren $1$, $2,5$, $5$ und $7,5$ mit den Potenzen $10^3$ bis $10^6$ verwendet.
+
+\pagebreak
 \subsection{Benchmark-Ergebnisse}
 
 Die Benchmarks konnten nur auf einem lokalen Spark-Cluster mit einem Worker ausgeführt werden.
-Diesem standen 8 Kerne und 20 Gigabyte Arbeitsspeicher zur Verfügung.
+Das gesammte Data-Lake-System wurde für die Benchmarks in Docker bereitgestellt.
+Das Host-System für Docker verfügte über die folgende Hardware:
+\begin{itemize}
+    \item \textbf{CPU:} AMD Ryzen 7 5800X
+          \begin{itemize}
+              \item 8 Kerne (16 Threads)
+              \item Basistaktrate 3.8 GHz (max. bis 4.7 GHz)
+              \item L1-Chache: 512 KiB
+              \item L2-Chache: 4 MiB
+              \item L3-Chache: 32 MiB
+          \end{itemize}
+    \item \textbf{RAM:} Corsair Vengeance LPX
+          \begin{itemize}
+              \item Größe: 2x 16 GB
+              \item Geschwindigkeit: 3600 MHz
+          \end{itemize}
+\end{itemize}
+
 Es wurde auch probiert diesen Worker in zwei, mit jeweils der Hälfte der Ressourcen, aufzuteilen.
 Bei dieser Konfiguration konnten die Benchmarks aber nicht für eine Zeilenanzahl ab 1.000.000 erfolgreich beendet werden, da die Ressourcen nicht ausreichend waren.
-Aufgrund des verwendeten Spark-Clusters hat die Betrachtung der absoluten Zahlen keine große Aussagekraft.
+Aufgrund des verwendeten Spark-Clusters hat die Betrachtung der einzelnen absoluten Zahlen keine große Aussagekraft.
 Diese ändern sich mit dem Spark-Cluster und sind nur sinnvoll, wenn der Benchmark auf dem System ausgeführt wird, das auch beim Betrieb zum Einsatz kommen soll.
 Eine der Kern-Funktionen ist die Versionierung.
-Daher werden die Benchmark-Ergebnisse mit dem Ziel verglichen, Aussagen über diese Funktion zu treffen.
-Dazu wird jeweils ein Faktor für die zwei Szenarien und die Quelle wie folgt berechnet:
-\begin{align*}
-     & p_t: \text{Zeit beim Speichern in Parquet, ohne Versionierung}      \\
-     & d_t: \text{Zeit beim Speichern in Delta-Tabelle, mit Versionierung} \\
-     & f_t = d_t / p_t                                                     \\ \\
-     & p_s: \text{Speicherverbrauch in Parquet, ohne Versionierung}        \\
-     & d_s: \text{Speicherverbrauch in Delta-Tabelle, mit Versionierung}   \\
-     & f_s = d_s / p_s                                                     \\ \\
-\end{align*}
-Diese Werte werden für die zweite Ingestion für beide Fälle mit jeweils aktualisierten Daten oder Änderungsdaten berechnet.
-Da die initialen Daten in beiden Fällen gleich sind, werden die Faktoren hierfür nur einmal berechnet.
-
-Der Wert der Faktoren kann folgendermaßen interpretiert werden: \begin{align*}
-     & f_t > 1: \text{Die Ingestion mit Versionierung ist langsamer als ohne}           \\
-     & f_t = 1: \text{Beide Ingestions sind gleich schnell}                             \\
-     & f_t < 1: \text{Die Ingestion mit Versionierung ist schneller als ohne}           \\ \\
-     & f_s > 1: \text{Die Ingestion mit Versionierung verbraucht mehr Speicherplatz}    \\
-     & f_s = 1: \text{Beide Ingestions verbrauchen gleich viel Speicher}                \\
-     & f_s < 1: \text{Die Ingestion mit Versionierung verbraucht weniger Speicherplatz}
-\end{align*}
-
-In den gezeigten Diagrammen werden nur die Ergebnisse ab 100.000 Zeilen gezeigt, da die Unterschiede vorher zu klein sind, um sie erkennbar darzustellen.
+Daher werden die Benchmark-Ergebnisse aller Szenarien und Format in einem Diagramm gezeigt.
+Sowohl für die Dauer der Ingestion, als auch den Festplattenspeicherverbrauch, werden jeweil ein Diagramm für die initiale Ingestion, die Ingestion von aktualisierten Daten und die Ingestion einer Update-Quelle gezeigt.
+Auf der Y-Achse der Diagramme ist entweder die Dauer der Ingestions in Minuten und Sekunde, Festplattenspeicherverbrauch angegeben.
+Die X-Achse zeigt die verwendete Anzahl an Zeilen.
+Es werden nur die Ergebnisse ab 100.000 Zeilen gezeigt, da die Unterschiede vorher zu klein sind, um sie erkennbar darzustellen.
 Alle Ergebnisse können in den Tabellen in \cref{sec:benchmark-tables} nachgelesen werden.
-Die Diagramme sind jeweils so aufgebaut, dass eines die Werte der initialen Ingestion, eines die Werte der Ingestion aus einer aktualisierten Quelle und eines die Werte der Ingestion einer Update-Quelle zeigt.
-
 
 \subsubsection{Dauer der Ingestion}
 
@@ -125,36 +163,36 @@ Im Gegensatz dazu, ist dies bei einer Ingestion aus einer Update-Quelle genau an
 \begin{figure}
     \centering
     \caption{Dauer erste Ingestion}
-    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Zeit-Initial}
+    \includegraphics[width=\textwidth]{Grafiken/Evaluierung/Zeit-Initial}
     \label{fig:eval-time-i}
 \end{figure}
 
 \begin{figure}
     \centering
     \caption{Dauer Ingestion aus aktualisierten Daten}
-    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Zeit-Update}
+    \includegraphics[width=\textwidth]{Grafiken/Evaluierung/Zeit-Update}
     \label{fig:eval-time-u}
 \end{figure}
 
 \begin{figure}
     \centering
     \caption{Dauer Ingestion aus Update-Quelle}
-    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Zeit-Cdc}
+    \includegraphics[width=\textwidth]{Grafiken/Evaluierung/Zeit-Cdc}
     \label{fig:eval-time-c}
 \end{figure}
 
-\subsubsection{Speicherverbrauch}
+\subsubsection{Festplattenspeicherverbrauch}
 
-Für die initial Ingestion \cref{fig:eval-storage-i} ist kein Unterschied im Speicherverbrauch zu erkennen.
-Bei Betrachtung der genauen Werte ist zu sehen, dass dieser minimal vorhanden ist.
+Für die initiale Ingestion \cref{fig:eval-storage-i} ist kein Unterschied im Festplattenspeicherverbrauch zu erkennen.
+Bei Betrachtung der genauen Werte ist zu sehen, dass die Delta-Tabellen einen leicht höheren Festplattenspeicherverbrauch haben.
 Das liegt daran, dass Delta-Tabellen die Daten auch in Parquet speichern und nach der ersten Ingestion noch keine Versionierungsinformationen vorhanden sind.
 Diese treten erst bei einer weiteren Ingestion auf.
 
-Bei einer Ingestion von aktualisierten Daten (\cref{fig:eval-storage-u}) und aus einer Update-Quelle (\cref{fig:eval-storage-c}) ist der Speicherverbrauch gleich.
+Bei einer Ingestion von aktualisierten Daten (\cref{fig:eval-storage-u}) und aus einer Update-Quelle (\cref{fig:eval-storage-c}) ist der Festplattenspeicherverbrauch gleich.
 Beide Quellen enthalten die gleichen Änderungen, weshalb auch das gespeicherte Ergebnis gleich sein muss.
 Der Unterschied zwischen den Szenarien liegt darin, dass im zweiten Szenario mehr Daten eingefügt und weniger gelöscht werden, so dass am Ende mehr Daten im Datensatz enthalten sind.
 
-Auch beim Speicherverbrauch kommt die Eigenschaft der verschachtelten Daten in Spark zum Tragen.
+Auch beim Festplattenspeicherverbrauch kommt die Eigenschaft der verschachtelten Daten in Spark zum Tragen.
 Man sieht, dass weniger Spalteninformationen gespeichert werden müssen, was den Verbrauch niedriger hält.
 Daraus lässt sich aber auch schließen, dass ohne weitere Verarbeitung weniger Informationen über Änderungen vorhanden sind.
 Das heißt, dass bei Änderungen in einem verschachtelten Feld nur erkannt wird, dass sich das Feld auf der obersten Ebene darüber verändert hat.
@@ -163,21 +201,21 @@ Die genauen Änderungen müssen, durch zum Beispiel einen Vergleich der Versione
 
 \begin{figure}
     \centering
+    \caption{Festplattenspeicherverbrauch nach der ersten Ingestion}
+    \includegraphics[width=\textwidth]{Grafiken/Evaluierung/Speicher-Initial}
     \label{fig:eval-storage-i}
-    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Speicher-Initial}
-    \caption{Speicherverbrauch nach der ersten Ingestion}
 \end{figure}
 
 \begin{figure}
     \centering
+    \caption{Festplattenspeicherverbrauch nach der Ingestion aus aktualisierten Daten}
+    \includegraphics[width=\textwidth]{Grafiken/Evaluierung/Speicher-Update}
     \label{fig:eval-storage-u}
-    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Speicher-Update}
-    \caption{Speicherverbrauch nach der Ingestion aus aktualisierten Daten}
 \end{figure}
 
 \begin{figure}
     \centering
+    \caption{Festplattenspeicherverbrauch nach der Ingestion aus Update-Quelle}
+    \includegraphics[width=\textwidth]{Grafiken/Evaluierung/Speicher-Cdc}
     \label{fig:eval-storage-c}
-    \includesvg[inkscapelatex=false,width=\textwidth]{Grafiken/Evaluierung/Speicher-Cdc}
-    \caption{Speicherverbrauch nach der Ingestion aus Update-Quelle}
 \end{figure}

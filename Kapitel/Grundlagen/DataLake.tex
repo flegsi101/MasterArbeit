@@ -21,16 +21,16 @@ Jeder Pond ist mit einem spezialisierten Speichersystem verknüpft und beinhalte
 Einige Ponds führen zudem weitere Verarbeitungen der Daten, wie Aufbereitung oder Analysen aus.
 Inmon hat eine Architektur aus fünf Ponds aufgestellt (\cref{fig:datalake-ponds}).
 \begin{enumerate}
-    \item Daten werden im Raw Data Pond im Rohformat gespeichert und fließen von dort aus in andere Ponds.
+    \item Daten werden im \emph{Raw Data Pond} im Rohformat gespeichert und fließen von dort aus in andere Ponds.
           Dieser dient also als Eintrittspunkt in das System für neue Daten.
           Nach dem Verlassen des Pond werden die Daten aus diesem gelöscht.
-    \item Der Analog Data Pond enthält analoge Daten, meist von IoT-Geräten.
+    \item Der \emph{Analog Data Pond} enthält analoge Daten, meist von IoT-Geräten.
           Diese werden hier auf ein aussagekräftiges und verwaltbares Volumen reduziert und umstrukturiert.
-    \item In den Application Data Pond kommen Daten, die von Software-Anwendungen erzeugt wurden.
+    \item In den \emph{Application Data Pond} kommen Daten, die von Software-Anwendungen erzeugt wurden.
           Diese sind häufig strukturierte Daten aus relationalen Daten\-bank-Systemen.
           Sie werden für Analysen integriert und aufbereitet.
-    \item Der Textual Data Pond enthält unstrukturierte Daten und Prozesse, die deren Analyse erleichtern.
-    \item Im Archival Data Pond werden alle Daten gespeichert, die nicht mehr aktiv verwendet, aber eventuell in der Zukunft nochmal gebraucht werden.
+    \item Der \emph{Textual Data Pond} enthält unstrukturierte Daten und Prozesse, die deren Analyse erleichtern.
+    \item Im \emph{Archival Data Pond} werden alle Daten gespeichert, die nicht mehr aktiv verwendet, aber eventuell in der Zukunft nochmal gebraucht werden.
 \end{enumerate}
 \begin{figure}
     \centering
@@ -53,15 +53,15 @@ Die Anzahl der Zonen und deren Verfeinerungsgrad ist dabei je nach Anwendung unt
 
 Eine speziellere Architektur ist die Lambda-Architektur, die für die verteilte Verarbeitung von Echtzeit- und Batch-Daten verwendet wird.
 Eine Lambda-Architektur besteht aus drei Ebenen (Layers) \parencite{lambda-arch}: \begin{enumerate}
-    \item Die Batch Layer hat zwei Aufgaben.
+    \item Die \emph{Batch Layer} hat zwei Aufgaben.
           Die erste Aufgabe ist das verteilte Speichern von wachsenden Daten.
           Dafür kann zum Beispiel das HDFS verwendet werden.
           Als zweite Aufgabe werden Batch Views für die verteilten Daten vorberechnet, um Anfragen schneller beantworten zu können.
-    \item In der Speed Layer werden inkrementell Echtzeit-Views auf Daten verwaltet.
+    \item In der \emph{Speed Layer} werden inkrementell Echtzeit-Views auf Daten verwaltet.
           Dadurch wird die Lücke gefüllt, die bei den Views in der Batch-Ebene entstehen können.
           Die Speed Layer enthält immer nur aktuelle Daten.
           Ältere Daten werden durch die Batch Layer aufgenommen.
-    \item Die Serving Layer enthält Indices über alle Batch Views um Anfragen mit geringer Latenz bearbeiten zu können. Sie ist dafür verantwortlich die Views aus der Batch und der Speed Layer zusammenzuführen um Echtzeitergebnisse über alle Daten bereit zu stellen.
+    \item Die \emph{Serving Layer} enthält Indices über alle Batch Views um Anfragen mit geringer Latenz bearbeiten zu können. Sie ist dafür verantwortlich die Views aus der Batch und der Speed Layer zusammenzuführen um Echtzeitergebnisse über alle Daten bereit zu stellen.
 \end{enumerate}
 
 Nach \textcite{sawadogo2021data} können die Architekturen von Data-Lake-Systemen auch anders unterteilt werden.

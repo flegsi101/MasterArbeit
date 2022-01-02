@@ -1,6 +1,7 @@
 \section{Continuation-Service}
 
 Der Continuation-Service führt durchgehend eine Schleife zum Überprüfen der Datenquellen aus.
+Alle für die Schleife benötigten Informationen werden aus dem Metadatenspeicher geladen.
 Bei der Prüfung wird immer der Status des aktuellsten IngestionEvent betrachtet.
 Je nach Datenquelle wird dann entschieden, ob eine Ingestion gestartet werden soll.
 Die Logik der Schleife besteht aus drei Teilen, wovon zwei die Datenquellen prüfen und einer die Zeit steuert, nachdem die Schleife erneut ausgeführt wird (\cref{algo:ci-loop}).
@@ -26,9 +27,6 @@ Damit ist sichergestellt, dass sie nicht häufiger als einmal pro Minute ausgef�
 \begin{algorithm}
     \caption{Continuation loop}
     \label{algo:ci-loop}
-
-    \KwData{-}
-    \KwResult{-}
 
     $loopStart \gets$ current\_time() \;
 

@@ -84,30 +84,30 @@ Dabei müssen drei allgemeine Bedingungen erfüllt werden: \begin{itemize}
 \end{itemize}
 Genauer betrachtet ergeben sich daraus folgende Aufgaben und Fragestellungen: \begin{itemize}
     \item Entwicklung einer Ingestion, die mit geringem spezifischem Aufwand mit allen Datenquellen kompatibel ist: \begin{itemize}
-        \item Wie sieht eine Ingestion aus?
-        \item Wie werden Datenströme geladen?
-        \item Wie werden Daten aus einer API geladen?
-        \item Lässt sich daraus eine allgemeine Art der Definition ableiten, die von der Ingestion-Schnittstelle verwendet werden kann?
-    \end{itemize}
+              \item Wie sieht eine Ingestion aus?
+              \item Wie werden Datenströme geladen?
+              \item Wie werden Daten aus einer API geladen?
+              \item Lässt sich daraus eine allgemeine Art der Definition ableiten, die von der Ingestion-Schnittstelle verwendet werden kann?
+          \end{itemize}
     \item Die Erkennung und Speicherung von Änderungen zwischen dem aktuellen Stand im System und dem Stand der Datenquelle: \begin{itemize}
-        \item Wie erkennt man  die Änderungen zwischen den Daten?
-        \item Wann soll diese Erkennung gemacht werden?
-        \item Lässt sich die Erkennung für alle Datenquellen gleich gestalten?
-        \item Lässt sich die Erkennung erweiterbar gestalten, um komplexere Situationen abzubilden?
-        \item Wie wird die Deltaerkennung in den Ingestion-Ablauf integriert?
-    \end{itemize}
+              \item Wie erkennt man  die Änderungen zwischen den Daten?
+              \item Wann soll diese Erkennung gemacht werden?
+              \item Lässt sich die Erkennung für alle Datenquellen gleich gestalten?
+              \item Lässt sich die Erkennung erweiterbar gestalten, um komplexere Situationen abzubilden?
+              \item Wie wird die Deltaerkennung in den Ingestion-Ablauf integriert?
+          \end{itemize}
     \item Speichern und Verwalten der Versionierung von Daten: \begin{itemize}
-        \item Wie speichert man die Daten mit Versionierung?
-        \item Wie können Abfragen über die Datenversionen gestellt werden?
-    \end{itemize}
+              \item Wie speichert man die Daten mit Versionierung?
+              \item Wie können Abfragen über die Datenversionen gestellt werden?
+          \end{itemize}
     \item Evaluierung des Systems: \begin{itemize}
-        \item Anwendung des Systems mit Daten, die verschiedene Datenquellen abbilden
-    \end{itemize}
+              \item Anwendung des Systems mit Daten, die verschiedene Datenquellen abbilden
+          \end{itemize}
 \end{itemize}
 
 \subsection{Aufbau}
 Die Arbeit gliedert sich in sieben Kapitel.
-Im nächsten Kapitel werden wichtige Grundlagen für die Arbeit vermittelt und verwandte Arbeiten erläutert. 
+Im nächsten Kapitel werden wichtige Grundlagen für die Arbeit vermittelt und verwandte Arbeiten erläutert.
 Der weitere Aufbau orientiert sich an der Vorgehensweise der Software-Entwicklung.
 Zuerst werden in Kapitel 3 die Anforderungen ermittelt.
 Dazu werden die Ziele für die Ingestion-Schnittstelle definiert.
